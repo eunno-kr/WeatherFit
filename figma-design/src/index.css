@@ -1,0 +1,110 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    linear-gradient(90deg, rgba(26, 26, 26, 0.035) 1px, transparent 1px) 0 0 / 56px 56px,
+    linear-gradient(0deg, rgba(26, 26, 26, 0.025) 1px, transparent 1px) 0 0 / 56px 56px,
+    #faf8f3;
+  color: #1a1a1a;
+  font-family: "Pretendard", system-ui, sans-serif;
+}
+
+button,
+select {
+  font: inherit;
+}
+
+button,
+select,
+input {
+  border-radius: 0;
+}
+
+button,
+select,
+input {
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    color 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+::selection {
+  background: #1a1a1a;
+  color: #faf8f3;
+}
+
+.brand-wordmark {
+  font-family: "Archivo", "Pretendard", system-ui, sans-serif;
+  font-weight: 900;
+  letter-spacing: 0;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.figma-shell {
+  position: relative;
+}
+
+.figma-shell::before {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  background:
+    linear-gradient(180deg, rgba(232, 84, 59, 0.08), transparent 34%),
+    radial-gradient(circle at 12% 10%, rgba(124, 139, 90, 0.08), transparent 28%),
+    radial-gradient(circle at 88% 20%, rgba(37, 82, 122, 0.06), transparent 24%);
+  z-index: 0;
+}
+
+.figma-content {
+  position: relative;
+  z-index: 1;
+}
+
+.wf-card {
+  border: 1px solid #1a1a1a;
+  background: rgba(255, 253, 247, 0.92);
+  box-shadow: 10px 10px 0 rgba(26, 26, 26, 0.08);
+}
+
+.wf-card-soft {
+  border: 1px solid #d7d0c4;
+  background: rgba(255, 253, 247, 0.88);
+}
+
+.wf-label {
+  font-family: "Archivo", "Pretendard", system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.wf-panel {
+  border: 1px solid #d7d0c4;
+  background: #fffdf7;
+}
+
+.wf-subtle {
+  color: #6b665c;
+}

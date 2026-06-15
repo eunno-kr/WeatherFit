@@ -30,10 +30,23 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
+      - name: Build main app
         run: npm run build
         env:
           GITHUB_PAGES: "true"
+
+      - name: Install Figma design dependencies
+        working-directory: ./figma-design
+        run: npm ci
+
+      - name: Build Figma design app
+        working-directory: ./figma-design
+        run: npm run build
+        env:
+          GITHUB_PAGES: "true"
+
+      - name: Add Figma design app to Pages artifact
+        run: mkdir -p dist/figma-design && cp -R figma-design/dist/. dist/figma-design/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
