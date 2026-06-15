@@ -1,0 +1,51 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: #faf8f3;
+  color: #1a1a1a;
+}
+
+button,
+select {
+  font: inherit;
+}
+
+button,
+select,
+input {
+  border-radius: 0;
+}
+
+::selection {
+  background: #1a1a1a;
+  color: #faf8f3;
+}
+
+.brand-wordmark {
+  font-family: "Archivo", "Pretendard", system-ui, sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.wf-panel {
+  border: 1px solid #d7d0c4;
+  background: #fffdf7;
+}
+
+.wf-subtle {
+  color: #6b665c;
+}
