@@ -110,7 +110,10 @@ export default function WardrobePanel({
   const [filter, setFilter] = useState("all");
   const [appliedAt, setAppliedAt] = useState(null);
   const [showMoreColors, setShowMoreColors] = useState(false);
-  const [open, setOpen] = useState(true);
+  const [openAdd, setOpenAdd] = useState(true);
+  const [openLock, setOpenLock] = useState(false);
+  const [openList, setOpenList] = useState(true);
+  const [openRec, setOpenRec] = useState(true);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -219,319 +222,221 @@ export default function WardrobePanel({
     ["포인트", "accessory", recommendation.outfit?.accessory, fallbackOutfit?.accessory],
   ];
 
+  const SubHeader = ({ title, sub, open: o, onToggle }) => (
+    <button type="button" onClick={onToggle} className="flex w-full items-center justify-between py-3">
+      <div>
+        <div className="wf-label text-[#3A362E]" style={{ fontSize: "13px" }}>{title}</div>
+        {sub && <p className="mt-0.5 text-xs text-[#6B665C]">{sub}</p>}
+      </div>
+      <span className="text-xs text-[#A8A296]">{o ? "▲" : "▼"}</span>
+    </button>
+  );
+
   return (
-    <section className="wf-card-soft mt-6 p-5">
+    <div className="mt-6 grid gap-3">
       {seasonAlert && (
-        <div className="mb-4 flex items-start gap-2 border border-[#E8543B] bg-[#FFF5F2] px-4 py-3 text-sm text-[#E8543B]">
+        <div className="flex items-start gap-2 border border-[#E8543B] bg-[#FFF5F2] px-4 py-3 text-sm text-[#E8543B]">
           <span>🌿</span>
           <span>{seasonAlert}</span>
         </div>
       )}
-      <button type="button" onClick={() => setOpen((v) => !v)} className="flex w-full items-start justify-between gap-4">
-        <div className="text-left">
-          <div className="wf-label text-[#6B665C]" style={{ fontSize: "13px" }}>내 옷장</div>
-          <h2 className="mt-2 text-lg font-semibold">내 옷장</h2>
-          <p className="mt-1 text-sm leading-6 text-[#6B665C]">
-            가지고 있는 옷을 넣으면 날씨, 스타일, 색감 기준으로 조합을 골라줍니다.
-          </p>
-        </div>
-        <span className="mt-1 shrink-0 text-xs text-[#A8A296]">{open ? "▲" : "▼"}</span>
-      </button>
 
-      {open && (<><div className="mt-5 border-t border-[#E5DED1] pt-4">
-        <div className="mb-3 wf-label text-[#6B665C]" style={{ fontSize: "13px" }}>옷 추가</div>
-      <div className="grid min-w-0 gap-3">
-        <input
-          value={draft.name}
-          onChange={(event) => setDraft({ ...draft, name: event.target.value })}
-          placeholder="예: 네이비 반팔 니트"
-          className="min-w-0 w-full border border-[#D7D0C4] bg-transparent px-3 py-2 text-sm outline-none"
-        />
-        <SelectField
-          label="분류"
-          value={draft.category}
-          onChange={(category) => setDraft({ ...draft, category })}
-          options={CATEGORY_OPTIONS}
-        />
-        <label className="grid gap-1 text-xs font-semibold text-[#6B665C]">
-          색상
-          <div className="flex min-w-0 items-center gap-2">
-            <span className="shrink-0">
-              <ColorChips text={draft.color} colorHex={draft.colorHex} />
-            </span>
+      {/* ── 옷 추가 ── */}
+      <section className="wf-card-soft p-4">
+        <SubHeader title="옷 추가" open={openAdd} onToggle={() => setOpenAdd((v) => !v)} />
+        {openAdd && (
+          <div className="grid min-w-0 gap-3 border-t border-[#E5DED1] pt-3">
             <input
-              value={draft.color}
-              onChange={(event) => setDraft({ ...draft, color: event.target.value })}
-              className="min-w-0 w-full border border-[#D7D0C4] bg-transparent px-3 py-2 text-sm font-normal text-ink outline-none"
+              value={draft.name}
+              onChange={(e) => setDraft({ ...draft, name: e.target.value })}
+              placeholder="예: 네이비 반팔 니트"
+              className="min-w-0 w-full border border-[#D7D0C4] bg-transparent px-3 py-2 text-sm outline-none"
             />
-          </div>
-          <div className="mt-2 grid grid-cols-9 gap-1.5">
-            {(showMoreColors ? [...COLOR_SWATCHES, ...MORE_COLOR_SWATCHES] : COLOR_SWATCHES).map(([name, hex]) => {
-              const selected = draft.colorHex === hex;
-              return (
-                <button
-                  key={`${name}-${hex}`}
-                  type="button"
-                  onClick={() => setDraft({ ...draft, color: name, colorHex: hex })}
-                  className="h-6 border"
-                  style={{
-                    background: hex,
-                    borderColor: selected ? "#1A1A1A" : "#D7D0C4",
-                    outline: selected ? "2px solid #1A1A1A" : "none",
-                    outlineOffset: 1,
-                  }}
-                  title={name}
-                  aria-label={`${name} 선택`}
+            <SelectField label="분류" value={draft.category} onChange={(category) => setDraft({ ...draft, category })} options={CATEGORY_OPTIONS} />
+            <label className="grid gap-1 text-xs font-semibold text-[#6B665C]">
+              색상
+              <div className="flex min-w-0 items-center gap-2">
+                <span className="shrink-0"><ColorChips text={draft.color} colorHex={draft.colorHex} /></span>
+                <input
+                  value={draft.color}
+                  onChange={(e) => setDraft({ ...draft, color: e.target.value })}
+                  className="min-w-0 w-full border border-[#D7D0C4] bg-transparent px-3 py-2 text-sm font-normal text-ink outline-none"
                 />
-              );
-            })}
-          </div>
-          <div className="mt-2 flex flex-wrap items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setShowMoreColors(!showMoreColors)}
-              className="border border-[#D7D0C4] px-3 py-1.5 text-xs font-normal text-[#6B665C]"
-            >
-              {showMoreColors ? "기본 색만 보기" : "더 많은 색 보기"}
+              </div>
+              <div className="mt-2 grid grid-cols-9 gap-1.5">
+                {(showMoreColors ? [...COLOR_SWATCHES, ...MORE_COLOR_SWATCHES] : COLOR_SWATCHES).map(([name, hex]) => {
+                  const selected = draft.colorHex === hex;
+                  return (
+                    <button key={`${name}-${hex}`} type="button" onClick={() => setDraft({ ...draft, color: name, colorHex: hex })}
+                      className="h-6 border"
+                      style={{ background: hex, borderColor: selected ? "#1A1A1A" : "#D7D0C4", outline: selected ? "2px solid #1A1A1A" : "none", outlineOffset: 1 }}
+                      title={name} aria-label={`${name} 선택`}
+                    />
+                  );
+                })}
+              </div>
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <button type="button" onClick={() => setShowMoreColors(!showMoreColors)} className="border border-[#D7D0C4] px-3 py-1.5 text-xs font-normal text-[#6B665C]">
+                  {showMoreColors ? "기본 색만 보기" : "더 많은 색 보기"}
+                </button>
+                <input type="color" value={draft.colorHex || "#111111"} onChange={(e) => setDraft({ ...draft, color: "직접 선택", colorHex: e.target.value })}
+                  className="h-8 w-10 border border-[#D7D0C4] bg-transparent p-0" title="직접 색 선택" />
+                <span className="text-xs font-normal text-[#8F897D]">직접 선택</span>
+                <label className="flex cursor-pointer items-center gap-1 border border-[#D7D0C4] px-3 py-1.5 text-xs font-normal text-[#6B665C] transition hover:border-[#1A1A1A]">
+                  📷 사진 색상 추출
+                  <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+                </label>
+              </div>
+            </label>
+            <SelectField label="두께" value={draft.warmth} onChange={(warmth) => setDraft({ ...draft, warmth })} options={WARMTH_OPTIONS} />
+            <SelectField label="스타일" value={draft.style} onChange={(style) => setDraft({ ...draft, style })} options={STYLE_OPTIONS} />
+            <label className="flex items-center gap-2 text-sm text-[#3A362E]">
+              <input type="checkbox" checked={draft.rainOk} onChange={(e) => setDraft({ ...draft, rainOk: e.target.checked })} />
+              비 오는 날에도 착용 가능
+            </label>
+            <button type="button" onClick={addItem} className="bg-ink px-4 py-2 text-sm font-semibold text-white">
+              옷장에 추가
             </button>
-            <input
-              type="color"
-              value={draft.colorHex || "#111111"}
-              onChange={(event) => setDraft({ ...draft, color: "직접 선택", colorHex: event.target.value })}
-              className="h-8 w-10 border border-[#D7D0C4] bg-transparent p-0"
-              title="직접 색 선택"
-            />
-            <span className="text-xs font-normal text-[#8F897D]">직접 선택</span>
-            <label className="flex cursor-pointer items-center gap-1 border border-[#D7D0C4] px-3 py-1.5 text-xs font-normal text-[#6B665C] transition hover:border-[#1A1A1A]">
-              📷 사진 색상 추출
-              <input
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleImageUpload}
-              />
-            </label>
           </div>
-        </label>
-        <SelectField
-          label="두께"
-          value={draft.warmth}
-          onChange={(warmth) => setDraft({ ...draft, warmth })}
-          options={WARMTH_OPTIONS}
-        />
-        <SelectField
-          label="스타일"
-          value={draft.style}
-          onChange={(style) => setDraft({ ...draft, style })}
-          options={STYLE_OPTIONS}
-        />
-      </div>
-
-      <label className="mt-3 flex items-center gap-2 text-sm text-[#3A362E]">
-        <input
-          type="checkbox"
-          checked={draft.rainOk}
-          onChange={(event) => setDraft({ ...draft, rainOk: event.target.checked })}
-        />
-        비 오는 날에도 착용 가능
-      </label>
-
-      <button type="button" onClick={addItem} className="mt-4 bg-ink px-4 py-2 text-sm font-semibold text-white">
-        옷장에 추가
-      </button>
-      </div>
-
-      <div className="mt-6 border-t border-[#E5DED1] pt-5">
-        <div className="wf-label text-[#6B665C]" style={{ fontSize: "13px" }}>오늘의 고정</div>
-        <h3 className="mt-1 text-base font-semibold">오늘 꼭 입고 싶은 옷 고정</h3>
-        <p className="mt-1 text-sm leading-6 text-[#6B665C]">
-          상의, 하의, 신발처럼 이미 정한 아이템이 있으면 선택하세요. 나머지만 날씨에 맞춰 조합합니다.
-        </p>
-        <div className="mt-3 grid min-w-0 gap-3">
-          {CATEGORY_OPTIONS.map(([category, label]) => (
-            <label key={category} className="grid gap-1 text-xs font-semibold text-[#6B665C]">
-              {label} 고정
-              <select
-                value={locks[category] || ""}
-                onChange={(event) => setLocks({ ...locks, [category]: event.target.value })}
-                className="min-w-0 w-full border border-[#D7D0C4] bg-transparent px-2 py-2 text-sm font-normal text-ink outline-none"
-              >
-                <option value="">자동 추천</option>
-                {itemsByCategory(category).map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.name} · {item.color}
-                  </option>
-                ))}
-              </select>
-            </label>
-          ))}
-        </div>
-
-        <div className="mt-4 flex flex-wrap gap-2">
-          <button type="button" onClick={applyLocks} className="bg-ink px-4 py-2 text-sm font-semibold text-white">
-            고정한 옷으로 다시 조합하기
-          </button>
-          <button type="button" onClick={clearLocks} className="border border-[#D7D0C4] px-4 py-2 text-sm text-[#6B665C]">
-            고정 해제
-          </button>
-        </div>
-
-        <p className="mt-3 text-xs leading-5 text-[#6B665C]">
-          {lockedCount > 0
-            ? `현재 ${lockedCount}개 아이템이 고정되어 있습니다.${appliedAt ? ` ${appliedAt}에 다시 조합했어요.` : " 버튼을 눌러 결과를 확인하세요."}`
-            : appliedCount > 0
-              ? "적용된 고정을 해제하려면 고정 해제를 누르세요."
-              : "고정한 옷이 없으면 내 옷장에서 자동으로 조합합니다."}
-        </p>
-        {appliedCount > 0 && (
-          <p className="mt-2 text-xs leading-5 text-[#3A362E]">
-            왼쪽의 <strong>내가 고른 옷으로 다시 맞춘 코디</strong> 영역에 적용 결과가 표시됩니다.
-          </p>
         )}
-      </div>
+      </section>
 
-      <div className="mt-6 border-t border-[#E5DED1] pt-5">
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <div className="wf-label text-[#6B665C]" style={{ fontSize: "13px" }}>옷장 목록</div>
-            <h3 className="mt-1 text-base font-semibold">등록한 옷 {wardrobe.length}개</h3>
-          </div>
-          <div className="text-right text-xs leading-5 text-[#6B665C]">
-            상의 {categoryCounts.top || 0} · 하의 {categoryCounts.bottom || 0} · 신발 {categoryCounts.shoes || 0}
-          </div>
-        </div>
-
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          {FILTER_OPTIONS.map(([id, label]) => {
-            const selected = filter === id;
-            return (
-              <button
-                key={id}
-                type="button"
-                onClick={() => setFilter(id)}
-                className="border px-2.5 py-1 text-xs"
-                style={{
-                  borderColor: selected ? "#1A1A1A" : "#D7D0C4",
-                  background: selected ? "#1A1A1A" : "transparent",
-                  color: selected ? "#fff" : "#6B665C",
-                }}
-              >
-                {label}
-              </button>
-            );
-          })}
-        </div>
-
-        <div className="mt-3 grid max-h-[320px] gap-2 overflow-auto pr-1">
-          {filteredWardrobe.map((item) => (
-            <div key={item.id} className="border border-[#E5DED1] bg-[#FAF8F3] p-3 transition hover:border-[#1A1A1A] hover:bg-white">
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <div className="text-sm font-semibold">
-                    <ColorText value={item.name} colorHex={item.colorHex} />
-                  </div>
-                  <div className="mt-1 text-xs leading-5 text-[#6B665C]">
-                    {CATEGORY_LABELS_KO[item.category]} · <ColorText value={item.color} colorHex={item.colorHex} /> · {WARMTH_LABELS[item.warmth]} ·{" "}
-                    {STYLE_LABELS[item.style]}
-                  </div>
-                  <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-[#8F897D]">
-                    <span>{item.rainOk ? "비 오는 날 가능" : "비 오는 날 비추천"}</span>
-                    {(item.wearCount || 0) > 0 ? (
-                      <span className="border border-[#E5DED1] px-1.5 py-0.5">{item.wearCount}회 착용</span>
-                    ) : (
-                      <span className="text-[#C9B89A]">미착용</span>
-                    )}
-                  </div>
-                  {item.lastWorn && (
-                    <div className="mt-0.5 text-xs text-[#A8A296]">마지막 {item.lastWorn}</div>
-                  )}
-                </div>
-                <div className="flex shrink-0 flex-col gap-1">
-                  <button
-                    type="button"
-                    onClick={() => recordWear(item.id)}
-                    className="border border-[#D7D0C4] px-2 py-1 text-xs text-[#6B665C]"
+      {/* ── 오늘의 고정 ── */}
+      <section className="wf-card-soft p-4">
+        <SubHeader title="오늘의 고정" sub={lockedCount > 0 ? `${lockedCount}개 고정 중` : "특정 아이템을 고정하고 나머지를 조합"} open={openLock} onToggle={() => setOpenLock((v) => !v)} />
+        {openLock && (
+          <div className="border-t border-[#E5DED1] pt-3">
+            <div className="grid min-w-0 gap-3">
+              {CATEGORY_OPTIONS.map(([category, label]) => (
+                <label key={category} className="grid gap-1 text-xs font-semibold text-[#6B665C]">
+                  {label} 고정
+                  <select
+                    value={locks[category] || ""}
+                    onChange={(e) => setLocks({ ...locks, [category]: e.target.value })}
+                    className="min-w-0 w-full border border-[#D7D0C4] bg-transparent px-2 py-2 text-sm font-normal text-ink outline-none"
                   >
-                    착용 ✓
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => removeItem(item.id)}
-                    className="border border-[#D7D0C4] px-2 py-1 text-xs text-[#6B665C]"
-                  >
-                    삭제
-                  </button>
-                </div>
-              </div>
+                    <option value="">자동 추천</option>
+                    {itemsByCategory(category).map((item) => (
+                      <option key={item.id} value={item.id}>{item.name} · {item.color}</option>
+                    ))}
+                  </select>
+                </label>
+              ))}
             </div>
-          ))}
-
-          {filteredWardrobe.length === 0 && (
-            <div className="border border-dashed border-[#D7D0C4] p-4 text-center text-sm text-[#8F897D]">
-              이 분류에 등록된 옷이 없습니다.
+            <div className="mt-4 flex flex-wrap gap-2">
+              <button type="button" onClick={applyLocks} className="bg-ink px-4 py-2 text-sm font-semibold text-white">고정한 옷으로 다시 조합하기</button>
+              <button type="button" onClick={clearLocks} className="border border-[#D7D0C4] px-4 py-2 text-sm text-[#6B665C]">고정 해제</button>
             </div>
-          )}
-        </div>
-      </div>
-
-      <div className="mt-6 border-t border-[#E5DED1] pt-5">
-        <div className="wf-label text-[#6B665C]" style={{ fontSize: "13px" }}>옷장에서 고른 코디</div>
-        <div className="mt-3 border border-[#1A1A1A] bg-[#FAF8F3] p-4">
-          <div className="flex items-center justify-between gap-3">
-            <h3 className="text-base font-semibold">{recommendation.outfit?.title || "내 옷장 코디"}</h3>
-            <span className="border border-[#D7D0C4] px-2 py-1 text-[11px] text-[#6B665C]">
-              {lockedCount > 0 ? "고정 반영" : "자동"}
-            </span>
-          </div>
-          <div className="mt-3 grid gap-2">
-            {outfitRows.map(([label, category, item, fallback]) => {
-              const value = item ? `${item.name} · ${item.color}` : fallback;
-              const colorHex = item?.colorHex;
-              const suffix = item
-                ? appliedLocks[item.category] === item.id
-                  ? " · 고정"
-                  : ""
-                : "";
-              return (
-              <div key={label} className="grid grid-cols-[56px_1fr] gap-3 text-sm">
-                <span className="font-semibold text-[#6B665C]">{label}</span>
-                {value ? (
-                  <ColorText value={value} suffix={suffix} colorHex={colorHex} />
-                ) : (
-                  <span className="text-[#A8A296]">추천 가능한 옷 부족</span>
-                )}
-              </div>
-            );
-            })}
-          </div>
-        </div>
-        <div className="mt-3 grid gap-2">
-          {Object.entries(recommendation.picked).map(([category, item]) => (
-            <div key={category} className="flex items-center justify-between border-t border-[#E5DED1] pt-2 text-sm">
-              <span className="font-semibold text-[#6B665C]">{CATEGORY_LABELS_KO[category]}</span>
-              <ColorText
-                value={`${item.name} · ${item.color}`}
-                colorHex={item.colorHex}
-                suffix={appliedLocks[category] === item.id ? " · 고정" : ""}
-              />
-            </div>
-          ))}
-          {Object.keys(recommendation.picked).length === 0 && (
-            <p className="text-sm leading-6 text-[#8F897D]">
-              현재 날씨와 스타일 조건에 맞는 옷이 부족합니다. 상의, 하의, 신발을 하나씩 추가해보세요.
+            <p className="mt-3 text-xs leading-5 text-[#6B665C]">
+              {lockedCount > 0
+                ? `현재 ${lockedCount}개 고정.${appliedAt ? ` ${appliedAt}에 조합했어요.` : " 버튼을 눌러 결과를 확인하세요."}`
+                : "고정한 옷이 없으면 자동으로 조합합니다."}
             </p>
-          )}
-        </div>
-      </div>
+          </div>
+        )}
+      </section>
 
-      {recommendation.reasons.length > 0 && (
-        <div className="mt-4 grid gap-1 text-xs leading-5 text-[#6B665C]">
-          {recommendation.reasons.map((reason) => (
-            <p key={reason}>왜? {reason}</p>
-          ))}
-        </div>
-      )}
-      </>)}
-    </section>
+      {/* ── 옷장 목록 ── */}
+      <section className="wf-card-soft p-4">
+        <SubHeader
+          title={`옷장 목록 · ${wardrobe.length}개`}
+          sub={`상의 ${categoryCounts.top || 0} · 하의 ${categoryCounts.bottom || 0} · 신발 ${categoryCounts.shoes || 0}`}
+          open={openList}
+          onToggle={() => setOpenList((v) => !v)}
+        />
+        {openList && (
+          <div className="border-t border-[#E5DED1] pt-3">
+            <div className="flex flex-wrap gap-1.5 mb-3">
+              {FILTER_OPTIONS.map(([id, label]) => {
+                const selected = filter === id;
+                return (
+                  <button key={id} type="button" onClick={() => setFilter(id)} className="border px-2.5 py-1 text-xs"
+                    style={{ borderColor: selected ? "#1A1A1A" : "#D7D0C4", background: selected ? "#1A1A1A" : "transparent", color: selected ? "#fff" : "#6B665C" }}>
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+            <div className="grid max-h-[320px] gap-2 overflow-auto pr-1">
+              {filteredWardrobe.map((item) => (
+                <div key={item.id} className="border border-[#E5DED1] bg-[#FAF8F3] p-3 transition hover:border-[#1A1A1A] hover:bg-white">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="text-sm font-semibold"><ColorText value={item.name} colorHex={item.colorHex} /></div>
+                      <div className="mt-1 text-xs leading-5 text-[#6B665C]">
+                        {CATEGORY_LABELS_KO[item.category]} · <ColorText value={item.color} colorHex={item.colorHex} /> · {WARMTH_LABELS[item.warmth]} · {STYLE_LABELS[item.style]}
+                      </div>
+                      <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-[#8F897D]">
+                        <span>{item.rainOk ? "비 오는 날 가능" : "비 오는 날 비추천"}</span>
+                        {(item.wearCount || 0) > 0
+                          ? <span className="border border-[#E5DED1] px-1.5 py-0.5">{item.wearCount}회 착용</span>
+                          : <span className="text-[#C9B89A]">미착용</span>}
+                      </div>
+                      {item.lastWorn && <div className="mt-0.5 text-xs text-[#A8A296]">마지막 {item.lastWorn}</div>}
+                    </div>
+                    <div className="flex shrink-0 flex-col gap-1">
+                      <button type="button" onClick={() => recordWear(item.id)} className="border border-[#D7D0C4] px-2 py-1 text-xs text-[#6B665C]">착용 ✓</button>
+                      <button type="button" onClick={() => removeItem(item.id)} className="border border-[#D7D0C4] px-2 py-1 text-xs text-[#6B665C]">삭제</button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              {filteredWardrobe.length === 0 && (
+                <div className="border border-dashed border-[#D7D0C4] p-4 text-center text-sm text-[#8F897D]">이 분류에 등록된 옷이 없습니다.</div>
+              )}
+            </div>
+          </div>
+        )}
+      </section>
+
+      {/* ── 옷장 코디 결과 ── */}
+      <section className="wf-card-soft p-4">
+        <SubHeader
+          title="옷장에서 고른 코디"
+          sub={lockedCount > 0 ? "고정 반영" : "자동 조합"}
+          open={openRec}
+          onToggle={() => setOpenRec((v) => !v)}
+        />
+        {openRec && (
+          <div className="border-t border-[#E5DED1] pt-3">
+            <div className="border border-[#1A1A1A] bg-[#FAF8F3] p-4">
+              <div className="flex items-center justify-between gap-3">
+                <h3 className="text-base font-semibold">{recommendation.outfit?.title || "내 옷장 코디"}</h3>
+                <span className="border border-[#D7D0C4] px-2 py-1 text-[11px] text-[#6B665C]">{lockedCount > 0 ? "고정 반영" : "자동"}</span>
+              </div>
+              <div className="mt-3 grid gap-2">
+                {outfitRows.map(([label, category, item, fallback]) => {
+                  const value = item ? `${item.name} · ${item.color}` : fallback;
+                  const colorHex = item?.colorHex;
+                  const suffix = item ? (appliedLocks[item.category] === item.id ? " · 고정" : "") : "";
+                  return (
+                    <div key={label} className="grid grid-cols-[56px_1fr] gap-3 text-sm">
+                      <span className="font-semibold text-[#6B665C]">{label}</span>
+                      {value ? <ColorText value={value} suffix={suffix} colorHex={colorHex} /> : <span className="text-[#A8A296]">추천 가능한 옷 부족</span>}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="mt-3 grid gap-2">
+              {Object.entries(recommendation.picked).map(([category, item]) => (
+                <div key={category} className="flex items-center justify-between border-t border-[#E5DED1] pt-2 text-sm">
+                  <span className="font-semibold text-[#6B665C]">{CATEGORY_LABELS_KO[category]}</span>
+                  <ColorText value={`${item.name} · ${item.color}`} colorHex={item.colorHex} suffix={appliedLocks[category] === item.id ? " · 고정" : ""} />
+                </div>
+              ))}
+              {Object.keys(recommendation.picked).length === 0 && (
+                <p className="text-sm leading-6 text-[#8F897D]">상의, 하의, 신발을 하나씩 추가해보세요.</p>
+              )}
+            </div>
+            {recommendation.reasons.length > 0 && (
+              <div className="mt-4 grid gap-1 text-xs leading-5 text-[#6B665C]">
+                {recommendation.reasons.map((reason) => <p key={reason}>왜? {reason}</p>)}
+              </div>
+            )}
+          </div>
+        )}
+      </section>
+    </div>
   );
 }
