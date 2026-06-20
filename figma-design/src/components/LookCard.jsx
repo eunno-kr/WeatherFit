@@ -11,7 +11,7 @@ const SLOTS = [
 
 function OutfitCard({ outfit, index, theme, onSave, isSaved, weather, palette, condition }) {
   return (
-    <article className={`group border border-black/10 p-5 hover:border-black/40 look-card-animated-${index % 3}`}>
+    <article className="group border border-black/10 bg-[#FFFDF7] p-5 transition hover:border-black/40 hover:bg-white">
       <div className="flex items-center justify-between gap-3">
         <div>
           <div className="wf-label" style={{ color: theme.accent }}>
@@ -106,8 +106,8 @@ export default function LookCard({
 
   return (
     <section
-      className="mt-6 border p-5 sm:p-6"
-      style={{ background: theme.soft, borderColor: `${theme.accent}44` }}
+      className="look-section-animated mt-6 border p-5 sm:p-6"
+      style={{ borderColor: `${theme.accent}44` }}
     >
       <div className="flex items-center justify-between gap-4">
         <div>
