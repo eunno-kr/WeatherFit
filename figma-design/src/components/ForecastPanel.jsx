@@ -59,23 +59,21 @@ export default function ForecastPanel({ forecast, selectedDay, onSelectDay, them
                     color: selected ? "#FFFDF7" : "#3A362E",
                   }}
                 >
-                  <span className="text-sm font-semibold">{label}</span>
-                  {i >= 2 && (
-                    <span className="text-[11px]" style={{ opacity: 0.5 }}>
-                      {date.getMonth() + 1}/{date.getDate()}
-                    </span>
-                  )}
-                  <span className="text-xl leading-none">{weatherIcon(day.code)}</span>
+                  <span className="text-base font-bold">{label}</span>
+                  <span className="text-xs font-medium" style={{ opacity: 0.6 }}>
+                    {date.getMonth() + 1}/{date.getDate()}
+                  </span>
+                  <span className="text-2xl leading-none">{weatherIcon(day.code)}</span>
                   <span
-                    className="text-sm font-semibold"
+                    className="text-base font-bold"
                     style={{ color: selected ? "#FFFDF7" : theme.accent }}
                   >
                     {Math.round(day.tmax)}°
                   </span>
-                  <span className="text-xs" style={{ opacity: 0.55 }}>{Math.round(day.tmin)}°</span>
+                  <span className="text-sm font-medium" style={{ opacity: 0.55 }}>{Math.round(day.tmin)}°</span>
                   {day.precipProb >= 20 && (
                     <span
-                      className="text-[11px]"
+                      className="text-xs font-semibold"
                       style={{ color: selected ? "#9FC7E8" : "#547EA8" }}
                     >
                       {day.precipProb}%
