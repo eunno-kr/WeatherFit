@@ -356,19 +356,8 @@ export default function App() {
       )}
 
       <div className="figma-content mx-auto max-w-[1220px]">
-        <div className="mb-4 flex items-center justify-between border border-ink bg-[#1A1A1A] px-3 py-2 text-xs text-[#FFFDF7]">
-          <span className="wf-label text-[#FFFDF7]">FIGMA DESIGN VERSION</span>
-          <a
-            href="http://localhost:5173"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden text-[#D8D0C2] underline-offset-2 hover:underline sm:inline"
-          >
-            Original app is kept separately on 5173
-          </a>
-        </div>
 
-        {loading && (
+{loading && (
           <div className="border-t border-ink pt-24 text-center text-sm text-[#9A958B]">
             날씨를 불러오는 중...
           </div>
