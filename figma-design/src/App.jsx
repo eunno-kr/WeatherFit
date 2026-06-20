@@ -360,9 +360,9 @@ export default function App() {
       <div className="figma-content mx-auto max-w-[1220px]">
 
         {/* 상단 배너 */}
-        <div className="mb-4 flex items-center justify-between border border-ink bg-[#1A1A1A] px-3 py-2 text-xs text-[#FFFDF7]">
-          <span className="wf-label text-[#FFFDF7]">날씨가 코디를 결정한다</span>
-          <span className="text-[#D8D0C2]">
+        <div className="mb-5 flex items-center justify-between border border-ink bg-[#1A1A1A] px-5 py-3.5 text-[#FFFDF7]">
+          <span className="wf-label text-sm text-[#FFFDF7]">날씨가 코디를 결정한다</span>
+          <span className="text-sm text-[#D8D0C2]">
             {new Date().toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric", weekday: "short" })}
           </span>
         </div>
