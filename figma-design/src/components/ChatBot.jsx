@@ -1,0 +1,177 @@
+import { useEffect, useRef, useState } from "react";
+import { chatWithStylist } from "../lib/gemini.js";
+
+const QUICK_QUESTIONS = [
+  "오늘 코디 중 뭐가 제일 나아?",
+  "우산 챙겨야 할까?",
+  "오늘 레이어링 어떻게 해?",
+  "포인트 컬러 추천해줘",
+];
+
+export default function ChatBot({ weather, profile, look, wardrobe, occasion, condition, theme }) {
+  const [open, setOpen] = useState(false);
+  const [messages, setMessages] = useState([
+    {
+      role: "model",
+      text: `안녕하세요! 저는 WeatherFit AI 스타일리스트예요 ✦\n오늘 코디나 패션에 대해 무엇이든 물어보세요!`,
+    },
+  ]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const bottomRef = useRef(null);
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (open) {
+      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+      inputRef.current?.focus();
+    }
+  }, [open, messages]);
+
+  const send = async (text) => {
+    const userText = (text || input).trim();
+    if (!userText || loading) return;
+    setInput("");
+
+    const userMsg = { role: "user", text: userText };
+    setMessages((prev) => [...prev, userMsg]);
+    setLoading(true);
+
+    try {
+      const reply = await chatWithStylist({
+        message: userText,
+        history: messages,
+        weather,
+        profile,
+        look,
+        wardrobe,
+        occasion,
+        condition,
+      });
+      setMessages((prev) => [...prev, { role: "model", text: reply }]);
+    } catch (err) {
+      setMessages((prev) => [
+        ...prev,
+        { role: "model", text: `오류가 발생했어요: ${err.message}` },
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      {/* 플로팅 버튼 */}
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center border-2 text-xl shadow-lg transition hover:scale-105"
+        style={{
+          background: open ? "#1A1A1A" : theme?.accent || "#E8543B",
+          borderColor: "#1A1A1A",
+          color: "#FFFDF7",
+        }}
+        title="AI 스타일리스트에게 물어보기"
+      >
+        {open ? "✕" : "✦"}
+      </button>
+
+      {/* 채팅 패널 */}
+      {open && (
+        <div
+          className="fixed bottom-24 right-6 z-40 flex w-[340px] max-w-[calc(100vw-3rem)] flex-col border-2 border-[#1A1A1A] shadow-2xl"
+          style={{ background: "#FFFDF7", maxHeight: "480px" }}
+        >
+          {/* 헤더 */}
+          <div
+            className="flex items-center justify-between px-4 py-3"
+            style={{ background: "#1A1A1A" }}
+          >
+            <div>
+              <div className="wf-label text-[10px] text-[#E8543B]">AI STYLIST</div>
+              <div className="text-sm font-semibold text-[#FFFDF7]">WeatherFit 스타일리스트</div>
+            </div>
+            <div
+              className="h-2 w-2 rounded-full"
+              style={{ background: "#4CAF50" }}
+              title="온라인"
+            />
+          </div>
+
+          {/* 메시지 목록 */}
+          <div className="flex-1 overflow-y-auto p-3" style={{ minHeight: 0, maxHeight: "300px" }}>
+            {messages.map((msg, i) => (
+              <div
+                key={i}
+                className={`mb-3 flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+              >
+                <div
+                  className="max-w-[82%] px-3 py-2 text-sm leading-6"
+                  style={
+                    msg.role === "user"
+                      ? { background: "#1A1A1A", color: "#FFFDF7" }
+                      : { background: "#F0EBE0", color: "#1A1A1A", borderLeft: `2px solid ${theme?.accent || "#E8543B"}` }
+                  }
+                >
+                  <p className="whitespace-pre-line">{msg.text}</p>
+                </div>
+              </div>
+            ))}
+            {loading && (
+              <div className="flex justify-start">
+                <div className="flex items-center gap-1 px-3 py-2" style={{ background: "#F0EBE0" }}>
+                  {[0, 1, 2].map((i) => (
+                    <span
+                      key={i}
+                      className="inline-block h-1.5 w-1.5 rounded-full animate-bounce"
+                      style={{ background: theme?.accent || "#E8543B", animationDelay: `${i * 0.15}s` }}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+            <div ref={bottomRef} />
+          </div>
+
+          {/* 빠른 질문 */}
+          {messages.length <= 1 && (
+            <div className="flex flex-wrap gap-1.5 border-t border-[#E5DED1] px-3 py-2">
+              {QUICK_QUESTIONS.map((q) => (
+                <button
+                  key={q}
+                  type="button"
+                  onClick={() => send(q)}
+                  className="border border-[#D7D0C4] px-2 py-1 text-[11px] text-[#6B665C] transition hover:border-[#1A1A1A] hover:text-[#1A1A1A]"
+                >
+                  {q}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* 입력창 */}
+          <div className="flex border-t border-[#1A1A1A]">
+            <input
+              ref={inputRef}
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && send()}
+              placeholder="질문을 입력하세요..."
+              className="flex-1 bg-transparent px-3 py-2.5 text-sm outline-none placeholder:text-[#A8A296]"
+            />
+            <button
+              type="button"
+              onClick={() => send()}
+              disabled={!input.trim() || loading}
+              className="px-4 py-2.5 text-sm font-semibold transition disabled:opacity-40"
+              style={{ background: theme?.accent || "#E8543B", color: "#FFFDF7" }}
+            >
+              전송
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}

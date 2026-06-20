@@ -6,6 +6,18 @@ export const SAMPLE_WEATHER = {
   code: 2,
   tmax: 22,
   tmin: 11,
+  forecast: Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(Date.now() + i * 86400000);
+    return {
+      date: d.toISOString().slice(0, 10),
+      tmax: Math.round(22 - i * 0.5),
+      tmin: Math.round(11 + i * 0.3),
+      code: i === 2 ? 61 : i === 4 ? 63 : 1,
+      precipProb: i === 2 ? 75 : i === 4 ? 60 : 10,
+      feelsMax: Math.round(21 - i * 0.5),
+      feelsMin: Math.round(10 + i * 0.3),
+    };
+  }),
 };
 
 const WEATHER_CODES = {
@@ -40,23 +52,33 @@ export async function fetchWeather(city) {
     latitude: city.lat,
     longitude: city.lon,
     current: "temperature_2m,relative_humidity_2m,apparent_temperature,weather_code",
-    daily: "temperature_2m_max,temperature_2m_min",
+    daily:
+      "weather_code,precipitation_probability_max,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min",
     timezone: "auto",
+    forecast_days: "7",
   });
 
   const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error("날씨 정보를 불러오지 못했습니다.");
-  }
+  if (!response.ok) throw new Error("날씨 정보를 불러오지 못했습니다.");
 
   const json = await response.json();
+  const d = json.daily;
   return {
     city: city.name,
     temp: json.current.temperature_2m,
     feels: json.current.apparent_temperature,
     humidity: json.current.relative_humidity_2m,
     code: json.current.weather_code,
-    tmax: json.daily.temperature_2m_max[0],
-    tmin: json.daily.temperature_2m_min[0],
+    tmax: d.temperature_2m_max[0],
+    tmin: d.temperature_2m_min[0],
+    forecast: d.time.map((date, i) => ({
+      date,
+      tmax: d.temperature_2m_max[i],
+      tmin: d.temperature_2m_min[i],
+      code: d.weather_code[i],
+      precipProb: d.precipitation_probability_max[i] ?? 0,
+      feelsMax: d.apparent_temperature_max[i],
+      feelsMin: d.apparent_temperature_min[i],
+    })),
   };
 }

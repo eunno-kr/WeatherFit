@@ -105,10 +105,46 @@ export default function WardrobePanel({
   appliedLocks,
   setAppliedLocks,
   fallbackOutfit,
+  seasonAlert,
 }) {
   const [filter, setFilter] = useState("all");
   const [appliedAt, setAppliedAt] = useState(null);
   const [showMoreColors, setShowMoreColors] = useState(false);
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const objectUrl = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const SIZE = 100;
+      canvas.width = SIZE;
+      canvas.height = SIZE;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, SIZE, SIZE);
+      const data = ctx.getImageData(0, 0, SIZE, SIZE).data;
+      let rSum = 0, gSum = 0, bSum = 0, count = 0;
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i], g = data[i + 1], b = data[i + 2];
+        const brightness = (r + g + b) / 3;
+        if (brightness > 20 && brightness < 235) {
+          rSum += r; gSum += g; bSum += b; count++;
+        }
+      }
+      if (count > 0) {
+        const hex =
+          "#" +
+          Math.round(rSum / count).toString(16).padStart(2, "0") +
+          Math.round(gSum / count).toString(16).padStart(2, "0") +
+          Math.round(bSum / count).toString(16).padStart(2, "0");
+        setDraft((prev) => ({ ...prev, color: "사진 추출", colorHex: hex }));
+      }
+      URL.revokeObjectURL(objectUrl);
+    };
+    img.src = objectUrl;
+    e.target.value = "";
+  };
   const filteredWardrobe = useMemo(
     () => (filter === "all" ? wardrobe : wardrobe.filter((item) => item.category === filter)),
     [filter, wardrobe]
@@ -133,9 +169,21 @@ export default function WardrobePanel({
         ...draft,
         id: `${Date.now()}`,
         name: draft.name.trim(),
+        wearCount: 0,
+        addedAt: new Date().toISOString().slice(0, 10),
+        lastWorn: null,
       },
     ]);
     setDraft({ ...draft, name: "" });
+  };
+
+  const recordWear = (id) => {
+    const today = new Date().toISOString().slice(0, 10);
+    setWardrobe(wardrobe.map((item) =>
+      item.id === id
+        ? { ...item, wearCount: (item.wearCount || 0) + 1, lastWorn: today }
+        : item
+    ));
   };
 
   const removeItem = (id) => {
@@ -172,6 +220,12 @@ export default function WardrobePanel({
 
   return (
     <section className="wf-card-soft mt-6 p-5">
+      {seasonAlert && (
+        <div className="mb-4 flex items-start gap-2 border border-[#E8543B] bg-[#FFF5F2] px-4 py-3 text-sm text-[#E8543B]">
+          <span>🌿</span>
+          <span>{seasonAlert}</span>
+        </div>
+      )}
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="wf-label text-[#6B665C]">MY WARDROBE</div>
@@ -230,7 +284,7 @@ export default function WardrobePanel({
               );
             })}
           </div>
-          <div className="mt-2 flex items-center gap-2">
+          <div className="mt-2 flex flex-wrap items-center gap-2">
             <button
               type="button"
               onClick={() => setShowMoreColors(!showMoreColors)}
@@ -246,6 +300,15 @@ export default function WardrobePanel({
               title="직접 색 선택"
             />
             <span className="text-xs font-normal text-[#8F897D]">직접 선택</span>
+            <label className="flex cursor-pointer items-center gap-1 border border-[#D7D0C4] px-3 py-1.5 text-xs font-normal text-[#6B665C] transition hover:border-[#1A1A1A]">
+              📷 사진 색상 추출
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageUpload}
+              />
+            </label>
           </div>
         </label>
         <SelectField
@@ -361,7 +424,7 @@ export default function WardrobePanel({
           {filteredWardrobe.map((item) => (
             <div key={item.id} className="border border-[#E5DED1] bg-[#FAF8F3] p-3 transition hover:border-[#1A1A1A] hover:bg-white">
               <div className="flex items-start justify-between gap-3">
-                <div>
+                <div className="min-w-0">
                   <div className="text-sm font-semibold">
                     <ColorText value={item.name} colorHex={item.colorHex} />
                   </div>
@@ -369,17 +432,34 @@ export default function WardrobePanel({
                     {CATEGORY_LABELS_KO[item.category]} · <ColorText value={item.color} colorHex={item.colorHex} /> · {WARMTH_LABELS[item.warmth]} ·{" "}
                     {STYLE_LABELS[item.style]}
                   </div>
-                  <div className="mt-1 text-xs text-[#8F897D]">
-                    {item.rainOk ? "비 오는 날 가능" : "비 오는 날 비추천"}
+                  <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-[#8F897D]">
+                    <span>{item.rainOk ? "비 오는 날 가능" : "비 오는 날 비추천"}</span>
+                    {(item.wearCount || 0) > 0 ? (
+                      <span className="border border-[#E5DED1] px-1.5 py-0.5">{item.wearCount}회 착용</span>
+                    ) : (
+                      <span className="text-[#C9B89A]">미착용</span>
+                    )}
                   </div>
+                  {item.lastWorn && (
+                    <div className="mt-0.5 text-xs text-[#A8A296]">마지막 {item.lastWorn}</div>
+                  )}
                 </div>
-                <button
-                  type="button"
-                  onClick={() => removeItem(item.id)}
-                  className="shrink-0 border border-[#D7D0C4] px-2 py-1 text-xs text-[#6B665C]"
-                >
-                  삭제
-                </button>
+                <div className="flex shrink-0 flex-col gap-1">
+                  <button
+                    type="button"
+                    onClick={() => recordWear(item.id)}
+                    className="border border-[#D7D0C4] px-2 py-1 text-xs text-[#6B665C]"
+                  >
+                    착용 ✓
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => removeItem(item.id)}
+                    className="border border-[#D7D0C4] px-2 py-1 text-xs text-[#6B665C]"
+                  >
+                    삭제
+                  </button>
+                </div>
               </div>
             </div>
           ))}

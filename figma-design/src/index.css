@@ -108,3 +108,64 @@ button:hover {
 .wf-subtle {
   color: #6b665c;
 }
+
+/* ── 모바일 최적화 ── */
+@media (max-width: 640px) {
+  .brand-wordmark {
+    font-size: 30px !important;
+  }
+  .wf-card {
+    box-shadow: 4px 4px 0 rgba(26, 26, 26, 0.08);
+  }
+}
+
+/* 예보 패널 가로 스크롤 (모바일) */
+.forecast-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.forecast-scroll::-webkit-scrollbar {
+  display: none;
+}
+.forecast-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(52px, 1fr));
+  gap: 6px;
+  min-width: 400px;
+}
+
+/* ── 다크모드 ── */
+[data-dark="true"] body {
+  background-color: #1a1a1a;
+  background-image:
+    linear-gradient(90deg, rgba(255,253,247,0.04) 1px, transparent 1px) 0 0 / 56px 56px,
+    linear-gradient(0deg, rgba(255,253,247,0.03) 1px, transparent 1px) 0 0 / 56px 56px;
+  color: #f0ebe0;
+}
+[data-dark="true"] .figma-shell::before {
+  background:
+    linear-gradient(180deg, rgba(232,84,59,0.12), transparent 34%),
+    radial-gradient(circle at 12% 10%, rgba(124,139,90,0.06), transparent 28%),
+    radial-gradient(circle at 88% 20%, rgba(37,82,122,0.08), transparent 24%);
+}
+[data-dark="true"] .wf-card {
+  background: rgba(36,34,30,0.96) !important;
+  border-color: #3a3a38 !important;
+  box-shadow: 10px 10px 0 rgba(0,0,0,0.3) !important;
+}
+[data-dark="true"] .wf-card-soft {
+  background: rgba(30,28,24,0.92) !important;
+  border-color: #3a3a38 !important;
+}
+[data-dark="true"] select,
+[data-dark="true"] input[type="text"],
+[data-dark="true"] input[type="color"] {
+  background: #252520 !important;
+  color: #f0ebe0 !important;
+  border-color: #3a3a38 !important;
+}
+[data-dark="true"] ::selection {
+  background: #e8543b;
+  color: #fff;
+}
