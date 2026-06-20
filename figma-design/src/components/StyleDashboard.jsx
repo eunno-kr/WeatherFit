@@ -23,15 +23,22 @@ function getTip(condition, temp) {
   return TIPS.hot;
 }
 
+function localDateStr(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
 function getWeekDates() {
   const today = new Date();
-  const day = today.getDay();
+  const dow = today.getDay();
   const monday = new Date(today);
-  monday.setDate(today.getDate() - ((day + 6) % 7));
+  monday.setDate(today.getDate() - ((dow + 6) % 7));
   return Array.from({ length: 7 }, (_, i) => {
     const d = new Date(monday);
     d.setDate(monday.getDate() + i);
-    return d.toISOString().slice(0, 10);
+    return localDateStr(d);
   });
 }
 
@@ -48,7 +55,7 @@ function calcStreak(history) {
   let streak = 0;
   const d = new Date();
   while (true) {
-    if (dates.has(d.toISOString().slice(0, 10))) { streak++; d.setDate(d.getDate() - 1); }
+    if (dates.has(localDateStr(d))) { streak++; d.setDate(d.getDate() - 1); }
     else break;
   }
   return streak;
@@ -60,7 +67,7 @@ const LABEL_STYLE = { fontSize: "13px" };
 export default function StyleDashboard({ history, condition, temp, theme }) {
   const accent = theme?.accent || "#E8543B";
   const weekDates = useMemo(() => getWeekDates(), []);
-  const todayStr = new Date().toISOString().slice(0, 10);
+  const todayStr = localDateStr(new Date());
 
   const historyDates = useMemo(() => {
     const set = new Set();

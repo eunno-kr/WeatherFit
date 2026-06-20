@@ -47,7 +47,10 @@ function getWeekKey() {
   const d = new Date();
   const monday = new Date(d);
   monday.setDate(d.getDate() - ((d.getDay() + 6) % 7));
-  return monday.toISOString().slice(0, 10); // "2026-06-16" 형태
+  const y = monday.getFullYear();
+  const m = String(monday.getMonth() + 1).padStart(2, "0");
+  const day = String(monday.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
 }
 
 function loadCache() {
