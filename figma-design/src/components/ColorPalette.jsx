@@ -1,7 +1,8 @@
 export default function ColorPalette({ palette }) {
   return (
     <section className="wf-card-soft mt-6 p-5">
-      <div className="wf-label text-[#6B665C]" style={{ fontSize: "13px" }}>컬러 팔레트</div>
+      <div className="wf-label text-[#6B665C]" style={{ fontSize: "13px" }}>오늘의 코디 팔레트</div>
+      <p className="mt-1 text-xs text-[#8F897D] leading-5">AI가 오늘 날씨와 스타일 무드를 기반으로 선택한 색상이에요. 왼쪽 코디 추천에 직접 반영됩니다.</p>
       <div className="mt-3 flex items-center gap-3">
         {palette.colors.map((color) => (
           <span

@@ -201,10 +201,14 @@ export default function TodayColorPalette({ condition, temp, profile, theme }) {
     <section className="mt-6 border border-[#E5DED1] bg-[#FAF8F3] p-5">
 
       {/* 헤더 */}
-      <button type="button" onClick={() => setOpen((v) => !v)} className="flex w-full items-center justify-between mb-5">
-        <div className="wf-label text-[#3A362E]" style={{ fontSize: "13px" }}>퍼스널컬러 & 색상 팔레트</div>
-        <span style={{ fontSize: "13px", border: "0.5px solid #D7D0C4", borderRadius: "4px", padding: "2px 8px", color: "#6B665C" }}>{open ? "−" : "+"}</span>
+      <button type="button" onClick={() => setOpen((v) => !v)} className="flex w-full items-start justify-between mb-3">
+        <div className="text-left">
+          <div className="wf-label text-[#3A362E]" style={{ fontSize: "13px" }}>퍼스널컬러 & 색상 팔레트</div>
+          <p className="mt-1 text-xs text-[#8F897D] leading-5">내 피부톤에 맞는 색상을 진단하고 계절별 팔레트를 확인하세요. 코디 추천 색상과는 별개로, 평소 잘 받는 색을 파악하는 용도예요.</p>
+        </div>
+        <span className="ml-3 shrink-0" style={{ fontSize: "13px", border: "0.5px solid #D7D0C4", borderRadius: "4px", padding: "2px 8px", color: "#6B665C" }}>{open ? "−" : "+"}</span>
       </button>
+      {open && <div className="border-t border-[#E5DED1] pt-4 mb-1" />}
 
       {/* 탭 */}
       {open && <div className="grid grid-cols-3 gap-1.5 mb-5">

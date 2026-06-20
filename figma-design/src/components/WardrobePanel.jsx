@@ -110,10 +110,16 @@ export default function WardrobePanel({
   const [filter, setFilter] = useState("all");
   const [appliedAt, setAppliedAt] = useState(null);
   const [showMoreColors, setShowMoreColors] = useState(false);
-  const [openAdd, setOpenAdd] = useState(true);
-  const [openLock, setOpenLock] = useState(false);
-  const [openList, setOpenList] = useState(true);
-  const [openRec, setOpenRec] = useState(true);
+  const readOpen = (key, def) => { try { const v = localStorage.getItem(key); return v === null ? def : v === "true"; } catch { return def; } };
+  const saveOpen = (key, val) => { try { localStorage.setItem(key, val); } catch {} };
+  const [openAdd, setOpenAdd] = useState(() => readOpen("wf.open.wAdd", true));
+  const [openLock, setOpenLock] = useState(() => readOpen("wf.open.wLock", false));
+  const [openList, setOpenList] = useState(() => readOpen("wf.open.wList", true));
+  const [openRec, setOpenRec] = useState(() => readOpen("wf.open.wRec", true));
+  const toggleAdd  = () => setOpenAdd(v  => { const n = !v;  saveOpen("wf.open.wAdd",  n); return n; });
+  const toggleLock = () => setOpenLock(v => { const n = !v;  saveOpen("wf.open.wLock", n); return n; });
+  const toggleList = () => setOpenList(v => { const n = !v;  saveOpen("wf.open.wList", n); return n; });
+  const toggleRec  = () => setOpenRec(v  => { const n = !v;  saveOpen("wf.open.wRec",  n); return n; });
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -234,10 +240,10 @@ export default function WardrobePanel({
   const SubHeader = ({ title, sub, open: o, onToggle }) => (
     <button type="button" onClick={onToggle} className="flex w-full items-start justify-between py-1">
       <div>
-        <div className="wf-label text-[#3A362E]" style={{ fontSize: "13px" }}>{title}</div>
-        {sub && <p className="mt-0.5 text-xs text-[#6B665C]">{sub}</p>}
+        <div className="text-sm font-semibold text-[#1A1A1A]">{title}</div>
+        {sub && <p className="text-xs text-[#6B665C] leading-5">{sub}</p>}
       </div>
-      <span style={{ fontSize: "13px", border: "0.5px solid #D7D0C4", borderRadius: "4px", padding: "2px 8px", color: "#6B665C" }}>{o ? "−" : "+"}</span>
+      <span className="ml-3 shrink-0" style={{ fontSize: "13px", border: "0.5px solid #D7D0C4", borderRadius: "4px", padding: "2px 8px", color: "#6B665C" }}>{o ? "−" : "+"}</span>
     </button>
   );
 
@@ -252,7 +258,7 @@ export default function WardrobePanel({
 
       {/* ── 옷 추가 ── */}
       <section className="wf-card-soft px-4 py-3">
-        <SubHeader title="옷 추가" open={openAdd} onToggle={() => setOpenAdd((v) => !v)} />
+        <SubHeader title="옷 추가" open={openAdd} onToggle={toggleAdd} />
         {openAdd && (
           <div className="grid min-w-0 gap-3 border-t border-[#E5DED1] pt-3">
             <input
@@ -312,7 +318,7 @@ export default function WardrobePanel({
 
       {/* ── 오늘의 고정 ── */}
       <section className="wf-card-soft px-4 py-3">
-        <SubHeader title="오늘의 고정" sub={lockedCount > 0 ? `${lockedCount}개 고정 중` : "특정 아이템을 고정하고 나머지를 조합"} open={openLock} onToggle={() => setOpenLock((v) => !v)} />
+        <SubHeader title="오늘의 고정" sub={lockedCount > 0 ? `${lockedCount}개 고정 중` : "특정 아이템을 고정하고 나머지를 조합"} open={openLock} onToggle={toggleLock} />
         {openLock && (
           <div className="border-t border-[#E5DED1] pt-3">
             <div className="grid min-w-0 gap-3">
@@ -353,7 +359,7 @@ export default function WardrobePanel({
           title={`옷장 목록 · ${wardrobe.length}개`}
           sub={`상의 ${categoryCounts.top || 0} · 하의 ${categoryCounts.bottom || 0} · 신발 ${categoryCounts.shoes || 0}`}
           open={openList}
-          onToggle={() => setOpenList((v) => !v)}
+          onToggle={toggleList}
         />
         {openList && (
           <div className="border-t border-[#E5DED1] pt-3">
@@ -406,7 +412,7 @@ export default function WardrobePanel({
           title="옷장에서 고른 코디"
           sub={lockedCount > 0 ? "고정 반영" : "자동 조합"}
           open={openRec}
-          onToggle={() => setOpenRec((v) => !v)}
+          onToggle={toggleRec}
         />
         {openRec && (
           <div className="border-t border-[#E5DED1] pt-3">
