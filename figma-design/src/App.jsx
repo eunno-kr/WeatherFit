@@ -357,7 +357,15 @@ export default function App() {
 
       <div className="figma-content mx-auto max-w-[1220px]">
 
-{loading && (
+        {/* 상단 배너 */}
+        <div className="mb-4 flex items-center justify-between border border-ink bg-[#1A1A1A] px-3 py-2 text-xs text-[#FFFDF7]">
+          <span className="wf-label text-[#FFFDF7]">날씨가 코디를 결정한다</span>
+          <span className="text-[#D8D0C2]">
+            {new Date().toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric", weekday: "short" })}
+          </span>
+        </div>
+
+        {loading && (
           <div className="border-t border-ink pt-24 text-center text-sm text-[#9A958B]">
             날씨를 불러오는 중...
           </div>
@@ -475,19 +483,34 @@ export default function App() {
               </aside>
             </div>
 
-            <p className="mt-5 text-xs leading-5 text-[#8F897D]">
-              {usingSample
-                ? "실시간 호출에 실패해 샘플 데이터로 표시 중입니다."
-                : "실시간 날씨 · Open-Meteo"}
-              {" · "}
-              <button
-                type="button"
-                className="underline underline-offset-2"
-                onClick={() => setShowTutorial(true)}
-              >
-                사용 가이드
-              </button>
-            </p>
+            <div className="mt-8 border-t border-[#E5DED1] pt-5 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between text-xs text-[#8F897D]">
+              <p>
+                {usingSample
+                  ? "실시간 호출에 실패해 샘플 데이터로 표시 중입니다."
+                  : "실시간 날씨 · Open-Meteo · Groq AI"}
+                {" · "}
+                <button
+                  type="button"
+                  className="underline underline-offset-2"
+                  onClick={() => setShowTutorial(true)}
+                >
+                  사용 가이드
+                </button>
+              </p>
+              <p className="flex items-center gap-2">
+                <span>WeatherFit © 2026</span>
+                <span>·</span>
+                <span>Designed & Developed by</span>
+                <a
+                  href="https://github.com/korea-j"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-[#1A1A1A] underline underline-offset-2 hover:text-[#E8543B] transition-colors"
+                >
+                  korea_j
+                </a>
+              </p>
+            </div>
 
             <ChatBot
               weather={activeWeather}

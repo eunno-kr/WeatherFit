@@ -8,6 +8,13 @@ const QUICK_QUESTIONS = [
   "포인트 컬러 추천해줘",
 ];
 
+const MIN_W = 280;
+const MAX_W = 560;
+const MIN_H = 320;
+const MAX_H = 700;
+const DEFAULT_W = 340;
+const DEFAULT_H = 480;
+
 export default function ChatBot({ weather, profile, look, wardrobe, occasion, condition, theme }) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([
@@ -18,15 +25,37 @@ export default function ChatBot({ weather, profile, look, wardrobe, occasion, co
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [size, setSize] = useState({ w: DEFAULT_W, h: DEFAULT_H });
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
+  const resizeRef = useRef(null);
 
   useEffect(() => {
     if (open) {
       bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-      inputRef.current?.focus();
+      setTimeout(() => inputRef.current?.focus(), 50);
     }
   }, [open, messages]);
+
+  const startResize = (e) => {
+    e.preventDefault();
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startW = size.w;
+    const startH = size.h;
+
+    const onMove = (ev) => {
+      const newW = Math.min(MAX_W, Math.max(MIN_W, startW - (ev.clientX - startX)));
+      const newH = Math.min(MAX_H, Math.max(MIN_H, startH - (ev.clientY - startY)));
+      setSize({ w: newW, h: newH });
+    };
+    const onUp = () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+  };
 
   const send = async (text) => {
     const userText = (text || input).trim();
@@ -79,27 +108,52 @@ export default function ChatBot({ weather, profile, look, wardrobe, occasion, co
       {/* 채팅 패널 */}
       {open && (
         <div
-          className="fixed bottom-24 right-6 z-40 flex w-[340px] max-w-[calc(100vw-3rem)] flex-col border-2 border-[#1A1A1A] shadow-2xl"
-          style={{ background: "#FFFDF7", maxHeight: "480px" }}
+          className="fixed bottom-24 right-6 z-40 flex flex-col border-2 border-[#1A1A1A] shadow-2xl"
+          style={{
+            background: "#FFFDF7",
+            width: `${size.w}px`,
+            height: `${size.h}px`,
+            maxWidth: "calc(100vw - 3rem)",
+          }}
         >
+          {/* 리사이즈 핸들 (좌상단 모서리) */}
+          <div
+            ref={resizeRef}
+            onMouseDown={startResize}
+            className="absolute left-0 top-0 z-50 flex items-center justify-center"
+            style={{
+              width: "18px",
+              height: "18px",
+              cursor: "nw-resize",
+              background: "#1A1A1A",
+            }}
+            title="드래그해서 크기 조절"
+          >
+            <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+              <path d="M1 7L7 1M1 4L4 1" stroke="#FFFDF7" strokeWidth="1.2" strokeLinecap="round"/>
+            </svg>
+          </div>
+
           {/* 헤더 */}
           <div
-            className="flex items-center justify-between px-4 py-3"
+            className="flex items-center justify-between px-4 py-3 flex-shrink-0"
             style={{ background: "#1A1A1A" }}
           >
             <div>
               <div className="wf-label text-[10px] text-[#E8543B]">AI STYLIST</div>
               <div className="text-sm font-semibold text-[#FFFDF7]">WeatherFit 스타일리스트</div>
             </div>
-            <div
-              className="h-2 w-2 rounded-full"
-              style={{ background: "#4CAF50" }}
-              title="온라인"
-            />
+            <div className="flex items-center gap-2">
+              <div
+                className="h-2 w-2 rounded-full"
+                style={{ background: "#4CAF50" }}
+                title="온라인"
+              />
+            </div>
           </div>
 
           {/* 메시지 목록 */}
-          <div className="flex-1 overflow-y-auto p-3" style={{ minHeight: 0, maxHeight: "300px" }}>
+          <div className="flex-1 overflow-y-auto p-3" style={{ minHeight: 0 }}>
             {messages.map((msg, i) => (
               <div
                 key={i}
@@ -135,7 +189,7 @@ export default function ChatBot({ weather, profile, look, wardrobe, occasion, co
 
           {/* 빠른 질문 */}
           {messages.length <= 1 && (
-            <div className="flex flex-wrap gap-1.5 border-t border-[#E5DED1] px-3 py-2">
+            <div className="flex flex-wrap gap-1.5 border-t border-[#E5DED1] px-3 py-2 flex-shrink-0">
               {QUICK_QUESTIONS.map((q) => (
                 <button
                   key={q}
@@ -150,7 +204,7 @@ export default function ChatBot({ weather, profile, look, wardrobe, occasion, co
           )}
 
           {/* 입력창 */}
-          <div className="flex border-t border-[#1A1A1A]">
+          <div className="flex border-t border-[#1A1A1A] flex-shrink-0">
             <input
               ref={inputRef}
               type="text"
