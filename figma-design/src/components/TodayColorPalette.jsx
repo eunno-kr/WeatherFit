@@ -157,6 +157,7 @@ export default function TodayColorPalette({ condition, temp, profile, theme }) {
   const season = getSeason();
   const seasonKo = SEASON_KO[season];
 
+  const [open, setOpen] = useState(true);
   const [tab, setTab] = useState("quiz");
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -199,8 +200,14 @@ export default function TodayColorPalette({ condition, temp, profile, theme }) {
   return (
     <section className="mt-6 border border-[#E5DED1] bg-[#FAF8F3] p-5">
 
+      {/* 헤더 */}
+      <button type="button" onClick={() => setOpen((v) => !v)} className="flex w-full items-center justify-between mb-5">
+        <div className="wf-label text-[#3A362E]" style={{ fontSize: "13px" }}>퍼스널컬러 & 색상 팔레트</div>
+        <span className="text-xs text-[#A8A296]">{open ? "▲" : "▼"}</span>
+      </button>
+
       {/* 탭 */}
-      <div className="grid grid-cols-3 gap-1.5 mb-5">
+      {open && <div className="grid grid-cols-3 gap-1.5 mb-5">
         {TABS.map(({ key, label }) => (
           <button
             key={key}
@@ -219,10 +226,10 @@ export default function TodayColorPalette({ condition, temp, profile, theme }) {
             )}
           </button>
         ))}
-      </div>
+      </div>}
 
       {/* ── 퍼스널컬러 찾기 탭 ── */}
-      {tab === "quiz" && !done && (
+      {open && tab === "quiz" && !done && (
         <div>
           {/* 진행 바 */}
           <div className="mb-5">
@@ -264,7 +271,7 @@ export default function TodayColorPalette({ condition, temp, profile, theme }) {
       )}
 
       {/* ── 진단 결과 ── */}
-      {tab === "quiz" && done && result && (
+      {open && tab === "quiz" && done && result && (
         <div>
           <div className="wf-label mb-3 text-[#3A362E]" style={{ fontSize: "13px" }}>내 퍼스널컬러</div>
           <div className="border-l-4 pl-4 py-2 mb-4" style={{ borderColor: accent }}>
@@ -290,7 +297,7 @@ export default function TodayColorPalette({ condition, temp, profile, theme }) {
       )}
 
       {/* ── 웜톤 / 쿨톤 팔레트 탭 ── */}
-      {palette && (
+      {open && palette && (
         <div>
           <p className="mb-4 text-sm font-medium text-[#6B665C]">{palette.desc}</p>
 

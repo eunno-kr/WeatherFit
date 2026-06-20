@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { decodeWeather } from "../lib/weather.js";
 
 const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
@@ -13,6 +14,7 @@ function weatherIcon(code) {
 }
 
 export default function ForecastPanel({ forecast, selectedDay, onSelectDay, theme }) {
+  const [open, setOpen] = useState(true);
   if (!forecast?.length) return null;
 
   const tomorrow = forecast[1];
@@ -32,8 +34,11 @@ export default function ForecastPanel({ forecast, selectedDay, onSelectDay, them
         </div>
       )}
 
-      <div className="wf-label mb-3 text-[#6B665C]" style={{ fontSize: "13px" }}>주간 예보</div>
-      <div className="forecast-scroll">
+      <button type="button" onClick={() => setOpen((v) => !v)} className="flex w-full items-center justify-between mb-3">
+        <div className="wf-label text-[#6B665C]" style={{ fontSize: "13px" }}>주간 예보</div>
+        <span className="text-xs text-[#A8A296]">{open ? "▲" : "▼"}</span>
+      </button>
+      {open && <div className="forecast-scroll">
       <div className="forecast-grid">
         {forecast.map((day, i) => {
           const date = new Date(day.date + "T12:00:00");
@@ -55,6 +60,11 @@ export default function ForecastPanel({ forecast, selectedDay, onSelectDay, them
               }}
             >
               <span className="text-sm font-semibold">{label}</span>
+              {i >= 2 && (
+                <span className="text-[11px]" style={{ opacity: 0.5 }}>
+                  {date.getMonth() + 1}/{date.getDate()}
+                </span>
+              )}
               <span className="text-xl leading-none">{weatherIcon(day.code)}</span>
               <span
                 className="text-sm font-semibold"
@@ -74,8 +84,7 @@ export default function ForecastPanel({ forecast, selectedDay, onSelectDay, them
             </button>
           );
         })}
-      </div>
-      </div>
+      </div>}
 
       {selectedDay > 0 && forecast[selectedDay] && (
         <p className="mt-2 text-xs text-[#6B665C]">

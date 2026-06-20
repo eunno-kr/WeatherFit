@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 const WEEKDAYS = ["월", "화", "수", "목", "금", "토", "일"];
 
@@ -81,52 +81,53 @@ export default function StyleDashboard({ history, condition, temp, theme }) {
   const recentOutfits = history.slice(0, 3);
   const wornDays = weekDates.filter((d) => historyDates.has(d)).length;
 
+  const [openCal, setOpenCal] = useState(true);
+  const [openStreak, setOpenStreak] = useState(true);
+  const [openRecent, setOpenRecent] = useState(true);
+
   return (
     <div className="mt-6 grid gap-4">
 
       {/* ── 1. 이번 주 착용 달력 ── */}
       <section className="border border-[#E5DED1] bg-[#FAF8F3] p-5">
-        <div className="flex items-center justify-between mb-4">
+        <button type="button" onClick={() => setOpenCal((v) => !v)} className="flex w-full items-center justify-between mb-4">
           <div>
             <div className="wf-label text-[#3A362E]" style={LABEL_STYLE}>이번 주 착용 달력</div>
             <p className="mt-1 text-sm font-medium text-[#6B665C]">
               {wornDays > 0 ? `이번 주 ${wornDays}일 기록했어요` : "오늘부터 기록을 시작해보세요!"}
             </p>
           </div>
-          <span
-            className="border px-3 py-1 text-sm font-bold"
-            style={{ borderColor: `${accent}55`, color: accent }}
-          >
-            {wornDays}/7
-          </span>
-        </div>
-        <div className="grid grid-cols-7 gap-2">
-          {weekDates.map((date, i) => {
-            const worn = historyDates.has(date);
-            const isToday = date === todayStr;
-            const dayNum = new Date(date + "T00:00:00").getDate();
-            return (
-              <div key={date} className="flex flex-col items-center gap-2">
-                <span
-                  className="text-xs font-bold"
-                  style={{ color: isToday ? accent : "#6B665C" }}
-                >
-                  {WEEKDAYS[i]}
-                </span>
-                <div
-                  className="flex h-10 w-full items-center justify-center text-sm font-bold transition"
-                  style={{
-                    background: worn ? accent : isToday ? `${accent}18` : "#F0EBE0",
-                    color: worn ? "#FFFDF7" : isToday ? accent : "#6B665C",
-                    borderRadius: "4px",
-                  }}
-                >
-                  {worn ? "✓" : dayNum}
+          <div className="flex items-center gap-2">
+            <span className="border px-3 py-1 text-sm font-bold" style={{ borderColor: `${accent}55`, color: accent }}>{wornDays}/7</span>
+            <span className="text-xs text-[#A8A296]">{openCal ? "▲" : "▼"}</span>
+          </div>
+        </button>
+        {openCal && (
+          <div className="grid grid-cols-7 gap-2">
+            {weekDates.map((date, i) => {
+              const worn = historyDates.has(date);
+              const isToday = date === todayStr;
+              const dayNum = new Date(date + "T00:00:00").getDate();
+              return (
+                <div key={date} className="flex flex-col items-center gap-2">
+                  <span className="text-xs font-bold" style={{ color: isToday ? accent : "#6B665C" }}>
+                    {WEEKDAYS[i]}
+                  </span>
+                  <div
+                    className="flex h-10 w-full items-center justify-center text-sm font-bold transition"
+                    style={{
+                      background: worn ? accent : isToday ? `${accent}18` : "#F0EBE0",
+                      color: worn ? "#FFFDF7" : isToday ? accent : "#6B665C",
+                      borderRadius: "4px",
+                    }}
+                  >
+                    {worn ? "✓" : dayNum}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </section>
 
       {/* ── 2+3. 착용 스트릭 + 오늘의 팁 ── */}
@@ -166,33 +167,38 @@ export default function StyleDashboard({ history, condition, temp, theme }) {
       {/* ── 4. 최근 착용 코디 ── */}
       {recentOutfits.length > 0 && (
         <section className="border border-[#E5DED1] bg-[#FAF8F3] p-5">
-          <div className="wf-label mb-4 text-[#3A362E]" style={LABEL_STYLE}>최근 착용 코디</div>
-          <div className="grid gap-3">
-            {recentOutfits.map((entry, i) => (
-              <div key={entry.id} className="flex items-center gap-3">
-                <span
-                  className="flex h-7 w-7 shrink-0 items-center justify-center text-sm font-bold text-[#FFFDF7]"
-                  style={{ background: i === 0 ? accent : "#C9C3BB" }}
-                >
-                  {i + 1}
-                </span>
-                <div className="flex-1 min-w-0 border-b border-[#F0EBE0] pb-3">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-base font-semibold truncate text-[#1A1A1A]">{entry.outfitTitle}</span>
-                    <span
-                      className="shrink-0 border px-2 py-0.5 text-xs font-semibold"
-                      style={{ borderColor: `${accent}44`, color: accent }}
-                    >
-                      {STYLE_KO[entry.style] || entry.style}
-                    </span>
-                  </div>
-                  <div className="mt-1 text-sm text-[#6B665C]">
-                    {entry.date} · {entry.temp}° · {entry.condition}
+          <button type="button" onClick={() => setOpenRecent((v) => !v)} className="flex w-full items-center justify-between mb-4">
+            <div className="wf-label text-[#3A362E]" style={LABEL_STYLE}>최근 착용 코디</div>
+            <span className="text-xs text-[#A8A296]">{openRecent ? "▲" : "▼"}</span>
+          </button>
+          {openRecent && (
+            <div className="grid gap-3">
+              {recentOutfits.map((entry, i) => (
+                <div key={entry.id} className="flex items-center gap-3">
+                  <span
+                    className="flex h-7 w-7 shrink-0 items-center justify-center text-sm font-bold text-[#FFFDF7]"
+                    style={{ background: i === 0 ? accent : "#C9C3BB" }}
+                  >
+                    {i + 1}
+                  </span>
+                  <div className="flex-1 min-w-0 border-b border-[#F0EBE0] pb-3">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-base font-semibold truncate text-[#1A1A1A]">{entry.outfitTitle}</span>
+                      <span
+                        className="shrink-0 border px-2 py-0.5 text-xs font-semibold"
+                        style={{ borderColor: `${accent}44`, color: accent }}
+                      >
+                        {STYLE_KO[entry.style] || entry.style}
+                      </span>
+                    </div>
+                    <div className="mt-1 text-sm text-[#6B665C]">
+                      {entry.date} · {entry.temp}° · {entry.condition}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </section>
       )}
 

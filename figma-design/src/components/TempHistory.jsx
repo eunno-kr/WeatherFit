@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 const RANGES = [
   { label: "영하 이하", sub: "0° 미만", min: -99, max: 0,  emoji: "🥶" },
@@ -21,6 +21,7 @@ function getMostFrequent(entries) {
 
 export default function TempHistory({ history, theme }) {
   const accent = theme?.accent || "#E8543B";
+  const [open, setOpen] = useState(true);
 
   const grouped = useMemo(() => {
     return RANGES.map((r) => ({
@@ -38,14 +39,17 @@ export default function TempHistory({ history, theme }) {
 
   return (
     <section className="mt-4 border border-[#E5DED1] bg-[#FAF8F3] p-5">
-      <div className="mb-1">
-        <div className="wf-label text-[#3A362E]" style={{ fontSize: "13px" }}>기온대별 코디 기록</div>
-        <p className="mt-1 text-sm font-medium text-[#6B665C]">
-          내 착용 기록 {history.length}개 분석 · 기온별 자주 입은 코디
-        </p>
-      </div>
+      <button type="button" onClick={() => setOpen((v) => !v)} className="flex w-full items-center justify-between mb-1">
+        <div>
+          <div className="wf-label text-[#3A362E]" style={{ fontSize: "13px" }}>기온대별 코디 기록</div>
+          <p className="mt-1 text-sm font-medium text-[#6B665C]">
+            내 착용 기록 {history.length}개 분석 · 기온별 자주 입은 코디
+          </p>
+        </div>
+        <span className="text-xs text-[#A8A296]">{open ? "▲" : "▼"}</span>
+      </button>
 
-      <div className="mt-4 grid gap-4">
+      {open && <div className="mt-4 grid gap-4">
         {grouped.map((range) => {
           const topOutfit = getMostFrequent(range.entries);
           const barPct = Math.max(8, Math.round((range.entries.length / maxCount) * 100));
@@ -76,11 +80,11 @@ export default function TempHistory({ history, theme }) {
             </div>
           );
         })}
-      </div>
+      </div>}
 
-      <p className="mt-4 text-xs font-medium text-[#8F897D]">
+      {open && <p className="mt-4 text-xs font-medium text-[#8F897D]">
         막대 안 텍스트 = 해당 기온에서 가장 자주 입은 코디
-      </p>
+      </p>}
     </section>
   );
 }

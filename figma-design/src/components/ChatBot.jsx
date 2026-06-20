@@ -2,11 +2,39 @@ import { useEffect, useRef, useState } from "react";
 import { chatWithStylist } from "../lib/gemini.js";
 
 const QUICK_QUESTIONS = [
+  "앱 사용법 알려줘",
   "오늘 코디 중 뭐가 제일 나아?",
   "우산 챙겨야 할까?",
   "오늘 레이어링 어떻게 해?",
   "포인트 컬러 추천해줘",
 ];
+
+const APP_GUIDE = `WeatherFit 앱 사용법:
+
+① 코디 추천 보기
+  - 날씨가 자동으로 불러와져요. 오늘/내일/주간 탭으로 예보 코디도 볼 수 있어요.
+  - LOOK 1~3 중 마음에 드는 코디를 골라요.
+
+② 오늘 입은 코디 기록하기
+  - 마음에 드는 LOOK 카드 하단 "오늘 이 코디 입었어요" 버튼 클릭!
+  - 이번 주 착용 달력과 연속 착용일이 자동으로 올라가요.
+
+③ 내 옷장 등록 (오른쪽 패널)
+  - 가지고 있는 옷을 등록하면 옷장 기반 맞춤 코디를 볼 수 있어요.
+  - 자물쇠 버튼으로 특정 아이템을 코디에 고정할 수 있어요.
+
+④ 퍼스널컬러 찾기
+  - 아래 "퍼스널컬러 찾기" 탭에서 5문항으로 내 퍼스널컬러를 진단할 수 있어요.
+  - 계절별 웜톤/쿨톤 팔레트를 확인하세요.
+
+⑤ 계절 체크리스트
+  - AI가 매주 월요일 이번 주에 필요한 패션 아이템을 추천해줘요.
+  - 체크박스로 준비 완료 여부를 표시할 수 있어요.
+
+⑥ 기온대별 코디 기록
+  - 착용 기록이 쌓이면 기온별로 자주 입은 코디를 분석해줘요.
+
+모르는 게 있으면 언제든 저한테 물어보세요! 😊`;
 
 const MIN_W = 280;
 const MAX_W = 560;
@@ -73,6 +101,12 @@ export default function ChatBot({ weather, profile, look, wardrobe, occasion, co
 
     const userMsg = { role: "user", text: userText };
     setMessages((prev) => [...prev, userMsg]);
+
+    if (userText === "앱 사용법 알려줘") {
+      setMessages((prev) => [...prev, { role: "model", text: APP_GUIDE }]);
+      return;
+    }
+
     setLoading(true);
 
     try {

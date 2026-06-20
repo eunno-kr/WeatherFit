@@ -82,6 +82,7 @@ export default function SeasonChecklist({ profile, condition, temp, theme }) {
   const [checked, setChecked] = useState(() => loadChecked());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [open, setOpen] = useState(true);
   const accent = theme?.accent || "#E8543B";
   const season = getSeason();
   const checkedCount = items.filter((_, i) => checked[i]).length;
@@ -115,31 +116,31 @@ export default function SeasonChecklist({ profile, condition, temp, theme }) {
 
   return (
     <section className="mt-4 border border-[#E5DED1] bg-[#FAF8F3] p-5">
-      <div className="flex items-center justify-between mb-4">
+      <button type="button" onClick={() => setOpen((v) => !v)} className="flex w-full items-center justify-between mb-4">
         <div>
           <div className="wf-label text-[#3A362E]" style={{ fontSize: "13px" }}>계절 체크리스트</div>
           <p className="mt-1 text-sm font-medium text-[#6B665C]">
             {error ? "기본 목록 (AI 연결 실패)" : `AI 추천 · 이번 주 ${seasonLabel} 아이템 · 매주 월요일 갱신`}
           </p>
         </div>
-        {items.length > 0 && (
-          <span
-            className="border px-3 py-1 text-sm font-bold"
-            style={{ borderColor: `${accent}55`, color: accent }}
-          >
-            {checkedCount}/{items.length}
-          </span>
-        )}
-      </div>
+        <div className="flex items-center gap-2">
+          {items.length > 0 && (
+            <span className="border px-3 py-1 text-sm font-bold" style={{ borderColor: `${accent}55`, color: accent }}>
+              {checkedCount}/{items.length}
+            </span>
+          )}
+          <span className="text-xs text-[#A8A296]">{open ? "▲" : "▼"}</span>
+        </div>
+      </button>
 
-      {loading && (
+      {open && loading && (
         <div className="flex items-center gap-2.5 py-4 text-sm font-medium text-[#6B665C]">
           <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
           AI가 이번 시즌 체크리스트 생성 중...
         </div>
       )}
 
-      {!loading && items.map((item, i) => (
+      {open && !loading && items.map((item, i) => (
         <button
           key={i}
           type="button"
@@ -174,7 +175,7 @@ export default function SeasonChecklist({ profile, condition, temp, theme }) {
         </button>
       ))}
 
-      {checkedCount === items.length && items.length > 0 && (
+      {open && checkedCount === items.length && items.length > 0 && (
         <div
           className="mt-3 border-l-2 pl-3 text-base font-bold"
           style={{ borderColor: accent, color: accent }}
