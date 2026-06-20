@@ -216,6 +216,13 @@ export default function WardrobePanel({
     setAppliedAt(null);
   };
 
+  const AUTO_LOCKS = { outer: "", top: "", bottom: "", shoes: "", accessory: "" };
+  const autoAll = () => {
+    setLocks({ ...AUTO_LOCKS });
+    setAppliedLocks({ ...AUTO_LOCKS });
+    setAppliedAt(null);
+  };
+
   const outfitRows = [
     ["아우터", "outer", recommendation.outfit?.outer, fallbackOutfit?.outer],
     ["상의", "top", recommendation.outfit?.top, fallbackOutfit?.top],
@@ -244,7 +251,7 @@ export default function WardrobePanel({
       )}
 
       {/* ── 옷 추가 ── */}
-      <section className="wf-card-soft p-4">
+      <section className="wf-card-soft px-4 py-3">
         <SubHeader title="옷 추가" open={openAdd} onToggle={() => setOpenAdd((v) => !v)} />
         {openAdd && (
           <div className="grid min-w-0 gap-3 border-t border-[#E5DED1] pt-3">
@@ -304,7 +311,7 @@ export default function WardrobePanel({
       </section>
 
       {/* ── 오늘의 고정 ── */}
-      <section className="wf-card-soft p-4">
+      <section className="wf-card-soft px-4 py-3">
         <SubHeader title="오늘의 고정" sub={lockedCount > 0 ? `${lockedCount}개 고정 중` : "특정 아이템을 고정하고 나머지를 조합"} open={openLock} onToggle={() => setOpenLock((v) => !v)} />
         {openLock && (
           <div className="border-t border-[#E5DED1] pt-3">
@@ -328,6 +335,7 @@ export default function WardrobePanel({
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
               <button type="button" onClick={applyLocks} className="bg-ink px-4 py-2 text-sm font-semibold text-white">고정한 옷으로 다시 조합하기</button>
+              <button type="button" onClick={autoAll} className="border border-[#D7D0C4] px-4 py-2 text-sm text-[#6B665C]">자동 추천</button>
               <button type="button" onClick={clearLocks} className="border border-[#D7D0C4] px-4 py-2 text-sm text-[#6B665C]">고정 해제</button>
             </div>
             <p className="mt-3 text-xs leading-5 text-[#6B665C]">
@@ -340,7 +348,7 @@ export default function WardrobePanel({
       </section>
 
       {/* ── 옷장 목록 ── */}
-      <section className="wf-card-soft p-4">
+      <section className="wf-card-soft px-4 py-3">
         <SubHeader
           title={`옷장 목록 · ${wardrobe.length}개`}
           sub={`상의 ${categoryCounts.top || 0} · 하의 ${categoryCounts.bottom || 0} · 신발 ${categoryCounts.shoes || 0}`}
@@ -393,7 +401,7 @@ export default function WardrobePanel({
       </section>
 
       {/* ── 옷장 코디 결과 ── */}
-      <section className="wf-card-soft p-4">
+      <section className="wf-card-soft px-4 py-3">
         <SubHeader
           title="옷장에서 고른 코디"
           sub={lockedCount > 0 ? "고정 반영" : "자동 조합"}
