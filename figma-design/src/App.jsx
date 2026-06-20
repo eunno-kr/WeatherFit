@@ -48,11 +48,11 @@ const INITIAL_DRAFT = {
 };
 
 const INITIAL_LOCKS = {
-  outer: "",
-  top: "",
-  bottom: "",
-  shoes: "",
-  accessory: "",
+  outer: "__skip__",
+  top: "__skip__",
+  bottom: "__skip__",
+  shoes: "__skip__",
+  accessory: "__skip__",
 };
 
 const STORAGE_KEYS = {
@@ -252,7 +252,7 @@ export default function App() {
     [wardrobe, activeWeather, isWet, effectiveMood, profile, appliedLocks]
   );
 
-  const appliedLockCount = Object.values(appliedLocks).filter(Boolean).length;
+  const appliedLockCount = Object.values(appliedLocks).filter((v) => v && v !== "__skip__").length;
   const fallbackOutfit = look?.outfits?.[0];
 
   // 코디 저장 토글

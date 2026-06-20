@@ -201,16 +201,18 @@ export default function WardrobePanel({
   };
 
   const itemsByCategory = (category) => wardrobe.filter((item) => item.category === category);
-  const lockedCount = Object.values(locks).filter(Boolean).length;
-  const appliedCount = Object.values(appliedLocks).filter(Boolean).length;
+  const SKIP = "__skip__";
+  const EMPTY_LOCKS = { outer: SKIP, top: SKIP, bottom: SKIP, shoes: SKIP, accessory: SKIP };
+  const lockedCount = Object.values(locks).filter((v) => v && v !== SKIP).length;
+  const appliedCount = Object.values(appliedLocks).filter((v) => v && v !== SKIP).length;
   const applyLocks = () => {
     setAppliedLocks(locks);
     setAppliedAt(new Date().toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" }));
   };
 
   const clearLocks = () => {
-    setLocks({ outer: "", top: "", bottom: "", shoes: "", accessory: "" });
-    setAppliedLocks({ outer: "", top: "", bottom: "", shoes: "", accessory: "" });
+    setLocks({ ...EMPTY_LOCKS });
+    setAppliedLocks({ ...EMPTY_LOCKS });
     setAppliedAt(null);
   };
 
@@ -223,7 +225,7 @@ export default function WardrobePanel({
   ];
 
   const SubHeader = ({ title, sub, open: o, onToggle }) => (
-    <button type="button" onClick={onToggle} className="flex w-full items-center justify-between py-1">
+    <button type="button" onClick={onToggle} className="flex w-full items-start justify-between py-1">
       <div>
         <div className="wf-label text-[#3A362E]" style={{ fontSize: "13px" }}>{title}</div>
         {sub && <p className="mt-0.5 text-xs text-[#6B665C]">{sub}</p>}
@@ -311,12 +313,12 @@ export default function WardrobePanel({
                 <label key={category} className="grid gap-1 text-xs font-semibold text-[#6B665C]">
                   {label} 고정
                   <select
-                    value={locks[category] || ""}
+                    value={locks[category] ?? SKIP}
                     onChange={(e) => setLocks({ ...locks, [category]: e.target.value })}
                     className="min-w-0 w-full border border-[#D7D0C4] bg-transparent px-2 py-2 text-sm font-normal text-ink outline-none"
                   >
+                    <option value="__skip__">고정 안함</option>
                     <option value="">자동 추천</option>
-                    <option value="__skip__">추천하지 않음</option>
                     {itemsByCategory(category).map((item) => (
                       <option key={item.id} value={item.id}>{item.name} · {item.color}</option>
                     ))}
