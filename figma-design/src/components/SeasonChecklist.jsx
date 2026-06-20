@@ -117,7 +117,7 @@ export default function SeasonChecklist({ profile, condition, temp, theme }) {
 
   return (
     <section className="mt-4 border border-[#E5DED1] bg-[#FAF8F3] p-5">
-      <button type="button" onClick={toggleOpen} className="flex w-full items-center justify-between mb-4">
+      <button type="button" onClick={toggleOpen} className="flex w-full items-center justify-between mb-4 text-left">
         <div>
           <div className="wf-label text-[#3A362E]" style={{ fontSize: "13px" }}>계절 체크리스트</div>
           <p className="mt-1 text-sm font-medium text-[#6B665C]">

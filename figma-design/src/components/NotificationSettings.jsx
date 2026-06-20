@@ -21,7 +21,11 @@ export default function NotificationSettings({ notifTime, onSave, condition, tem
   const cancel = () => onSave(null);
 
   return (
-    <div className="mt-4 border-t border-[#E5DED1] pt-4">
+    <div className="mt-4">
+      <div className="flex items-center gap-3 mb-4">
+        <span className="text-xs font-bold text-[#1A1A1A] shrink-0">알림 설정</span>
+        <div className="flex-1 h-px bg-[#E5DED1]" />
+      </div>
       <div className="wf-label mb-2 text-[#6B665C]">DAILY REMINDER</div>
       <p className="mb-3 text-xs leading-5 text-[#8F897D]">
         매일 설정한 시간에 날씨 코디 알림을 받아요.
