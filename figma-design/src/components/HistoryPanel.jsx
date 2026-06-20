@@ -16,9 +16,7 @@ export default function HistoryPanel({ history, onRemove }) {
           <div className="wf-label text-[#6B665C]" style={{ fontSize: "13px" }}>착용 기록</div>
           <h2 className="mt-1 text-lg font-semibold">착용 기록 {history.length}일</h2>
         </div>
-        <span className="shrink-0 border border-[#D7D0C4] px-3 py-1 text-xs text-[#6B665C]">
-          {open ? "접기" : "펼치기"}
-        </span>
+        <span style={{ fontSize: "13px", border: "0.5px solid #D7D0C4", borderRadius: "4px", padding: "2px 8px", color: "#6B665C" }}>{open ? "−" : "+"}</span>
       </button>
 
       {open && (

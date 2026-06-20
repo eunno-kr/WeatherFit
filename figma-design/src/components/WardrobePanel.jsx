@@ -223,7 +223,7 @@ export default function WardrobePanel({
   ];
 
   const SubHeader = ({ title, sub, open: o, onToggle }) => (
-    <button type="button" onClick={onToggle} className="flex w-full items-center justify-between py-3">
+    <button type="button" onClick={onToggle} className="flex w-full items-center justify-between py-1">
       <div>
         <div className="wf-label text-[#3A362E]" style={{ fontSize: "13px" }}>{title}</div>
         {sub && <p className="mt-0.5 text-xs text-[#6B665C]">{sub}</p>}
@@ -316,6 +316,7 @@ export default function WardrobePanel({
                     className="min-w-0 w-full border border-[#D7D0C4] bg-transparent px-2 py-2 text-sm font-normal text-ink outline-none"
                   >
                     <option value="">자동 추천</option>
+                    <option value="__skip__">추천하지 않음 (생략)</option>
                     {itemsByCategory(category).map((item) => (
                       <option key={item.id} value={item.id}>{item.name} · {item.color}</option>
                     ))}
@@ -406,13 +407,18 @@ export default function WardrobePanel({
               </div>
               <div className="mt-3 grid gap-2">
                 {outfitRows.map(([label, category, item, fallback]) => {
+                  const isSkipped = appliedLocks[category] === "__skip__";
                   const value = item ? `${item.name} · ${item.color}` : fallback;
                   const colorHex = item?.colorHex;
                   const suffix = item ? (appliedLocks[item.category] === item.id ? " · 고정" : "") : "";
                   return (
                     <div key={label} className="grid grid-cols-[56px_1fr] gap-3 text-sm">
                       <span className="font-semibold text-[#6B665C]">{label}</span>
-                      {value ? <ColorText value={value} suffix={suffix} colorHex={colorHex} /> : <span className="text-[#A8A296]">추천 가능한 옷 부족</span>}
+                      {isSkipped
+                        ? <span className="text-[#C9B89A]">생략</span>
+                        : value
+                          ? <ColorText value={value} suffix={suffix} colorHex={colorHex} />
+                          : <span className="text-[#A8A296]">추천 가능한 옷 부족</span>}
                     </div>
                   );
                 })}

@@ -122,6 +122,7 @@ export function recommendWardrobe({ wardrobe, weather, isWet, mood, profile, loc
   const effectiveMood = anchor?.style || mood;
 
   categories.forEach((category) => {
+    if (locks[category] === "__skip__") return;
     if (locks[category]) {
       const lockedItem = wardrobe.find((item) => item.id === locks[category]);
       if (lockedItem) {
