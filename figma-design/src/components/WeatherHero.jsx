@@ -7,6 +7,13 @@ const COLOR_KO = {
 const SENSITIVITY_KO = {
   sensitive: "추위 탐", normal: "보통", resilient: "더위 탐",
 };
+const SEASON_KO = () => {
+  const m = new Date().getMonth() + 1;
+  if (m >= 3 && m <= 5) return "봄";
+  if (m >= 6 && m <= 8) return "여름";
+  if (m >= 9 && m <= 11) return "가을";
+  return "겨울";
+};
 
 export default function WeatherHero({
   data,
@@ -23,6 +30,7 @@ export default function WeatherHero({
   onToggleDark,
 }) {
   const genderLabel = profile.gender === "male" ? "남성" : profile.gender === "female" ? "여성" : "공용";
+  const season = SEASON_KO();
 
   return (
     <section className="pt-2">
@@ -102,45 +110,67 @@ export default function WeatherHero({
               </p>
             </div>
           </div>
-          <div className="grid grid-cols-3 border-t border-[#1A1A1A] bg-[#FAF8F3] p-4 text-xs text-[#6B665C]">
-            <div>
-              <div className="wf-label text-[#A09A90]">최저</div>
-              <strong className="mt-1 block text-base text-ink">{Math.round(data.tmin)}°</strong>
-            </div>
-            <div>
-              <div className="wf-label text-[#A09A90]">최고</div>
-              <strong className="mt-1 block text-base text-ink">{Math.round(data.tmax)}°</strong>
-            </div>
-            <div>
-              <div className="wf-label text-[#A09A90]">일교차</div>
-              <strong className="mt-1 block text-base text-ink">{Math.round(gap)}°</strong>
-            </div>
+
+          {/* ── 1번: 최저/최고/일교차 바 ── */}
+          <div className="grid grid-cols-3 border-t border-[#1A1A1A] bg-[#FAF8F3]">
+            {[
+              { label: "최저", value: `${Math.round(data.tmin)}°` },
+              { label: "최고", value: `${Math.round(data.tmax)}°` },
+              { label: "일교차", value: `${Math.round(gap)}°` },
+            ].map(({ label, value }, i) => (
+              <div
+                key={label}
+                className="flex flex-col items-center justify-center gap-1 py-5"
+                style={{ borderRight: i < 2 ? "1px solid #E5DED1" : "none" }}
+              >
+                <div className="wf-label text-[#A09A90]">{label}</div>
+                <strong className="mt-1 text-2xl font-semibold tracking-tight text-ink">
+                  {value}
+                </strong>
+              </div>
+            ))}
           </div>
         </div>
 
-        <div className="wf-card-soft p-5 sm:p-6">
+        {/* ── 2번: 스타일 프로필 ── */}
+        <div className="wf-card-soft flex flex-col p-5 sm:p-6">
           <div className="wf-label text-[#6B665C]">스타일 프로필</div>
-          <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
-            <div className="border-b border-[#E5DED1] pb-3">
-              <div className="text-xs text-[#8F897D]">스타일</div>
-              <div className="mt-1 font-semibold">{STYLE_KO[profile.style] || profile.style}</div>
-            </div>
-            <div className="border-b border-[#E5DED1] pb-3">
-              <div className="text-xs text-[#8F897D]">색감</div>
-              <div className="mt-1 font-semibold">{COLOR_KO[profile.colorTone] || profile.colorTone}</div>
-            </div>
-            <div>
-              <div className="text-xs text-[#8F897D]">온도 민감도</div>
-              <div className="mt-1 font-semibold">{SENSITIVITY_KO[profile.sensitivity] || profile.sensitivity}</div>
-            </div>
-            <div>
-              <div className="text-xs text-[#8F897D]">저장</div>
-              <div className="mt-1 font-semibold">자동</div>
-            </div>
+
+          <div className="mt-4 grid grid-cols-2 gap-0">
+            {[
+              { label: "스타일", value: STYLE_KO[profile.style] || profile.style },
+              { label: "색감", value: COLOR_KO[profile.colorTone] || profile.colorTone },
+              { label: "온도 민감도", value: SENSITIVITY_KO[profile.sensitivity] || profile.sensitivity },
+              { label: "성별", value: genderLabel },
+              { label: "나이대", value: profile.age || "-" },
+              { label: "계절", value: season },
+              { label: "현재 날씨", value: condition },
+              { label: "위치", value: data.city || city.name },
+            ].map(({ label, value }, i) => (
+              <div
+                key={label}
+                className="py-3 px-1"
+                style={{ borderBottom: i < 6 ? "1px solid #EFE8DA" : "none" }}
+              >
+                <div className="text-xs text-[#8F897D]">{label}</div>
+                <div className="mt-1 text-base font-semibold leading-snug">{value}</div>
+              </div>
+            ))}
           </div>
-          <p className="mt-4 border-t border-[#E5DED1] pt-3 text-xs leading-5 text-[#8F897D]">
-            프로필, 옷장, 고정 선택은 이 브라우저에 저장됩니다.
-          </p>
+
+          <div className="mt-auto pt-4 border-t border-[#E5DED1]">
+            <p className="text-xs leading-5 text-[#8F897D]">
+              프로필, 옷장, 고정 선택은 이 브라우저에 저장됩니다.
+            </p>
+            <button
+              type="button"
+              onClick={onEditProfile}
+              className="mt-2 text-xs font-semibold underline underline-offset-2"
+              style={{ color: theme.accent }}
+            >
+              프로필 편집 →
+            </button>
+          </div>
         </div>
       </div>
     </section>

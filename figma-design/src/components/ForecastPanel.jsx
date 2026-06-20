@@ -32,7 +32,7 @@ export default function ForecastPanel({ forecast, selectedDay, onSelectDay, them
         </div>
       )}
 
-      <div className="wf-label mb-2 text-[#6B665C]">주간 예보</div>
+      <div className="wf-label mb-3 text-[#6B665C]">주간 예보</div>
       <div className="forecast-scroll">
       <div className="forecast-grid">
         {forecast.map((day, i) => {
@@ -47,25 +47,25 @@ export default function ForecastPanel({ forecast, selectedDay, onSelectDay, them
               type="button"
               onClick={() => onSelectDay(i)}
               title={condition}
-              className="flex flex-col items-center gap-1 border py-2.5 px-1 text-xs transition"
+              className="flex flex-col items-center gap-1.5 border py-3.5 px-1 text-sm transition"
               style={{
                 borderColor: selected ? "#1A1A1A" : "#E5DED1",
                 background: selected ? "#1A1A1A" : "#FAF8F3",
                 color: selected ? "#FFFDF7" : "#3A362E",
               }}
             >
-              <span className="font-semibold">{label}</span>
-              <span className="text-lg leading-none">{weatherIcon(day.code)}</span>
+              <span className="text-sm font-semibold">{label}</span>
+              <span className="text-xl leading-none">{weatherIcon(day.code)}</span>
               <span
-                className="font-semibold"
+                className="text-sm font-semibold"
                 style={{ color: selected ? "#FFFDF7" : theme.accent }}
               >
                 {Math.round(day.tmax)}°
               </span>
-              <span style={{ opacity: 0.55 }}>{Math.round(day.tmin)}°</span>
+              <span className="text-xs" style={{ opacity: 0.55 }}>{Math.round(day.tmin)}°</span>
               {day.precipProb >= 20 && (
                 <span
-                  className="text-[10px]"
+                  className="text-[11px]"
                   style={{ color: selected ? "#9FC7E8" : "#547EA8" }}
                 >
                   {day.precipProb}%
