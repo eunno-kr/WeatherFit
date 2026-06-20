@@ -30,7 +30,11 @@ async function callGroq(messages) {
   const data = await res.json();
   const text = data.choices?.[0]?.message?.content;
   if (!text) throw new Error("AI 응답을 받지 못했어요.");
-  return text.trim();
+  // 한자를 한글로 치환
+  return text.trim()
+    .replace(/最高/g, "최고").replace(/最低/g, "최저").replace(/氣溫/g, "기온")
+    .replace(/高/g, "고").replace(/低/g, "저")
+    .replace(/[一-鿿㐀-䶿]/g, "");
 }
 
 export async function askGeminiForOutfit({ weather, profile, look, wardrobe, occasion, condition }) {
@@ -50,7 +54,7 @@ export async function askGeminiForOutfit({ weather, profile, look, wardrobe, occ
     {
       role: "system",
       content:
-        "당신은 친절한 한국어 패션 스타일리스트입니다. 날씨와 사용자 정보를 바탕으로 실용적인 코디 조언을 제공합니다. 항상 한국어로 답변하세요.",
+        "당신은 친절한 한국어 패션 스타일리스트입니다. 날씨와 사용자 정보를 바탕으로 실용적인 코디 조언을 제공합니다. 반드시 순수한 한국어(한글)로만 답변하세요. 한자(漢字), 중국어, 일본어 문자는 절대 사용하지 마세요. '최고', '최저', '기온' 등 모든 단어를 한글로 쓰세요.",
     },
     {
       role: "user",
@@ -84,7 +88,7 @@ export async function chatWithStylist({ message, history, weather, profile, look
 
   const systemMsg = {
     role: "system",
-    content: `당신은 WeatherFit 앱의 AI 패션 스타일리스트입니다. 항상 한국어로 답변하세요.
+    content: `당신은 WeatherFit 앱의 AI 패션 스타일리스트입니다. 반드시 순수한 한국어(한글)로만 답변하세요. 한자(漢字), 중국어, 일본어 문자는 절대 사용하지 마세요. '최고', '최저', '기온' 등 모든 단어를 한글로만 쓰세요.
 
 현재 상황:
 - 도시: ${weather?.city || "알 수 없음"} / 날씨: ${condition || ""} / 기온: ${weather ? Math.round(weather.temp) : ""}°C (체감 ${weather ? Math.round(weather.feels) : ""}°C)
