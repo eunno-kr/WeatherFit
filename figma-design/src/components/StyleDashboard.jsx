@@ -20,8 +20,7 @@ function getTip(condition, temp) {
   if (t <= 4) return TIPS.cold;
   if (t <= 12) return TIPS.cool;
   if (t <= 23) return TIPS.warm;
-  if (t > 23) return TIPS.hot;
-  return TIPS.default;
+  return TIPS.hot;
 }
 
 function getWeekDates() {
@@ -49,19 +48,17 @@ function calcStreak(history) {
   let streak = 0;
   const d = new Date();
   while (true) {
-    if (dates.has(d.toISOString().slice(0, 10))) {
-      streak++;
-      d.setDate(d.getDate() - 1);
-    } else break;
+    if (dates.has(d.toISOString().slice(0, 10))) { streak++; d.setDate(d.getDate() - 1); }
+    else break;
   }
   return streak;
 }
 
 const STYLE_KO = { minimal: "미니멀", casual: "캐주얼", street: "스트릿", formal: "포멀", sporty: "스포티" };
+const LABEL_STYLE = { fontSize: "13px" };
 
 export default function StyleDashboard({ history, condition, temp, theme }) {
   const accent = theme?.accent || "#E8543B";
-
   const weekDates = useMemo(() => getWeekDates(), []);
   const todayStr = new Date().toISOString().slice(0, 10);
 
@@ -84,13 +81,13 @@ export default function StyleDashboard({ history, condition, temp, theme }) {
       <section className="border border-[#E5DED1] bg-[#FAF8F3] p-5">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <div className="wf-label text-[#6B665C]">이번 주 착용 달력</div>
-            <p className="mt-0.5 text-xs text-[#8F897D]">
+            <div className="wf-label text-[#3A362E]" style={LABEL_STYLE}>이번 주 착용 달력</div>
+            <p className="mt-1 text-sm font-medium text-[#6B665C]">
               {wornDays > 0 ? `이번 주 ${wornDays}일 기록했어요` : "오늘부터 기록을 시작해보세요!"}
             </p>
           </div>
           <span
-            className="border px-2.5 py-1 text-xs font-semibold"
+            className="border px-3 py-1 text-sm font-bold"
             style={{ borderColor: `${accent}55`, color: accent }}
           >
             {wornDays}/7
@@ -102,18 +99,18 @@ export default function StyleDashboard({ history, condition, temp, theme }) {
             const isToday = date === todayStr;
             const dayNum = new Date(date + "T00:00:00").getDate();
             return (
-              <div key={date} className="flex flex-col items-center gap-1.5">
+              <div key={date} className="flex flex-col items-center gap-2">
                 <span
-                  className="text-[10px] font-semibold"
-                  style={{ color: isToday ? accent : "#A8A296" }}
+                  className="text-xs font-bold"
+                  style={{ color: isToday ? accent : "#6B665C" }}
                 >
                   {WEEKDAYS[i]}
                 </span>
                 <div
-                  className="flex h-9 w-full items-center justify-center text-xs font-semibold transition"
+                  className="flex h-10 w-full items-center justify-center text-sm font-bold transition"
                   style={{
                     background: worn ? accent : isToday ? `${accent}18` : "#F0EBE0",
-                    color: worn ? "#FFFDF7" : isToday ? accent : "#A8A296",
+                    color: worn ? "#FFFDF7" : isToday ? accent : "#6B665C",
                     borderRadius: "4px",
                   }}
                 >
@@ -127,42 +124,33 @@ export default function StyleDashboard({ history, condition, temp, theme }) {
 
       {/* ── 2+3. 착용 스트릭 + 오늘의 팁 ── */}
       <div className="grid grid-cols-[auto_1fr] gap-3">
-
-        {/* 스트릭 */}
         <section
           className="border p-4 flex flex-col justify-between"
-          style={{ borderColor: streak > 0 ? `${accent}55` : "#E5DED1", background: streak > 0 ? `${accent}08` : "#FAF8F3", minWidth: "110px" }}
+          style={{ borderColor: streak > 0 ? `${accent}55` : "#E5DED1", background: streak > 0 ? `${accent}08` : "#FAF8F3", minWidth: "120px" }}
         >
-          <div className="wf-label text-[#6B665C]">착용 스트릭</div>
+          <div className="wf-label text-[#3A362E]" style={LABEL_STYLE}>착용 스트릭</div>
           <div className="mt-3">
             <div className="flex items-end gap-1">
-              <span
-                className="text-4xl font-semibold leading-none"
-                style={{ color: streak > 0 ? accent : "#C9C3BB" }}
-              >
+              <span className="text-4xl font-semibold leading-none" style={{ color: streak > 0 ? accent : "#C9C3BB" }}>
                 {streak}
               </span>
-              <span className="mb-0.5 text-sm text-[#8F897D]">일</span>
+              <span className="mb-1 text-base font-semibold text-[#6B665C]">일</span>
             </div>
-            <p className="mt-2 text-[11px] leading-4 text-[#8F897D]">
-              {streak === 0 && "오늘 기록을\n시작해보세요!"}
-              {streak >= 1 && streak < 3 && "좋은 시작!"}
+            <p className="mt-2 text-sm font-medium text-[#6B665C]">
+              {streak === 0 && "오늘 기록을 시작해보세요!"}
+              {streak >= 1 && streak < 3 && "좋은 시작이에요!"}
               {streak >= 3 && streak < 7 && "잘 하고 있어요!"}
               {streak >= 7 && "🔥 일주일 연속!"}
             </p>
           </div>
         </section>
 
-        {/* 오늘의 팁 */}
         <section className="border border-[#E5DED1] bg-[#FAF8F3] p-4">
-          <div className="wf-label text-[#6B665C]">오늘의 스타일 팁</div>
-          <div
-            className="mt-3 border-l-2 pl-3 text-sm leading-6 text-[#3A362E]"
-            style={{ borderColor: accent }}
-          >
+          <div className="wf-label text-[#3A362E]" style={LABEL_STYLE}>오늘의 스타일 팁</div>
+          <div className="mt-3 border-l-2 pl-3 text-sm font-medium leading-6 text-[#1A1A1A]" style={{ borderColor: accent }}>
             {todayTip}
           </div>
-          <p className="mt-2 text-[11px] text-[#A8A296]">
+          <p className="mt-2 text-xs font-medium text-[#8F897D]">
             {condition || "현재 날씨"} · {temp}°
           </p>
         </section>
@@ -171,30 +159,27 @@ export default function StyleDashboard({ history, condition, temp, theme }) {
       {/* ── 4. 최근 착용 코디 ── */}
       {recentOutfits.length > 0 && (
         <section className="border border-[#E5DED1] bg-[#FAF8F3] p-5">
-          <div className="wf-label mb-4 text-[#6B665C]">최근 착용 코디</div>
+          <div className="wf-label mb-4 text-[#3A362E]" style={LABEL_STYLE}>최근 착용 코디</div>
           <div className="grid gap-3">
             {recentOutfits.map((entry, i) => (
-              <div
-                key={entry.id}
-                className="flex items-center gap-3"
-              >
+              <div key={entry.id} className="flex items-center gap-3">
                 <span
-                  className="flex h-6 w-6 shrink-0 items-center justify-center text-[11px] font-semibold text-[#FFFDF7]"
+                  className="flex h-7 w-7 shrink-0 items-center justify-center text-sm font-bold text-[#FFFDF7]"
                   style={{ background: i === 0 ? accent : "#C9C3BB" }}
                 >
                   {i + 1}
                 </span>
                 <div className="flex-1 min-w-0 border-b border-[#F0EBE0] pb-3">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-sm font-semibold truncate">{entry.outfitTitle}</span>
+                    <span className="text-base font-semibold truncate text-[#1A1A1A]">{entry.outfitTitle}</span>
                     <span
-                      className="shrink-0 border px-1.5 py-0.5 text-[10px]"
+                      className="shrink-0 border px-2 py-0.5 text-xs font-semibold"
                       style={{ borderColor: `${accent}44`, color: accent }}
                     >
                       {STYLE_KO[entry.style] || entry.style}
                     </span>
                   </div>
-                  <div className="mt-0.5 text-xs text-[#8F897D]">
+                  <div className="mt-1 text-sm text-[#6B665C]">
                     {entry.date} · {entry.temp}° · {entry.condition}
                   </div>
                 </div>

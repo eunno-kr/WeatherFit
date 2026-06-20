@@ -39,41 +39,38 @@ export default function TempHistory({ history, theme }) {
   return (
     <section className="mt-4 border border-[#E5DED1] bg-[#FAF8F3] p-5">
       <div className="mb-1">
-        <div className="wf-label text-[#6B665C]">기온대별 코디 기록</div>
-        <p className="mt-0.5 text-xs text-[#8F897D]">
+        <div className="wf-label text-[#3A362E]" style={{ fontSize: "13px" }}>기온대별 코디 기록</div>
+        <p className="mt-1 text-sm font-medium text-[#6B665C]">
           내 착용 기록 {history.length}개 분석 · 기온별 자주 입은 코디
         </p>
       </div>
 
-      <div className="mt-4 grid gap-3.5">
+      <div className="mt-4 grid gap-4">
         {grouped.map((range) => {
           const topOutfit = getMostFrequent(range.entries);
           const barPct = Math.max(8, Math.round((range.entries.length / maxCount) * 100));
 
           return (
             <div key={range.label}>
-              <div className="flex items-center justify-between mb-1.5 text-xs">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-base leading-none">{range.emoji}</span>
-                  <span className="font-semibold text-[#3A362E]">{range.label}</span>
-                  <span className="text-[#A8A296]">· {range.sub}</span>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-lg leading-none">{range.emoji}</span>
+                  <span className="text-sm font-bold text-[#1A1A1A]">{range.label}</span>
+                  <span className="text-sm font-medium text-[#8F897D]">· {range.sub}</span>
                 </div>
-                <span
-                  className="font-semibold tabular-nums"
-                  style={{ color: accent }}
-                >
+                <span className="text-sm font-bold tabular-nums" style={{ color: accent }}>
                   {range.entries.length}회
                 </span>
               </div>
 
               {/* 바 그래프 */}
-              <div className="relative h-8 overflow-hidden bg-[#F0EBE0]">
+              <div className="relative h-9 overflow-hidden bg-[#F0EBE0]">
                 <div
                   className="absolute inset-y-0 left-0 transition-all"
-                  style={{ width: `${barPct}%`, background: `${accent}3A` }}
+                  style={{ width: `${barPct}%`, background: `${accent}40` }}
                 />
-                <div className="absolute inset-0 flex items-center px-2.5">
-                  <span className="truncate text-xs text-[#3A362E]">{topOutfit}</span>
+                <div className="absolute inset-0 flex items-center px-3">
+                  <span className="truncate text-sm font-semibold text-[#1A1A1A]">{topOutfit}</span>
                 </div>
               </div>
             </div>
@@ -81,7 +78,7 @@ export default function TempHistory({ history, theme }) {
         })}
       </div>
 
-      <p className="mt-4 text-[11px] text-[#A8A296]">
+      <p className="mt-4 text-xs font-medium text-[#8F897D]">
         막대 안 텍스트 = 해당 기온에서 가장 자주 입은 코디
       </p>
     </section>

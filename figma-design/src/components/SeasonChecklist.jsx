@@ -107,14 +107,14 @@ export default function SeasonChecklist({ profile, condition, temp, theme }) {
     <section className="mt-4 border border-[#E5DED1] bg-[#FAF8F3] p-5">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <div className="wf-label text-[#6B665C]">계절 체크리스트</div>
-          <p className="mt-0.5 text-xs text-[#8F897D]">
+          <div className="wf-label text-[#3A362E]" style={{ fontSize: "13px" }}>계절 체크리스트</div>
+          <p className="mt-1 text-sm font-medium text-[#6B665C]">
             {error ? "기본 목록 (AI 연결 실패)" : `AI 추천 · ${seasonLabel} 시즌 필수 아이템`}
           </p>
         </div>
         {items.length > 0 && (
           <span
-            className="border px-2.5 py-1 text-xs font-semibold"
+            className="border px-3 py-1 text-sm font-bold"
             style={{ borderColor: `${accent}55`, color: accent }}
           >
             {checkedCount}/{items.length}
@@ -123,8 +123,8 @@ export default function SeasonChecklist({ profile, condition, temp, theme }) {
       </div>
 
       {loading && (
-        <div className="flex items-center gap-2.5 py-4 text-sm text-[#8F897D]">
-          <span className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+        <div className="flex items-center gap-2.5 py-4 text-sm font-medium text-[#6B665C]">
+          <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
           AI가 이번 시즌 체크리스트 생성 중...
         </div>
       )}
@@ -134,11 +134,11 @@ export default function SeasonChecklist({ profile, condition, temp, theme }) {
           key={i}
           type="button"
           onClick={() => toggle(i)}
-          className="flex w-full items-start gap-3 py-3 text-left transition hover:opacity-80"
+          className="flex w-full items-start gap-3 py-3.5 text-left transition hover:opacity-80"
           style={{ borderBottom: i < items.length - 1 ? "1px solid #EFE8DA" : "none" }}
         >
           <div
-            className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center border text-[10px] font-bold transition"
+            className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center border-2 text-xs font-bold transition"
             style={{
               borderColor: checked[i] ? accent : "#C9C3BB",
               background: checked[i] ? accent : "transparent",
@@ -149,16 +149,16 @@ export default function SeasonChecklist({ profile, condition, temp, theme }) {
           </div>
           <div>
             <div
-              className="text-sm font-semibold leading-5 transition"
+              className="text-base font-semibold leading-6 transition"
               style={{
-                color: checked[i] ? "#A8A296" : "#3A362E",
+                color: checked[i] ? "#A8A296" : "#1A1A1A",
                 textDecoration: checked[i] ? "line-through" : "none",
               }}
             >
               {item.label}
             </div>
             {item.desc && (
-              <div className="mt-0.5 text-xs leading-4 text-[#8F897D]">{item.desc}</div>
+              <div className="mt-0.5 text-sm font-medium text-[#6B665C]">{item.desc}</div>
             )}
           </div>
         </button>
@@ -166,7 +166,7 @@ export default function SeasonChecklist({ profile, condition, temp, theme }) {
 
       {checkedCount === items.length && items.length > 0 && (
         <div
-          className="mt-3 border-l-2 pl-3 text-sm font-semibold"
+          className="mt-3 border-l-2 pl-3 text-base font-bold"
           style={{ borderColor: accent, color: accent }}
         >
           {seasonLabel} 준비 완료! 🎉

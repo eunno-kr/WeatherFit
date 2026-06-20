@@ -106,63 +106,63 @@ export default function TodayColorPalette({ condition, temp, profile, theme }) {
 
   const colors = useMemo(() => {
     const base = [...palette.colors];
-    if (styleAccent && profile?.style !== "minimal") {
-      base[4] = styleAccent;
-    }
+    if (styleAccent && profile?.style !== "minimal") base[4] = styleAccent;
     return base;
   }, [palette, profile?.style]);
 
   return (
     <section className="mt-6 border border-[#E5DED1] bg-[#FAF8F3] p-5">
       <div className="flex items-center justify-between mb-1">
-        <div className="wf-label text-[#6B665C]">오늘의 컬러 팔레트</div>
+        <div className="wf-label text-[#3A362E]" style={{ fontSize: "13px" }}>오늘의 컬러 팔레트</div>
         <span
-          className="border px-2 py-0.5 text-[11px] font-semibold"
+          className="border px-2.5 py-1 text-xs font-bold"
           style={{ borderColor: `${accent}44`, color: accent }}
         >
           {palette.name}
         </span>
       </div>
-      <p className="mb-5 text-xs text-[#8F897D]">{palette.desc}</p>
+      <p className="mb-5 text-sm font-medium text-[#6B665C]">{palette.desc}</p>
 
-      {/* 스와치 */}
+      {/* 색상 스와치 */}
       <div className="grid grid-cols-5 gap-2 mb-5">
         {colors.map((color, i) => (
-          <div key={i} className="flex flex-col gap-1.5">
+          <div key={i} className="flex flex-col gap-0">
+            {/* 컬러 칩 */}
             <div
-              className="h-16 w-full border border-black/8 transition hover:scale-[1.04]"
+              className="h-16 w-full border border-black/10"
               style={{ background: color.hex }}
               title={color.hex}
             />
-            <span className="text-[10px] font-semibold text-center leading-tight text-[#3A362E]">
-              {color.name}
-            </span>
-            <span className="text-[9px] text-center text-[#A8A296]">{color.hex}</span>
+            {/* 이름 배경 칩 */}
+            <div className="bg-[#EEEBE4] px-1 py-1.5 text-center">
+              <span className="block text-xs font-bold leading-tight text-[#1A1A1A]">
+                {color.name}
+              </span>
+              <span className="block text-[10px] font-medium text-[#6B665C] mt-0.5">
+                {color.hex}
+              </span>
+            </div>
           </div>
         ))}
       </div>
 
       {/* 추천 조합 */}
       <div className="border-t border-[#EFE8DA] pt-4">
-        <p className="mb-3 text-xs font-semibold text-[#6B665C]">오늘 추천 조합</p>
-        <div className="flex gap-4">
+        <p className="mb-3 text-sm font-bold text-[#3A362E]">오늘 추천 조합</p>
+        <div className="flex gap-5">
           {palette.combos.map((combo, ci) => (
-            <div key={ci} className="flex flex-col gap-1.5">
-              <div className="flex">
+            <div key={ci} className="flex flex-col gap-2">
+              <div className="flex overflow-hidden border border-black/10">
                 {combo.colors.map((hex, i) => (
-                  <div
-                    key={i}
-                    className="h-7 w-8 border border-black/8 first:rounded-l last:rounded-r"
-                    style={{ background: hex }}
-                  />
+                  <div key={i} className="h-8 w-9" style={{ background: hex }} />
                 ))}
               </div>
-              <span className="text-[10px] text-[#8F897D]">{combo.name}</span>
+              <span className="text-xs font-semibold text-[#6B665C]">{combo.name}</span>
             </div>
           ))}
         </div>
         <p
-          className="mt-4 border-l-2 pl-3 text-xs leading-5 text-[#6B665C]"
+          className="mt-4 border-l-2 pl-3 text-sm font-medium text-[#3A362E]"
           style={{ borderColor: accent }}
         >
           {tip}
