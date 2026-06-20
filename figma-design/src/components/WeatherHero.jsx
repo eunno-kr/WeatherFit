@@ -88,7 +88,7 @@ export default function WeatherHero({
             </div>
             <div className="flex flex-col justify-between bg-[#FFFDF7] p-5 sm:p-6">
               <div>
-                <div className="wf-label" style={{ color: theme.accent }}>
+                <div className="wf-label" style={{ color: theme.accent, fontSize: "13px" }}>
                   오늘 날씨
                 </div>
                 <h2 className="mt-2 text-2xl font-semibold">{condition}</h2>
@@ -123,7 +123,7 @@ export default function WeatherHero({
                 className="flex flex-col items-center justify-center gap-1 py-5"
                 style={{ borderRight: i < 2 ? "1px solid #E5DED1" : "none" }}
               >
-                <div className="wf-label text-[#A09A90]">{label}</div>
+                <div className="wf-label text-[#A09A90]" style={{ fontSize: "13px" }}>{label}</div>
                 <strong className="mt-1 text-2xl font-semibold tracking-tight text-ink">
                   {value}
                 </strong>
@@ -134,7 +134,7 @@ export default function WeatherHero({
 
         {/* ── 2번: 스타일 프로필 ── */}
         <div className="wf-card-soft flex flex-col p-5 sm:p-6">
-          <div className="wf-label text-[#6B665C]">스타일 프로필</div>
+          <div className="wf-label text-[#6B665C]" style={{ fontSize: "13px" }}>스타일 프로필</div>
 
           <div className="mt-4 grid grid-cols-2 gap-0">
             {[

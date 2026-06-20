@@ -128,7 +128,7 @@ export default function StyleDashboard({ history, condition, temp, theme }) {
           className="border p-4 flex flex-col justify-between"
           style={{ borderColor: streak > 0 ? `${accent}55` : "#E5DED1", background: streak > 0 ? `${accent}08` : "#FAF8F3", minWidth: "120px" }}
         >
-          <div className="wf-label text-[#3A362E]" style={LABEL_STYLE}>착용 스트릭</div>
+          <div className="wf-label text-[#3A362E]" style={LABEL_STYLE}>연속 착용일</div>
           <div className="mt-3">
             <div className="flex items-end gap-1">
               <span className="text-4xl font-semibold leading-none" style={{ color: streak > 0 ? accent : "#C9C3BB" }}>

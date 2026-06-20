@@ -51,7 +51,7 @@ export default function MonthlyStats({ history, wardrobe }) {
         className="flex w-full items-center justify-between"
       >
         <div className="text-left">
-          <div className="wf-label text-[#6B665C]">월별 통계</div>
+          <div className="wf-label text-[#6B665C]" style={{ fontSize: "13px" }}>월별 통계</div>
           <h2 className="mt-1 text-lg font-semibold">
             {stats.thisMonth} · {stats.monthHistory.length}회 착용
           </h2>
@@ -67,7 +67,7 @@ export default function MonthlyStats({ history, wardrobe }) {
           {/* 자주 입은 스타일 */}
           {stats.topStyles.length > 0 && (
             <div>
-              <div className="wf-label mb-2 text-[#8F897D]">자주 입은 스타일</div>
+              <div className="wf-label mb-2 text-[#8F897D]" style={{ fontSize: "13px" }}>자주 입은 스타일</div>
               <div className="grid gap-2">
                 {stats.topStyles.map(([style, count], i) => (
                   <div key={style} className="flex items-center gap-3">
@@ -94,7 +94,7 @@ export default function MonthlyStats({ history, wardrobe }) {
           {/* 자주 나간 상황 */}
           {stats.topOccasions.length > 0 && (
             <div>
-              <div className="wf-label mb-2 text-[#8F897D]">자주 나간 상황</div>
+              <div className="wf-label mb-2 text-[#8F897D]" style={{ fontSize: "13px" }}>자주 나간 상황</div>
               <div className="flex flex-wrap gap-2">
                 {stats.topOccasions.map(([occasion, count]) => (
                   <div
@@ -112,7 +112,7 @@ export default function MonthlyStats({ history, wardrobe }) {
           {/* 자주 입은 옷 TOP3 */}
           {stats.topWardrobe.length > 0 && (
             <div>
-              <div className="wf-label mb-2 text-[#8F897D]">자주 입은 옷 TOP {stats.topWardrobe.length}</div>
+              <div className="wf-label mb-2 text-[#8F897D]" style={{ fontSize: "13px" }}>자주 입은 옷 TOP {stats.topWardrobe.length}</div>
               <div className="grid gap-2">
                 {stats.topWardrobe.map((item, i) => (
                   <div

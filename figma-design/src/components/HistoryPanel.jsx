@@ -13,7 +13,7 @@ export default function HistoryPanel({ history, onRemove }) {
         className="flex w-full items-center justify-between"
       >
         <div className="text-left">
-          <div className="wf-label text-[#6B665C]">착용 기록</div>
+          <div className="wf-label text-[#6B665C]" style={{ fontSize: "13px" }}>착용 기록</div>
           <h2 className="mt-1 text-lg font-semibold">착용 기록 {history.length}일</h2>
         </div>
         <span className="shrink-0 border border-[#D7D0C4] px-3 py-1 text-xs text-[#6B665C]">

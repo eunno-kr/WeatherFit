@@ -26,7 +26,7 @@ function OutfitCard({ outfit, index, theme, onSave, isSaved, weather, palette, c
     <article className="group border border-black/10 bg-[#FFFDF7] p-5 transition hover:border-black/40 hover:bg-white">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <div className="wf-label" style={{ color: theme.accent }}>
+          <div className="wf-label" style={{ color: theme.accent, fontSize: "13px" }}>
             LOOK {index + 1}
           </div>
           <h3 className="mt-1 text-lg font-semibold">{outfit.title}</h3>
@@ -61,7 +61,7 @@ function OutfitCard({ outfit, index, theme, onSave, isSaved, weather, palette, c
             key={key}
             className="grid grid-cols-[64px_1fr] gap-3 border-t border-[#EFE8DA] pt-2 text-sm first:border-t-0 first:pt-0"
           >
-            <span className="wf-label" style={{ color: theme.accent }}>
+            <span className="wf-label" style={{ color: theme.accent, fontSize: "13px" }}>
               {label}
             </span>
             <ColorText value={outfit[key]} muted={outfit[key] === "레이어 생략"} />
@@ -126,7 +126,7 @@ export default function LookCard({
     >
       <div className="flex items-center justify-between gap-4">
         <div>
-          <div className="wf-label" style={{ color: theme.accent }}>
+          <div className="wf-label" style={{ color: theme.accent, fontSize: "13px" }}>
             {sectionLabel}
           </div>
           <h2 className="mt-1 text-2xl font-semibold tracking-normal">{title}</h2>
@@ -196,7 +196,7 @@ export default function LookCard({
           className="mt-4 border-l-2 pl-4 text-sm leading-7"
           style={{ borderColor: theme.accent }}
         >
-          <div className="wf-label mb-2" style={{ color: theme.accent }}>
+          <div className="wf-label mb-2" style={{ color: theme.accent, fontSize: "13px" }}>
             AI 스타일리스트
           </div>
           <p className="whitespace-pre-line text-[#3A362E]">{aiAdvice}</p>
