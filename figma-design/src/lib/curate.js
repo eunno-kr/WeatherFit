@@ -111,44 +111,176 @@ const GENDER_TWEAKS = {
   },
 };
 
-const COLOR_PALETTES = {
-  neutral: {
-    name: "무채색",
-    accessory: "블랙 양말·그레이 미니백",
-    colorNames: ["블랙", "아이보리", "그레이"],
-    colors: ["#111111", "#F5F1E8", "#8C8C86"],
-    colorRoles: ["다크 베이스", "라이트 베이스", "미드 톤"],
-    colorWhys: ["강한 대비와 정돈된 인상을 위한 앵커 색", "블랙과 대비를 주면서 밝기를 올리는 베이스", "두 극단 사이 부드러운 연결"],
-    text: "블랙, 아이보리, 그레이로 정돈된 인상을 만듭니다.",
-  },
-  bright: {
-    name: "밝은 톤",
-    accessory: "아이보리 양말·스카이블루 에코백",
-    colorNames: ["아이보리", "스카이블루", "화이트"],
-    colors: ["#F7F2D8", "#BFD7EA", "#FFFFFF"],
-    colorRoles: ["웜 베이스", "쿨 포인트", "라이트 베이스"],
-    colorWhys: ["따뜻한 느낌의 주조색, 어느 코디에나 잘 어울림", "아이보리의 따뜻함을 시원하게 중화시키는 쿨 포인트", "전체 밝기를 올리는 베이스"],
-    text: "아이보리와 라이트블루를 중심으로 산뜻하게 보입니다.",
-  },
-  calm: {
-    name: "차분한 톤",
-    accessory: "네이비 양말·세이지 캔버스백",
-    colorNames: ["네이비", "세이지", "베이지"],
-    colors: ["#283747", "#7C8B5A", "#D8D0C2"],
-    colorRoles: ["딥 베이스", "어스 포인트", "뉴트럴 베이스"],
-    colorWhys: ["깊이감을 주는 진한 앵커 색", "자연에서 온 색감으로 전체 무드를 차분하게", "두 색 사이 여백을 채우는 뉴트럴"],
-    text: "네이비, 세이지, 베이지 조합으로 안정적인 분위기를 줍니다.",
-  },
-  point: {
-    name: "포인트 컬러",
-    accessory: "블랙 양말·버터 옐로 미니백",
-    colorNames: ["블랙", "아이보리", "버터 옐로"],
-    colors: ["#1A1A1A", "#EDE7DA", "#F4DF8A"],
-    colorRoles: ["다크 베이스", "뉴트럴 베이스", "포인트 컬러"],
-    colorWhys: ["시선을 잡아주는 강한 앵커 색", "블랙을 받쳐주는 부드러운 기본색", "단 하나만 넣어 전체 룩에 생동감을 주는 포인트"],
-    text: "기본색을 깔고 포인트 하나만 넣어 완성도를 높입니다.",
-  },
+// ─── Static palette metadata ─────────────────────────────────────────────────
+const PALETTE_META = {
+  neutral: { name: "무채색",    accessory: "그레이 계열 양말·모노 미니백" },
+  bright:  { name: "밝은 톤",   accessory: "아이보리 양말·파스텔 에코백" },
+  calm:    { name: "차분한 톤", accessory: "어스 톤 양말·캔버스백" },
+  point:   { name: "포인트 컬러", accessory: "블랙 양말·포인트 컬러 미니백" },
 };
+
+// ─── Expanded color pools (날짜별 랜덤 선택, 다크/미드/라이트 티어로 대비 보장) ────
+const N_DARK = [
+  { hex: "#0A0A0A", name: "제트블랙",   role: "다크 베이스", why: "가장 강렬한 대비감의 절대 앵커 색" },
+  { hex: "#1A1A1A", name: "블랙",       role: "다크 베이스", why: "무게감과 정돈된 인상을 동시에 주는 기본 앵커" },
+  { hex: "#2C2C2C", name: "차콜블랙",   role: "다크 베이스", why: "블랙보다 부드럽지만 깊이감은 그대로" },
+  { hex: "#3A3A3A", name: "다크차콜",   role: "다크 베이스", why: "전체 룩에 무게 중심을 잡아주는 딥 톤" },
+  { hex: "#4A4A4A", name: "차콜",       role: "미드다크",    why: "블랙의 강함을 줄이고 부드럽게 무게를 주는 색" },
+  { hex: "#565656", name: "다크그레이", role: "미드다크",    why: "중간 무게감으로 코디의 중심을 잡아주는 색" },
+];
+const N_MID = [
+  { hex: "#6B6B6B", name: "스틸그레이", role: "미드 톤",    why: "차갑고 도시적인 느낌의 미드 그레이" },
+  { hex: "#808080", name: "미디엄그레이",role: "미드 톤",   why: "명도 중간의 균형잡힌 클래식 그레이" },
+  { hex: "#8C8C8C", name: "그레이",     role: "미드 톤",    why: "어느 색과도 충돌 없이 어울리는 무채색" },
+  { hex: "#9A9A9A", name: "워밍그레이", role: "웜 미드톤",  why: "약간 따뜻한 기운이 도는 부드러운 그레이" },
+  { hex: "#A8B0B7", name: "쿨그레이",   role: "쿨 미드톤",  why: "블루 기운의 차갑고 시원한 시티 그레이" },
+  { hex: "#A8A29E", name: "스톤그레이", role: "웜 미드톤",  why: "돌처럼 따뜻한 기운이 도는 내추럴 그레이" },
+  { hex: "#9E9689", name: "샌드그레이", role: "웜 미드톤",  why: "모래 기운이 살짝 도는 웜 뉴트럴 그레이" },
+];
+const N_LIGHT = [
+  { hex: "#B0B0B0", name: "실버그레이",  role: "라이트 베이스", why: "은빛 광택감으로 전체 룩을 밝히는 그레이" },
+  { hex: "#C4C4C4", name: "페블그레이",  role: "라이트 베이스", why: "자갈처럼 자연스럽고 편안한 밝은 톤" },
+  { hex: "#D5D5D5", name: "라이트그레이",role: "라이트 베이스", why: "전체 룩을 가볍게 띄우는 밝은 그레이" },
+  { hex: "#E5E0DC", name: "웜라이트그레이",role:"라이트 베이스",why:"따뜻한 기운의 밝은 그레이, 피부색을 살림" },
+  { hex: "#EBEBEB", name: "페일그레이",  role: "라이트 베이스", why: "거의 화이트에 가까운 매우 밝은 그레이" },
+  { hex: "#F5F2EC", name: "아이보리화이트",role:"라이트 베이스",why:"순수 화이트보다 포근한 웜 톤 화이트" },
+  { hex: "#FFFFFF", name: "화이트",      role: "퓨어 화이트",   why: "가장 밝고 깨끗한 순수 화이트" },
+  { hex: "#F0EDE8", name: "크림화이트",  role: "라이트 베이스", why: "크리미한 따뜻함이 느껴지는 오프화이트" },
+];
+const B_POOL = [
+  { hex: "#FFF8DC", name: "버터크림",    role: "웜 베이스",    why: "크리미하고 따뜻한 밝은 베이스" },
+  { hex: "#F7F2D8", name: "아이보리",    role: "웜 베이스",    why: "따뜻한 느낌의 주조색, 어느 코디에나 어울림" },
+  { hex: "#F3EAC2", name: "바닐라크림",  role: "웜 베이스",    why: "달콤하고 부드러운 크림 톤 베이스" },
+  { hex: "#FFFDE7", name: "레몬화이트",  role: "레몬 포인트",  why: "노란 기운이 살짝 도는 경쾌한 밝은 톤" },
+  { hex: "#FADBD8", name: "블러시핑크",  role: "블러시 포인트",why: "볼 터치처럼 은은한 핑크, 화사한 인상" },
+  { hex: "#FFD1DC", name: "파우더핑크",  role: "핑크 포인트",  why: "파우더처럼 부드러운 밝은 핑크" },
+  { hex: "#FFDAB9", name: "피치",        role: "피치 포인트",  why: "복숭아처럼 따뜻하고 달콤한 살구 톤" },
+  { hex: "#FFBCAA", name: "코랄피치",    role: "코랄 포인트",  why: "생기 있는 코랄 피치로 화사한 포인트" },
+  { hex: "#BFD7EA", name: "스카이블루",  role: "쿨 포인트",    why: "하늘처럼 청량한 포인트 컬러" },
+  { hex: "#B0C4DE", name: "베이비블루",  role: "쿨 포인트",    why: "아기처럼 부드럽고 편안한 파란 톤" },
+  { hex: "#B0D0E8", name: "파우더블루",  role: "쿨 포인트",    why: "파우더처럼 차갑고 맑은 스카이 톤" },
+  { hex: "#C5DCF0", name: "라이트블루",  role: "쿨 포인트",    why: "물처럼 투명하고 시원한 밝은 블루" },
+  { hex: "#E6E6FA", name: "라벤더",      role: "라벤더 포인트",why: "라벤더꽃처럼 은은하고 로맨틱한 보라 톤" },
+  { hex: "#D8D8F5", name: "라이트라벤더",role: "라벤더 포인트",why: "매우 연한 라벤더, 뮤트한 로맨틱 무드" },
+  { hex: "#EDE0FA", name: "라일락",      role: "퍼플 포인트",  why: "라일락꽃 같은 부드럽고 달콤한 퍼플 톤" },
+  { hex: "#C8EAD8", name: "민트",        role: "민트 포인트",  why: "상쾌하고 청량한 민트 그린 포인트" },
+  { hex: "#BDEFDA", name: "라이트민트",  role: "민트 포인트",  why: "가볍고 시원한 페일 민트 톤" },
+  { hex: "#C8D8C0", name: "라이트세이지",role: "세이지 포인트",why: "자연스럽고 편안한 연한 세이지 그린" },
+  { hex: "#FAF9F6", name: "오프화이트",  role: "라이트 베이스",why: "순백보다 부드러운 따뜻한 오프 화이트" },
+  { hex: "#E8F0E8", name: "페일그린",    role: "그린 포인트",  why: "연하고 신선한 페일 그린 톤" },
+];
+const C_DARK = [
+  { hex: "#162035", name: "딥네이비",    role: "딥 베이스",  why: "가장 깊고 차분한 다크 블루, 권위 있는 인상" },
+  { hex: "#1F2E46", name: "네이비",      role: "딥 베이스",  why: "깊이감을 주는 클래식한 다크 블루 앵커" },
+  { hex: "#2C3E6B", name: "미드나잇블루",role: "딥 베이스",  why: "밤하늘 같은 깊고 차분한 블루" },
+  { hex: "#2F3E2F", name: "딥포레스트",  role: "딥 베이스",  why: "숲 속 같은 진한 그린 베이스" },
+  { hex: "#3A3226", name: "다크브라운",  role: "딥 베이스",  why: "깊은 흙빛 브라운, 자연스러운 무게감" },
+  { hex: "#4A2F1A", name: "초콜릿",      role: "딥 베이스",  why: "진한 초콜릿 브라운으로 따뜻한 무게감" },
+  { hex: "#5A3040", name: "딥모브",      role: "딥 베이스",  why: "깊고 차분한 딥 퍼플-브라운 톤" },
+  { hex: "#3D3B4A", name: "딥슬레이트",  role: "딥 베이스",  why: "청보라빛이 도는 깊고 도시적인 다크 톤" },
+];
+const C_EARTH = [
+  { hex: "#5A6B3A", name: "모스그린",    role: "어스 포인트", why: "이끼처럼 자연스럽고 묵직한 그린" },
+  { hex: "#6B7B3A", name: "올리브",      role: "어스 포인트", why: "올리브오일 같은 자연스럽고 차분한 그린" },
+  { hex: "#7C8B5A", name: "세이지",      role: "어스 포인트", why: "자연에서 온 색감으로 전체 무드를 차분하게" },
+  { hex: "#77724F", name: "카키",        role: "어스 포인트", why: "군더더기 없이 자연스러운 카키 톤" },
+  { hex: "#987B5A", name: "오크",        role: "어스 포인트", why: "참나무처럼 자연스럽고 따뜻한 미디엄 브라운" },
+  { hex: "#C07456", name: "테라코타",    role: "어스 포인트", why: "흙처럼 따뜻하고 생동감 있는 포인트" },
+  { hex: "#B8962A", name: "머스타드",    role: "어스 포인트", why: "머스타드처럼 진하고 따뜻한 옐로 어스 톤" },
+  { hex: "#6B4A34", name: "브라운",      role: "어스 포인트", why: "따뜻하고 자연스러운 미디엄 브라운" },
+  { hex: "#4A8080", name: "틸",          role: "쿨 어스",    why: "청록빛 조합으로 차분하면서도 독특한 무드" },
+  { hex: "#708090", name: "슬레이트",    role: "쿨 어스",    why: "바위 같은 차갑고 차분한 블루 그레이" },
+  { hex: "#6B5B73", name: "더스티퍼플", role: "어스 포인트", why: "먼지처럼 뿌연 퍼플, 차분하고 성숙한 무드" },
+];
+const C_NEUTRAL = [
+  { hex: "#D8D0C2", name: "베이지",      role: "뉴트럴 베이스", why: "두 색 사이 여백을 채우는 따뜻한 뉴트럴" },
+  { hex: "#CBB89D", name: "샌드베이지",  role: "뉴트럴 베이스", why: "모래처럼 자연스러운 따뜻한 중간 톤" },
+  { hex: "#BFA880", name: "탠",          role: "뉴트럴 베이스", why: "구릿빛 느낌의 따뜻하고 편안한 어스 뉴트럴" },
+  { hex: "#C19A6B", name: "카멜",        role: "뉴트럴 베이스", why: "낙타털 같은 따뜻하고 클래식한 뉴트럴" },
+  { hex: "#C09090", name: "더스티로즈",  role: "뉴트럴 포인트",why: "먼지처럼 뿌연 로즈, 차분한 핑크 뉴트럴" },
+  { hex: "#B09090", name: "모브",        role: "뉴트럴 포인트",why: "잿빛이 도는 차분한 퍼플-핑크 뉴트럴" },
+  { hex: "#C4B49A", name: "웜샌드",      role: "뉴트럴 베이스", why: "따뜻하고 자연스러운 라이트 어스 톤" },
+];
+const P_BASES = [
+  { hex: "#1A1A1A", name: "블랙",      role: "다크 베이스", why: "시선을 잡아주는 강한 앵커 색" },
+  { hex: "#2C2C2C", name: "차콜블랙",  role: "다크 베이스", why: "블랙보다 부드러운 다크 앵커" },
+  { hex: "#3A3A3A", name: "다크차콜",  role: "다크 베이스", why: "깊이감 있는 다크 베이스" },
+  { hex: "#1F2E46", name: "네이비",    role: "딥 베이스",   why: "클래식한 딥 블루 베이스" },
+  { hex: "#2F3A2F", name: "딥포레스트",role: "딥 베이스",   why: "자연스럽고 깊은 그린 베이스" },
+];
+const P_NEUTRALS = [
+  { hex: "#EDE7DA", name: "아이보리",    role: "뉴트럴 베이스", why: "어두운 베이스를 부드럽게 받쳐주는 뉴트럴" },
+  { hex: "#F5F1E8", name: "크림",        role: "뉴트럴 베이스", why: "따뜻하고 부드러운 크림 뉴트럴" },
+  { hex: "#F0EDE8", name: "오프화이트",  role: "뉴트럴 베이스", why: "순백보다 포근한 오프 화이트 뉴트럴" },
+  { hex: "#E8E0D0", name: "라이트베이지",role: "뉴트럴 베이스", why: "가볍고 밝은 베이지 뉴트럴" },
+  { hex: "#D8D0C2", name: "워밍베이지",  role: "뉴트럴 베이스", why: "자연스럽고 따뜻한 뉴트럴" },
+  { hex: "#DDDDE0", name: "실버베이지",  role: "뉴트럴 베이스", why: "은빛 기운이 도는 차분한 뉴트럴" },
+];
+const P_ACCENTS = [
+  { hex: "#F4DF8A", name: "버터옐로",   role: "포인트 컬러", why: "단 하나만 넣어 전체 룩에 생동감을 주는 포인트" },
+  { hex: "#FF7F6A", name: "코랄",       role: "포인트 컬러", why: "따뜻하고 생동감 넘치는 코랄 포인트" },
+  { hex: "#5EC7A2", name: "민트그린",   role: "포인트 컬러", why: "상쾌하고 청량한 민트 포인트" },
+  { hex: "#9090C8", name: "라벤더블루", role: "포인트 컬러", why: "차분하면서도 개성 있는 라벤더 포인트" },
+  { hex: "#E8A0A0", name: "더스티핑크", role: "포인트 컬러", why: "부드럽고 로맨틱한 더스티 핑크 포인트" },
+  { hex: "#6AB0D8", name: "스카이블루", role: "포인트 컬러", why: "청량하고 시원한 스카이 블루 포인트" },
+  { hex: "#C07456", name: "테라코타",   role: "포인트 컬러", why: "흙빛 따뜻한 테라코타 포인트" },
+  { hex: "#8BA87A", name: "세이지그린", role: "포인트 컬러", why: "자연스럽고 편안한 세이지 그린 포인트" },
+  { hex: "#F4A460", name: "샌디브라운", role: "포인트 컬러", why: "따뜻하고 활기찬 샌디 브라운 포인트" },
+  { hex: "#DDA0DD", name: "플럼",       role: "포인트 컬러", why: "자두빛의 달콤하고 성숙한 퍼플 포인트" },
+  { hex: "#98C5D0", name: "더스티블루", role: "포인트 컬러", why: "차분하고 세련된 더스티 블루 포인트" },
+  { hex: "#B8D88A", name: "라이트그린", role: "포인트 컬러", why: "봄처럼 생생한 연두 포인트" },
+  { hex: "#F4EB6A", name: "레몬옐로",   role: "포인트 컬러", why: "레몬처럼 새콤하고 경쾌한 노랑 포인트" },
+  { hex: "#E8C49A", name: "피치베이지", role: "포인트 컬러", why: "달콤하고 따뜻한 피치 계열 포인트" },
+  { hex: "#A0C8A0", name: "소프트그린", role: "포인트 컬러", why: "부드럽고 편안한 소프트 그린 포인트" },
+];
+
+// ─── 날짜 시드 기반 색 선택 ──────────────────────────────────────────────────
+function todaySeed() {
+  const d = new Date();
+  return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+}
+function hashPick(pool, offset) {
+  const s = todaySeed() + offset * 1009;
+  let h = (s ^ 0x9e3779b9) >>> 0;
+  h = Math.imul(h ^ (h >>> 16), 0x45d9f3b) >>> 0;
+  h = Math.imul(h ^ (h >>> 16), 0x45d9f3b) >>> 0;
+  return pool[(h >>> 0) % pool.length];
+}
+function buildDailyColors(colorTone) {
+  let picks;
+  if (colorTone === "neutral") {
+    // 다크 / 미드 / 라이트 각 1개씩 → 항상 대비감 있는 3색
+    picks = [hashPick(N_DARK, 0), hashPick(N_MID, 1), hashPick(N_LIGHT, 2)];
+  } else if (colorTone === "bright") {
+    // 파스텔 풀에서 중복 없이 3개
+    const seen = new Set();
+    picks = [];
+    for (let i = 0; picks.length < 3; i++) {
+      const p = hashPick(B_POOL, i * 7);
+      if (!seen.has(p.hex)) { seen.add(p.hex); picks.push(p); }
+    }
+  } else if (colorTone === "calm") {
+    // 다크 어스 / 어스 포인트 / 뉴트럴 각 1개씩
+    picks = [hashPick(C_DARK, 0), hashPick(C_EARTH, 3), hashPick(C_NEUTRAL, 5)];
+  } else {
+    // point: 다크 베이스 + 뉴트럴 + 포인트 어센트
+    picks = [hashPick(P_BASES, 0), hashPick(P_NEUTRALS, 2), hashPick(P_ACCENTS, 4)];
+  }
+  const n = picks.map(p => p.name);
+  const textMap = {
+    neutral: `${n[0]}·${n[1]}·${n[2]} 조합으로 차분하고 정돈된 인상을 만듭니다.`,
+    bright:  `${n[0]}·${n[1]}·${n[2]}으로 산뜻하고 밝은 무드를 연출합니다.`,
+    calm:    `${n[0]}·${n[1]}·${n[2]} 어스 톤 조합으로 안정적인 분위기를 줍니다.`,
+    point:   `${n[0]}·${n[1]} 기본색 위에 ${n[2]}를 포인트로 올려 완성도를 높입니다.`,
+  };
+  return {
+    colors:     picks.map(p => p.hex),
+    colorNames: picks.map(p => p.name),
+    colorRoles: picks.map(p => p.role),
+    colorWhys:  picks.map(p => p.why),
+    text:       textMap[colorTone] || textMap.neutral,
+  };
+}
 
 const COLOR_HEX = {
   블랙: "#111111",
@@ -255,8 +387,11 @@ const COLOR_WORDS = [
 ];
 
 function preferredPalette(profile) {
-  const base = COLOR_PALETTES[profile.colorTone] || COLOR_PALETTES.neutral;
+  const meta = PALETTE_META[profile.colorTone] || PALETTE_META.neutral;
   const rules = COLOR_TONE_RULES[profile.colorTone] || COLOR_TONE_RULES.neutral;
+  const daily = buildDailyColors(profile.colorTone || "neutral");
+  const base = { ...meta, ...daily };
+
   const selected =
     profile.mainColor === "custom" && profile.customColor?.trim()
       ? {
@@ -265,17 +400,15 @@ function preferredPalette(profile) {
         }
       : MAIN_COLOR_RULES[profile.mainColor || "auto"];
 
-  if (!selected) {
-    return { ...base, text: `${base.text} ${rules.text}` };
-  }
+  if (!selected) return base;
 
   return {
     ...base,
-    name: `${base.name} · ${selected.label}`,
-    colorNames: [selected.label, rules.top, rules.bottom],
-    colors: [selected.hex, COLOR_HEX[rules.top], COLOR_HEX[rules.bottom]].filter(Boolean),
-    colorRoles: [`${selected.label} (메인)`, "베이스 색", "서브 베이스"],
-    colorWhys: [`온보딩에서 직접 선택한 메인 컬러`, `${selected.label}와 어울리는 베이스`, "균형을 잡아주는 서브 컬러"],
+    name: `${meta.name} · ${selected.label}`,
+    colorNames: [selected.label, daily.colorNames[1], daily.colorNames[2]],
+    colors: [selected.hex, daily.colors[1], daily.colors[2]].filter(Boolean),
+    colorRoles: [`${selected.label} (메인)`, daily.colorRoles[1], daily.colorRoles[2]],
+    colorWhys: [`온보딩에서 직접 선택한 메인 컬러`, daily.colorWhys[1], daily.colorWhys[2]],
     accessory: `${selected.label} 미니백·${rules.shoes} 양말`,
     text: `${selected.label}를 중심색으로 두고 ${rules.top}, ${rules.bottom} 계열로 균형을 맞춥니다.`,
   };
@@ -543,7 +676,12 @@ const PLAIN_HINTS = [
   ["슬랙스", "긴바지"],
   ["트라우저", "긴바지"],
   ["팬츠", "긴바지"],
-  ["데님", "청바지"],
+  // "데님 자켓"을 먼저 매칭해야 "청자켓"으로 올바르게 분류됨
+  // (순서가 빠를수록 먼저 매칭되는 find() 특성 활용)
+  ["데님 자켓", "청자켓"],
+  ["스트레이트 데님", "청바지"],
+  ["와이드 데님", "청바지"],
+  ["기모 데님", "청바지"],
   ["스커트", "치마"],
   ["블라우스", "셔츠형 상의"],
   ["슬리브리스", "민소매"],
@@ -600,11 +738,11 @@ function detailedItems({ feels, mood, profile, isWet, gap }) {
 
 function outfitName(mood, index) {
   const names = {
-    minimal: ["톤 정리 미니멀", "린넨 클린룩", "모노 밸런스"],
-    casual: ["주말 데일리", "데님 캐주얼", "가벼운 시티룩"],
-    street: ["롱 쇼츠 스트릿", "나일론 레이어드", "그래픽 포인트"],
-    formal: ["쿨 비즈 포멀", "린넨 셋업 무드", "정돈된 출근룩"],
-    sporty: ["라이트 액티브", "러닝 캐주얼", "나일론 스포츠"],
+    minimal: ["레이어드 미니멀", "클린 기본룩", "모노 포인트"],
+    casual:  ["레이어드 캐주얼", "가벼운 데일리", "크로스 믹스"],
+    street:  ["볼륨 스트릿", "나일론 캐주얼", "그래픽 믹스"],
+    formal:  ["비즈 포멀", "린넨 셋업", "스마트 캐주얼"],
+    sporty:  ["액티브 레이어드", "러닝 캐주얼", "스포츠 믹스"],
   };
   return (names[mood] || names.minimal)[index];
 }
@@ -616,18 +754,27 @@ function makeOutfits({ detail, outer, accessory, mood, palette, reasons, isWet, 
     typeof detail.shoes === "string" && detail.shoes.includes(" 또는 ")
       ? detail.shoes.split(" 또는 ")
       : [detail.shoes];
+
+  // 룩별 아우터 전략: 룩1=레이어드 완성형, 룩2=미니멀(아우터 없이), 룩3=필요시만
   const layerOptions = [
     outer,
-    feels >= 23 ? "레이어 생략" : outer,
-    gap >= 8 ? outer : "레이어 생략",
+    feels >= 20 ? "레이어 생략" : outer,
+    (isWet || gap >= 10 || feels < 16) ? outer : "레이어 생략",
   ];
+
+  // 룩 1~3이 아이템 유형까지 다르도록 크로스 믹스 인덱스 적용
+  // index 2(룩3) = top[1]+bottom[0] 조합 → 룩1(top0+bottom0)·룩2(top1+bottom1)와 다름
+  const TOP_IDX    = [0, 1, 1];
+  const BOTTOM_IDX = [0, 1, 0];
 
   return [0, 1, 2].map((index) => {
     const paletteColors = palette.colorNames || ["블랙", "아이보리", "그레이"];
     const pickedOuter = layerOptions[index] || outer || "레이어 생략";
-    const top = applyPaletteColor(topOptions[index % topOptions.length], paletteColors[index % 3]);
-    const bottom = applyPaletteColor(bottomOptions[index % bottomOptions.length], paletteColors[(index + 1) % 3]);
-    const shoes = applyPaletteColor(shoeOptions[index % shoeOptions.length] || detail.shoes, paletteColors[(index + 2) % 3]);
+    const tIdx = Math.min(TOP_IDX[index], topOptions.length - 1);
+    const bIdx = Math.min(BOTTOM_IDX[index], bottomOptions.length - 1);
+    const top    = applyPaletteColor(topOptions[tIdx],    paletteColors[index % 3]);
+    const bottom = applyPaletteColor(bottomOptions[bIdx], paletteColors[(index + 1) % 3]);
+    const shoes  = applyPaletteColor(shoeOptions[index % shoeOptions.length] || detail.shoes, paletteColors[(index + 2) % 3]);
     const point =
       index === 0
         ? applyPaletteColor(accessory, paletteColors[2])
