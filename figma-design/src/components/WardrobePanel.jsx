@@ -238,7 +238,7 @@ export default function WardrobePanel({
   ];
 
   const SubHeader = ({ title, sub, open: o, onToggle }) => (
-    <button type="button" onClick={onToggle} className="flex w-full items-start justify-between py-1">
+    <button type="button" onClick={onToggle} className="flex w-full items-start justify-between py-1 text-left">
       <div>
         <div className="text-sm font-semibold text-[#1A1A1A]">{title}</div>
         {sub && <p className="text-xs text-[#6B665C] leading-5">{sub}</p>}
