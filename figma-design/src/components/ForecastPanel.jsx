@@ -32,7 +32,7 @@ export default function ForecastPanel({ forecast, selectedDay, onSelectDay, them
         </div>
       )}
 
-      <div className="wf-label mb-2 text-[#6B665C]">WEEKLY FORECAST</div>
+      <div className="wf-label mb-2 text-[#6B665C]">주간 예보</div>
       <div className="forecast-scroll">
       <div className="forecast-grid">
         {forecast.map((day, i) => {

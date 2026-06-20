@@ -1,7 +1,7 @@
 export default function ColorPalette({ palette }) {
   return (
     <section className="wf-card-soft mt-6 p-5">
-      <div className="wf-label text-[#6B665C]">COLOR BALANCE</div>
+      <div className="wf-label text-[#6B665C]">컬러 팔레트</div>
       <div className="mt-3 flex items-center gap-3">
         {palette.colors.map((color) => (
           <span

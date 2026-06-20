@@ -96,7 +96,7 @@ export default function LookCard({
   condition,
 }) {
   const sectionLabel =
-    forecastDay === 0 ? "TODAY'S LOOK" : forecastDay === 1 ? "TOMORROW'S LOOK" : "FORECAST LOOK";
+    forecastDay === 0 ? "오늘의 코디" : forecastDay === 1 ? "내일의 코디" : "예보 코디";
   const title =
     forecastDay === 0
       ? "오늘 바로 입는 3가지 코디"
@@ -182,7 +182,7 @@ export default function LookCard({
           style={{ borderColor: theme.accent }}
         >
           <div className="wf-label mb-2" style={{ color: theme.accent }}>
-            AI STYLIST
+            AI 스타일리스트
           </div>
           <p className="whitespace-pre-line text-[#3A362E]">{aiAdvice}</p>
         </div>

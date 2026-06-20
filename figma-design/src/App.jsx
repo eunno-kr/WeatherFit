@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import ChatBot from "./components/ChatBot.jsx";
 import ColorText from "./components/ColorText.jsx";
 import ColorPalette from "./components/ColorPalette.jsx";
+import MonthlyStats from "./components/MonthlyStats.jsx";
 import ForecastPanel from "./components/ForecastPanel.jsx";
 import HistoryPanel from "./components/HistoryPanel.jsx";
 import InsightPanel from "./components/InsightPanel.jsx";
@@ -455,6 +456,7 @@ export default function App() {
                 <InsightPanel look={look} />
                 <SavedOutfitsPanel savedOutfits={savedOutfits} onRemove={removeSavedOutfit} />
                 <HistoryPanel history={history} onRemove={removeHistory} />
+                <MonthlyStats history={history} wardrobe={wardrobe} />
               </div>
 
               <aside className="min-w-0 lg:sticky lg:top-6 lg:self-start">

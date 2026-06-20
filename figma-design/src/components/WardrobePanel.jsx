@@ -228,7 +228,7 @@ export default function WardrobePanel({
       )}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <div className="wf-label text-[#6B665C]">MY WARDROBE</div>
+          <div className="wf-label text-[#6B665C]">내 옷장</div>
           <h2 className="mt-2 text-lg font-semibold">내 옷장</h2>
           <p className="mt-1 text-sm leading-6 text-[#6B665C]">
             가지고 있는 옷을 넣으면 날씨, 스타일, 색감 기준으로 입을 수 있는 조합을 골라줍니다.
@@ -237,7 +237,7 @@ export default function WardrobePanel({
       </div>
 
       <div className="mt-5 border-t border-[#E5DED1] pt-4">
-        <div className="mb-3 wf-label text-[#6B665C]">ADD ITEM</div>
+        <div className="mb-3 wf-label text-[#6B665C]">옷 추가</div>
       <div className="grid min-w-0 gap-3">
         <input
           value={draft.name}
@@ -340,7 +340,7 @@ export default function WardrobePanel({
       </div>
 
       <div className="mt-6 border-t border-[#E5DED1] pt-5">
-        <div className="wf-label text-[#6B665C]">TODAY LOCK</div>
+        <div className="wf-label text-[#6B665C]">오늘의 고정</div>
         <h3 className="mt-1 text-base font-semibold">오늘 꼭 입고 싶은 옷 고정</h3>
         <p className="mt-1 text-sm leading-6 text-[#6B665C]">
           상의, 하의, 신발처럼 이미 정한 아이템이 있으면 선택하세요. 나머지만 날씨에 맞춰 조합합니다.
@@ -391,7 +391,7 @@ export default function WardrobePanel({
       <div className="mt-6 border-t border-[#E5DED1] pt-5">
         <div className="flex items-end justify-between gap-4">
           <div>
-            <div className="wf-label text-[#6B665C]">WARDROBE LIST</div>
+            <div className="wf-label text-[#6B665C]">옷장 목록</div>
             <h3 className="mt-1 text-base font-semibold">등록한 옷 {wardrobe.length}개</h3>
           </div>
           <div className="text-right text-xs leading-5 text-[#6B665C]">
@@ -473,7 +473,7 @@ export default function WardrobePanel({
       </div>
 
       <div className="mt-6 border-t border-[#E5DED1] pt-5">
-        <div className="wf-label text-[#6B665C]">PICKED FROM WARDROBE</div>
+        <div className="wf-label text-[#6B665C]">옷장에서 고른 코디</div>
         <div className="mt-3 border border-[#1A1A1A] bg-[#FAF8F3] p-4">
           <div className="flex items-center justify-between gap-3">
             <h3 className="text-base font-semibold">{recommendation.outfit?.title || "내 옷장 코디"}</h3>

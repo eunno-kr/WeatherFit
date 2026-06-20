@@ -13,7 +13,7 @@ export default function OccasionPicker({ occasion, onOccasionChange, theme }) {
 
   return (
     <div className="mt-4 border-b border-[#D7D0C4] pb-4">
-      <div className="wf-label mb-2 text-[#6B665C]">OCCASION</div>
+      <div className="wf-label mb-2 text-[#6B665C]">상황</div>
       <div className="flex flex-wrap gap-2">
         {OCCASIONS.map((item) => {
           const selected = occasion === item.id;
