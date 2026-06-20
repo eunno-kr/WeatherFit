@@ -135,20 +135,6 @@ button:hover {
   min-width: 400px;
 }
 
-/* ── 오늘의 코디 섹션 배경색 애니메이션 ── */
-@keyframes look-section-bg {
-  0%   { background-color: #F5F2ED; }
-  16%  { background-color: #EEF3EA; }
-  33%  { background-color: #EAF0F5; }
-  50%  { background-color: #F5EDEA; }
-  66%  { background-color: #F3F0E8; }
-  83%  { background-color: #EEE9F3; }
-  100% { background-color: #F5F2ED; }
-}
-
-.look-section-animated {
-  animation: look-section-bg 16s ease-in-out infinite;
-}
 
 /* ── 다크모드 ── */
 [data-dark="true"] body {

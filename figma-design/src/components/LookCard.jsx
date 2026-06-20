@@ -1,5 +1,17 @@
+import { useState } from "react";
 import ColorText from "./ColorText.jsx";
 import { downloadOutfitCard } from "../lib/imageCard.js";
+
+const BG_COLORS = [
+  "#F5F2ED", // 베이지
+  "#EEF3EA", // 세이지
+  "#EAF0F5", // 스카이블루
+  "#F5EDEA", // 블러시
+  "#F3F0E8", // 버터
+  "#EEE9F3", // 라벤더
+  "#EDF5F0", // 민트
+  "#F5F0E8", // 샌드
+];
 
 const SLOTS = [
   ["레이어", "outer"],
@@ -95,6 +107,9 @@ export default function LookCard({
   weather,
   condition,
 }) {
+  const [sectionBg] = useState(
+    () => BG_COLORS[Math.floor(Math.random() * BG_COLORS.length)]
+  );
   const sectionLabel =
     forecastDay === 0 ? "오늘의 코디" : forecastDay === 1 ? "내일의 코디" : "예보 코디";
   const title =
@@ -106,8 +121,8 @@ export default function LookCard({
 
   return (
     <section
-      className="look-section-animated mt-6 border p-5 sm:p-6"
-      style={{ borderColor: `${theme.accent}44` }}
+      className="mt-6 border p-5 sm:p-6 transition-colors duration-1000"
+      style={{ background: sectionBg, borderColor: `${theme.accent}44` }}
     >
       <div className="flex items-center justify-between gap-4">
         <div>
