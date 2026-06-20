@@ -47,6 +47,10 @@ function getSeason() {
 
 export async function fetchSeasonChecklist({ profile, condition, temp }) {
   const season = getSeason();
+  const now = new Date();
+  const monthInSeason = ((now.getMonth() % 3) + 1);
+  const weekOfMonth = Math.ceil(now.getDate() / 7);
+  const weekDesc = monthInSeason === 1 ? "초반" : monthInSeason === 2 ? "중반" : "후반";
   const text = await callGroq([
     {
       role: "system",
@@ -55,10 +59,12 @@ export async function fetchSeasonChecklist({ profile, condition, temp }) {
     },
     {
       role: "user",
-      content: `현재 ${season} 시즌입니다. 날씨: ${condition || "보통"}, 기온: ${temp}°C, 스타일: ${profile?.style || "캐주얼"}, 나이대: ${profile?.age || "20대"}.
+      content: `현재 ${season} 시즌 ${weekDesc} (${now.getMonth() + 1}월 ${weekOfMonth}주차)입니다.
+날씨: ${condition || "보통"}, 기온: ${temp}°C, 스타일: ${profile?.style || "캐주얼"}, 나이대: ${profile?.age || "20대"}.
 
-이번 ${season} 시즌에 꼭 준비해야 할 패션 아이템 5가지를 JSON 배열로 알려주세요.
-형식: [{"label": "아이템명", "desc": "한 줄 팁"}, ...]
+이번 주 날씨와 시즌에 맞는 패션 체크리스트 5가지를 JSON 배열로 알려주세요.
+매주 조금씩 다른 아이템을 추천하고, 이번 주 날씨와 기온을 반드시 반영하세요.
+형식: [{"label": "아이템명", "desc": "이번 주 관련 한 줄 팁"}, ...]
 JSON 배열만 출력하세요. 다른 텍스트 없이.`,
     },
   ]);

@@ -43,19 +43,26 @@ const FALLBACK = {
   ],
 };
 
+function getWeekKey() {
+  const d = new Date();
+  const monday = new Date(d);
+  monday.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+  return monday.toISOString().slice(0, 10); // "2026-06-16" 형태
+}
+
 function loadCache() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
-    const { items, season } = JSON.parse(raw);
-    if (season === getSeason()) return items;
+    const { items, weekKey } = JSON.parse(raw);
+    if (weekKey === getWeekKey()) return items;
     return null;
   } catch { return null; }
 }
 
 function saveCache(items) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ items, season: getSeason() }));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ items, weekKey: getWeekKey() }));
   } catch {}
 }
 
@@ -109,7 +116,7 @@ export default function SeasonChecklist({ profile, condition, temp, theme }) {
         <div>
           <div className="wf-label text-[#3A362E]" style={{ fontSize: "13px" }}>계절 체크리스트</div>
           <p className="mt-1 text-sm font-medium text-[#6B665C]">
-            {error ? "기본 목록 (AI 연결 실패)" : `AI 추천 · ${seasonLabel} 시즌 필수 아이템`}
+            {error ? "기본 목록 (AI 연결 실패)" : `AI 추천 · 이번 주 ${seasonLabel} 아이템 · 매주 월요일 갱신`}
           </p>
         </div>
         {items.length > 0 && (
