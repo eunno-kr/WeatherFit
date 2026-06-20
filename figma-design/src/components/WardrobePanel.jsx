@@ -228,7 +228,7 @@ export default function WardrobePanel({
         <div className="wf-label text-[#3A362E]" style={{ fontSize: "13px" }}>{title}</div>
         {sub && <p className="mt-0.5 text-xs text-[#6B665C]">{sub}</p>}
       </div>
-      <span className="text-xs text-[#A8A296]">{o ? "▲" : "▼"}</span>
+      <span style={{ fontSize: "13px", border: "0.5px solid #D7D0C4", borderRadius: "4px", padding: "2px 8px", color: "#6B665C" }}>{o ? "−" : "+"}</span>
     </button>
   );
 

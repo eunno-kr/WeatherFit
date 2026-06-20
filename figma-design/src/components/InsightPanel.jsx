@@ -6,7 +6,7 @@ export default function InsightPanel({ look }) {
     <section className="wf-card-soft mt-6 p-5">
       <button type="button" onClick={() => setOpen((v) => !v)} className="flex w-full items-center justify-between">
         <div className="wf-label text-[#6B665C]" style={{ fontSize: "13px" }}>이 코디를 추천한 이유</div>
-        <span className="text-xs text-[#A8A296]">{open ? "▲" : "▼"}</span>
+        <span style={{ fontSize: "13px", border: "0.5px solid #D7D0C4", borderRadius: "4px", padding: "2px 8px", color: "#6B665C" }}>{open ? "−" : "+"}</span>
       </button>
       {open && (
         <div className="mt-3 grid gap-2">

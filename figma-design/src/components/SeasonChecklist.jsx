@@ -129,7 +129,7 @@ export default function SeasonChecklist({ profile, condition, temp, theme }) {
               {checkedCount}/{items.length}
             </span>
           )}
-          <span className="text-xs text-[#A8A296]">{open ? "▲" : "▼"}</span>
+          <span style={{ fontSize: "13px", border: "0.5px solid #D7D0C4", borderRadius: "4px", padding: "2px 8px", color: "#6B665C" }}>{open ? "−" : "+"}</span>
         </div>
       </button>
 

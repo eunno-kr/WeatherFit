@@ -203,7 +203,7 @@ export default function TodayColorPalette({ condition, temp, profile, theme }) {
       {/* 헤더 */}
       <button type="button" onClick={() => setOpen((v) => !v)} className="flex w-full items-center justify-between mb-5">
         <div className="wf-label text-[#3A362E]" style={{ fontSize: "13px" }}>퍼스널컬러 & 색상 팔레트</div>
-        <span className="text-xs text-[#A8A296]">{open ? "▲" : "▼"}</span>
+        <span style={{ fontSize: "13px", border: "0.5px solid #D7D0C4", borderRadius: "4px", padding: "2px 8px", color: "#6B665C" }}>{open ? "−" : "+"}</span>
       </button>
 
       {/* 탭 */}

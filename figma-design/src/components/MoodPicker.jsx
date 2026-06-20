@@ -16,7 +16,7 @@ export default function MoodPicker({ mood, onMoodChange, theme }) {
     <div className="mt-6 border-b border-[#D7D0C4] pb-5">
       <button type="button" onClick={() => setOpen((v) => !v)} className="flex w-full items-center justify-between mb-2">
         <div className="wf-label text-[#6B665C]" style={{ fontSize: "13px" }}>스타일 · {current?.label || "선택"}</div>
-        <span className="text-xs text-[#A8A296]">{open ? "▲" : "▼"}</span>
+        <span style={{ fontSize: "13px", border: "0.5px solid #D7D0C4", borderRadius: "4px", padding: "2px 8px", color: "#6B665C" }}>{open ? "−" : "+"}</span>
       </button>
       {open && (
         <div className="flex flex-wrap gap-2">

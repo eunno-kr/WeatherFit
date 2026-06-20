@@ -46,7 +46,7 @@ export default function TempHistory({ history, theme }) {
             내 착용 기록 {history.length}개 분석 · 기온별 자주 입은 코디
           </p>
         </div>
-        <span className="text-xs text-[#A8A296]">{open ? "▲" : "▼"}</span>
+        <span style={{ fontSize: "13px", border: "0.5px solid #D7D0C4", borderRadius: "4px", padding: "2px 8px", color: "#6B665C" }}>{open ? "−" : "+"}</span>
       </button>
 
       {open && <div className="mt-4 grid gap-4">
