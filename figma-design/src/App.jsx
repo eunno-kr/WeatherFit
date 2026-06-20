@@ -272,25 +272,23 @@ export default function App() {
   // 오늘 입었어요 기록
   const recordWorn = (outfit) => {
     const dateStr = new Date().toLocaleDateString("ko-KR");
-    const alreadyToday = history.some((h) => h.date === dateStr);
-    if (alreadyToday) return;
     const occasionDef = OCCASION_DEFS.find((o) => o.id === occasion);
-    setHistory((prev) =>
-      [
-        {
-          id: `${Date.now()}`,
-          date: dateStr,
-          outfitTitle: outfit.title,
-          style: effectiveMood,
-          occasion,
-          occasionLabel: occasionDef?.label || "자유",
-          city: city.name,
-          temp: `${Math.round(activeWeather?.temp || 0)}°`,
-          condition,
-        },
-        ...prev,
-      ].slice(0, 60)
-    );
+    const newEntry = {
+      id: `${Date.now()}`,
+      date: dateStr,
+      outfitTitle: outfit.title,
+      style: effectiveMood,
+      occasion,
+      occasionLabel: occasionDef?.label || "자유",
+      city: city.name,
+      temp: `${Math.round(activeWeather?.temp || 0)}°`,
+      condition,
+    };
+    // 오늘 기록이 있으면 교체, 없으면 추가
+    setHistory((prev) => {
+      const filtered = prev.filter((h) => h.date !== dateStr);
+      return [newEntry, ...filtered].slice(0, 60);
+    });
   };
   const removeHistory = (id) => setHistory((prev) => prev.filter((h) => h.id !== id));
 
@@ -456,6 +454,7 @@ export default function App() {
                   aiLoading={aiLoading}
                   weather={activeWeather}
                   condition={condition}
+                  history={history}
                 />
                 <InsightPanel look={look} />
                 <SavedOutfitsPanel savedOutfits={savedOutfits} onRemove={removeSavedOutfit} />

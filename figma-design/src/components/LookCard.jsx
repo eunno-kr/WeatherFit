@@ -125,11 +125,20 @@ export default function LookCard({
   aiLoading,
   weather,
   condition,
+  history,
 }) {
   const [sectionBg] = useState(
     () => BG_COLORS[Math.floor(Math.random() * BG_COLORS.length)]
   );
-  const [wornId, setWornId] = useState(null);
+  const [wornId, setWornId] = useState(() => {
+    const today = new Date().toLocaleDateString("ko-KR");
+    const todayEntry = history?.find((h) => h.date === today);
+    if (todayEntry) {
+      const match = look.outfits.find((o) => o.title === todayEntry.outfitTitle);
+      return match?.id ?? null;
+    }
+    return null;
+  });
   const sectionLabel =
     forecastDay === 0 ? "오늘의 코디" : forecastDay === 1 ? "내일의 코디" : "예보 코디";
   const title =
