@@ -502,7 +502,7 @@ export default function App() {
                 <span>·</span>
                 <span>Designed & Developed by</span>
                 <a
-                  href="https://github.com/korea-j"
+                  href="https://github.com/eunno-kr"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-semibold text-[#1A1A1A] underline underline-offset-2 hover:text-[#E8543B] transition-colors"
