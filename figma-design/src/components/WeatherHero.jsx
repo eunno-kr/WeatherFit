@@ -76,7 +76,7 @@ export default function WeatherHero({
         <div className="wf-card overflow-hidden p-0">
           <div className="grid min-h-[260px] sm:grid-cols-[0.92fr_1.08fr]">
             <div className="flex flex-col justify-between border-b border-ink bg-[#1A1A1A] p-5 text-[#FFFDF7] sm:border-b-0 sm:border-r">
-              <div className="wf-label text-[#E8543B]">
+              <div className="wf-label text-[#E8543B]" style={{ fontSize: "13px" }}>
                 {theme.name} · {data.city} · {profile.age} · {genderLabel}
               </div>
               <div>
