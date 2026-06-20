@@ -316,7 +316,7 @@ export default function WardrobePanel({
                     className="min-w-0 w-full border border-[#D7D0C4] bg-transparent px-2 py-2 text-sm font-normal text-ink outline-none"
                   >
                     <option value="">자동 추천</option>
-                    <option value="__skip__">추천하지 않음 (생략)</option>
+                    <option value="__skip__">추천하지 않음</option>
                     {itemsByCategory(category).map((item) => (
                       <option key={item.id} value={item.id}>{item.name} · {item.color}</option>
                     ))}
