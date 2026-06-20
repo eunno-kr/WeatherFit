@@ -117,6 +117,8 @@ const COLOR_PALETTES = {
     accessory: "블랙 양말·그레이 미니백",
     colorNames: ["블랙", "아이보리", "그레이"],
     colors: ["#111111", "#F5F1E8", "#8C8C86"],
+    colorRoles: ["다크 베이스", "라이트 베이스", "미드 톤"],
+    colorWhys: ["강한 대비와 정돈된 인상을 위한 앵커 색", "블랙과 대비를 주면서 밝기를 올리는 베이스", "두 극단 사이 부드러운 연결"],
     text: "블랙, 아이보리, 그레이로 정돈된 인상을 만듭니다.",
   },
   bright: {
@@ -124,6 +126,8 @@ const COLOR_PALETTES = {
     accessory: "아이보리 양말·스카이블루 에코백",
     colorNames: ["아이보리", "스카이블루", "화이트"],
     colors: ["#F7F2D8", "#BFD7EA", "#FFFFFF"],
+    colorRoles: ["웜 베이스", "쿨 포인트", "라이트 베이스"],
+    colorWhys: ["따뜻한 느낌의 주조색, 어느 코디에나 잘 어울림", "아이보리의 따뜻함을 시원하게 중화시키는 쿨 포인트", "전체 밝기를 올리는 베이스"],
     text: "아이보리와 라이트블루를 중심으로 산뜻하게 보입니다.",
   },
   calm: {
@@ -131,6 +135,8 @@ const COLOR_PALETTES = {
     accessory: "네이비 양말·세이지 캔버스백",
     colorNames: ["네이비", "세이지", "베이지"],
     colors: ["#283747", "#7C8B5A", "#D8D0C2"],
+    colorRoles: ["딥 베이스", "어스 포인트", "뉴트럴 베이스"],
+    colorWhys: ["깊이감을 주는 진한 앵커 색", "자연에서 온 색감으로 전체 무드를 차분하게", "두 색 사이 여백을 채우는 뉴트럴"],
     text: "네이비, 세이지, 베이지 조합으로 안정적인 분위기를 줍니다.",
   },
   point: {
@@ -138,7 +144,9 @@ const COLOR_PALETTES = {
     accessory: "블랙 양말·버터 옐로 미니백",
     colorNames: ["블랙", "아이보리", "버터 옐로"],
     colors: ["#1A1A1A", "#EDE7DA", "#F4DF8A"],
-    text: "기본색을 깔고 감색 포인트를 하나만 넣어 완성도를 높입니다.",
+    colorRoles: ["다크 베이스", "뉴트럴 베이스", "포인트 컬러"],
+    colorWhys: ["시선을 잡아주는 강한 앵커 색", "블랙을 받쳐주는 부드러운 기본색", "단 하나만 넣어 전체 룩에 생동감을 주는 포인트"],
+    text: "기본색을 깔고 포인트 하나만 넣어 완성도를 높입니다.",
   },
 };
 
@@ -266,6 +274,8 @@ function preferredPalette(profile) {
     name: `${base.name} · ${selected.label}`,
     colorNames: [selected.label, rules.top, rules.bottom],
     colors: [selected.hex, COLOR_HEX[rules.top], COLOR_HEX[rules.bottom]].filter(Boolean),
+    colorRoles: [`${selected.label} (메인)`, "베이스 색", "서브 베이스"],
+    colorWhys: [`온보딩에서 직접 선택한 메인 컬러`, `${selected.label}와 어울리는 베이스`, "균형을 잡아주는 서브 컬러"],
     accessory: `${selected.label} 미니백·${rules.shoes} 양말`,
     text: `${selected.label}를 중심색으로 두고 ${rules.top}, ${rules.bottom} 계열로 균형을 맞춥니다.`,
   };
