@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useOpen } from "../lib/useOpen.js";
 import ColorText from "./ColorText.jsx";
 import { downloadOutfitCard } from "../lib/imageCard.js";
 
@@ -130,7 +131,7 @@ export default function LookCard({
   const [sectionBg] = useState(
     () => BG_COLORS[Math.floor(Math.random() * BG_COLORS.length)]
   );
-  const [open, setOpen] = useState(true);
+  const [open, toggleOpen] = useOpen("lookCard", true);
   const [wornId, setWornId] = useState(() => {
     const today = new Date().toLocaleDateString("ko-KR");
     const todayEntry = history?.find((h) => h.date === today);
@@ -154,7 +155,7 @@ export default function LookCard({
       className="mt-6 border p-5 sm:p-6 transition-colors duration-1000"
       style={{ background: sectionBg, borderColor: `${theme.accent}44` }}
     >
-      <button type="button" onClick={() => setOpen((v) => !v)} className="flex w-full items-center justify-between gap-4">
+      <button type="button" onClick={toggleOpen} className="flex w-full items-center justify-between gap-4">
         <div className="text-left">
           <div className="wf-label" style={{ color: theme.accent, fontSize: "13px" }}>
             {sectionLabel}

@@ -8,15 +8,15 @@ const OCCASIONS = [
 
 export const OCCASION_DEFS = OCCASIONS;
 
-import { useState } from "react";
+import { useOpen } from "../lib/useOpen.js";
 
 export default function OccasionPicker({ occasion, onOccasionChange, theme }) {
-  const [open, setOpen] = useState(true);
+  const [open, toggleOpen] = useOpen("occasion", true);
   const current = OCCASIONS.find((o) => o.id === occasion) || OCCASIONS[0];
 
   return (
     <div className="mt-4 border-b border-[#D7D0C4] pb-4">
-      <button type="button" onClick={() => setOpen((v) => !v)} className="flex w-full items-center justify-between mb-2">
+      <button type="button" onClick={toggleOpen} className="flex w-full items-center justify-between mb-2">
         <div className="wf-label text-[#6B665C]" style={{ fontSize: "13px" }}>상황 · {current.emoji} {current.label}</div>
         <span style={{ fontSize: "13px", border: "0.5px solid #D7D0C4", borderRadius: "4px", padding: "2px 8px", color: "#6B665C" }}>{open ? "−" : "+"}</span>
       </button>

@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { useOpen } from "../lib/useOpen.js";
 
 const WEEKDAYS = ["월", "화", "수", "목", "금", "토", "일"];
 
@@ -82,16 +83,16 @@ export default function StyleDashboard({ history, condition, temp, theme }) {
   const recentOutfits = history.slice(0, 3);
   const wornDays = weekDates.filter((d) => historyDates.has(d)).length;
 
-  const [openCal, setOpenCal] = useState(true);
-  const [openStreak, setOpenStreak] = useState(true);
-  const [openRecent, setOpenRecent] = useState(true);
+  const [openCal, toggleCal] = useOpen("dashCal", true);
+  const [openStreak, toggleStreak] = useOpen("dashStreak", true);
+  const [openRecent, toggleRecent] = useOpen("dashRecent", true);
 
   return (
     <div className="mt-6 grid gap-4">
 
       {/* ── 1. 이번 주 착용 달력 ── */}
       <section className="border border-[#E5DED1] bg-[#FAF8F3] p-5">
-        <button type="button" onClick={() => setOpenCal((v) => !v)} className="flex w-full items-center justify-between mb-4">
+        <button type="button" onClick={toggleCal} className="flex w-full items-center justify-between mb-4">
           <div>
             <div className="wf-label text-[#3A362E]" style={LABEL_STYLE}>이번 주 착용 달력</div>
             <p className="mt-1 text-sm font-medium text-[#6B665C]">
@@ -168,7 +169,7 @@ export default function StyleDashboard({ history, condition, temp, theme }) {
       {/* ── 4. 최근 착용 코디 ── */}
       {recentOutfits.length > 0 && (
         <section className="border border-[#E5DED1] bg-[#FAF8F3] p-5">
-          <button type="button" onClick={() => setOpenRecent((v) => !v)} className="flex w-full items-center justify-between mb-4">
+          <button type="button" onClick={toggleRecent} className="flex w-full items-center justify-between mb-4">
             <div className="wf-label text-[#3A362E]" style={LABEL_STYLE}>최근 착용 코디</div>
             <span style={{ fontSize: "13px", border: "0.5px solid #D7D0C4", borderRadius: "4px", padding: "2px 8px", color: "#6B665C" }}>{openRecent ? "−" : "+"}</span>
           </button>

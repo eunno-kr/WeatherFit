@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useOpen } from "../lib/useOpen.js";
 
 const MOODS = [
   { id: "minimal", label: "미니멀" },
@@ -9,12 +9,12 @@ const MOODS = [
 ];
 
 export default function MoodPicker({ mood, onMoodChange, theme }) {
-  const [open, setOpen] = useState(true);
+  const [open, toggleOpen] = useOpen("mood", true);
   const current = MOODS.find((m) => m.id === mood);
 
   return (
     <div className="mt-6 border-b border-[#D7D0C4] pb-5">
-      <button type="button" onClick={() => setOpen((v) => !v)} className="flex w-full items-center justify-between mb-2">
+      <button type="button" onClick={toggleOpen} className="flex w-full items-center justify-between mb-2">
         <div className="wf-label text-[#6B665C]" style={{ fontSize: "13px" }}>스타일 · {current?.label || "선택"}</div>
         <span style={{ fontSize: "13px", border: "0.5px solid #D7D0C4", borderRadius: "4px", padding: "2px 8px", color: "#6B665C" }}>{open ? "−" : "+"}</span>
       </button>

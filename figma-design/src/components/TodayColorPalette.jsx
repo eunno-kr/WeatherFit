@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useOpen } from "../lib/useOpen.js";
 
 const getSeason = () => {
   const m = new Date().getMonth() + 1;
@@ -157,7 +158,7 @@ export default function TodayColorPalette({ condition, temp, profile, theme }) {
   const season = getSeason();
   const seasonKo = SEASON_KO[season];
 
-  const [open, setOpen] = useState(true);
+  const [open, toggleOpen] = useOpen("colorPalette", true);
   const [tab, setTab] = useState("quiz");
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -201,7 +202,7 @@ export default function TodayColorPalette({ condition, temp, profile, theme }) {
     <section className="mt-6 border border-[#E5DED1] bg-[#FAF8F3] p-5">
 
       {/* 헤더 */}
-      <button type="button" onClick={() => setOpen((v) => !v)} className="flex w-full items-start justify-between mb-3">
+      <button type="button" onClick={toggleOpen} className="flex w-full items-start justify-between mb-3">
         <div className="text-left">
           <div className="wf-label text-[#3A362E]" style={{ fontSize: "13px" }}>퍼스널컬러 & 색상 팔레트</div>
           <p className="mt-1 text-xs text-[#8F897D] leading-5">내 피부톤에 맞는 색상을 진단하고 계절별 팔레트를 확인하세요. 코디 추천 색상과는 별개로, 평소 잘 받는 색을 파악하는 용도예요.</p>

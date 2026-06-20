@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { useOpen } from "../lib/useOpen.js";
 
 const RANGES = [
   { label: "영하 이하", sub: "0° 미만", min: -99, max: 0,  emoji: "🥶" },
@@ -21,7 +22,7 @@ function getMostFrequent(entries) {
 
 export default function TempHistory({ history, theme }) {
   const accent = theme?.accent || "#E8543B";
-  const [open, setOpen] = useState(true);
+  const [open, toggleOpen] = useOpen("tempHistory", true);
 
   const grouped = useMemo(() => {
     return RANGES.map((r) => ({
@@ -39,7 +40,7 @@ export default function TempHistory({ history, theme }) {
 
   return (
     <section className="mt-4 border border-[#E5DED1] bg-[#FAF8F3] p-5">
-      <button type="button" onClick={() => setOpen((v) => !v)} className="flex w-full items-center justify-between mb-1">
+      <button type="button" onClick={toggleOpen} className="flex w-full items-center justify-between mb-1">
         <div>
           <div className="wf-label text-[#3A362E]" style={{ fontSize: "13px" }}>기온대별 코디 기록</div>
           <p className="mt-1 text-sm font-medium text-[#6B665C]">

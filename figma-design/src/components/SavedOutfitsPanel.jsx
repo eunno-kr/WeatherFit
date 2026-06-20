@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useOpen } from "../lib/useOpen.js";
 import ColorText from "./ColorText.jsx";
 
 const SLOTS = [
@@ -10,7 +10,7 @@ const SLOTS = [
 ];
 
 export default function SavedOutfitsPanel({ savedOutfits, onRemove }) {
-  const [open, setOpen] = useState(false);
+  const [open, toggleOpen] = useOpen("savedOutfits", false);
 
   if (savedOutfits.length === 0) return null;
 
@@ -18,7 +18,7 @@ export default function SavedOutfitsPanel({ savedOutfits, onRemove }) {
     <section className="mt-6 border border-[#E5DED1] bg-[#FAF8F3] p-5 sm:p-6">
       <button
         type="button"
-        onClick={() => setOpen((prev) => !prev)}
+        onClick={toggleOpen}
         className="flex w-full items-center justify-between"
       >
         <div className="text-left">

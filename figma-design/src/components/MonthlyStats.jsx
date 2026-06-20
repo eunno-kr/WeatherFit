@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { useOpen } from "../lib/useOpen.js";
 
 const STYLE_KO = {
   minimal: "미니멀", casual: "캐주얼", street: "스트릿",
@@ -20,7 +21,7 @@ function topN(arr, key, n = 3) {
 }
 
 export default function MonthlyStats({ history, wardrobe }) {
-  const [open, setOpen] = useState(false);
+  const [open, toggleOpen] = useOpen("monthlyStats", false);
 
   const stats = useMemo(() => {
     const now = new Date();
@@ -47,7 +48,7 @@ export default function MonthlyStats({ history, wardrobe }) {
     <section className="mt-6 border border-[#E5DED1] bg-[#FAF8F3] p-5 sm:p-6">
       <button
         type="button"
-        onClick={() => setOpen((p) => !p)}
+        onClick={toggleOpen}
         className="flex w-full items-center justify-between"
       >
         <div className="text-left">

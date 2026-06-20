@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useOpen } from "../lib/useOpen.js";
 
 export default function HistoryPanel({ history, onRemove }) {
-  const [open, setOpen] = useState(false);
+  const [open, toggleOpen] = useOpen("history", false);
 
   if (history.length === 0) return null;
 
@@ -9,7 +9,7 @@ export default function HistoryPanel({ history, onRemove }) {
     <section className="mt-6 border border-[#E5DED1] bg-[#FAF8F3] p-5 sm:p-6">
       <button
         type="button"
-        onClick={() => setOpen((p) => !p)}
+        onClick={toggleOpen}
         className="flex w-full items-center justify-between"
       >
         <div className="text-left">

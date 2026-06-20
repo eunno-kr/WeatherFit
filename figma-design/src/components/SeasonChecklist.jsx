@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useOpen } from "../lib/useOpen.js";
 import { fetchSeasonChecklist } from "../lib/gemini.js";
 
 const STORAGE_KEY = "wf-season-checklist";
@@ -82,7 +83,7 @@ export default function SeasonChecklist({ profile, condition, temp, theme }) {
   const [checked, setChecked] = useState(() => loadChecked());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [open, setOpen] = useState(true);
+  const [open, toggleOpen] = useOpen("seasonChecklist", true);
   const accent = theme?.accent || "#E8543B";
   const season = getSeason();
   const checkedCount = items.filter((_, i) => checked[i]).length;
@@ -116,7 +117,7 @@ export default function SeasonChecklist({ profile, condition, temp, theme }) {
 
   return (
     <section className="mt-4 border border-[#E5DED1] bg-[#FAF8F3] p-5">
-      <button type="button" onClick={() => setOpen((v) => !v)} className="flex w-full items-center justify-between mb-4">
+      <button type="button" onClick={toggleOpen} className="flex w-full items-center justify-between mb-4">
         <div>
           <div className="wf-label text-[#3A362E]" style={{ fontSize: "13px" }}>계절 체크리스트</div>
           <p className="mt-1 text-sm font-medium text-[#6B665C]">
