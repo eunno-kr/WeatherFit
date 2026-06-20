@@ -259,20 +259,18 @@ export default function ChatBot({ weather, profile, look, wardrobe, occasion, co
           </div>
 
           {/* 빠른 질문 */}
-          {messages.length <= 1 && (
-            <div className="flex flex-wrap gap-1.5 border-t border-[#E5DED1] px-3 py-2 flex-shrink-0">
-              {QUICK_QUESTIONS.map((q) => (
-                <button
-                  key={q}
-                  type="button"
-                  onClick={() => send(q)}
-                  className="border border-[#D7D0C4] px-2 py-1 text-[11px] text-[#6B665C] transition hover:border-[#1A1A1A] hover:text-[#1A1A1A]"
-                >
-                  {q}
-                </button>
-              ))}
-            </div>
-          )}
+          <div className="flex flex-wrap gap-1.5 border-t border-[#E5DED1] px-3 py-2 flex-shrink-0">
+            {QUICK_QUESTIONS.map((q) => (
+              <button
+                key={q}
+                type="button"
+                onClick={() => send(q)}
+                className="border border-[#D7D0C4] px-2 py-1 text-[11px] text-[#6B665C] transition hover:border-[#1A1A1A] hover:text-[#1A1A1A]"
+              >
+                {q}
+              </button>
+            ))}
+          </div>
 
           {/* 입력창 */}
           <div className="flex border-t border-[#1A1A1A] flex-shrink-0">
