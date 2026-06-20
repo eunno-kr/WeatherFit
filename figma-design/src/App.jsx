@@ -404,7 +404,7 @@ export default function App() {
               <div className="min-w-0">
                 {appliedLockCount > 0 && (
                   <section className="wf-card mt-6 p-5 sm:p-6">
-                    <div className="wf-label text-[#6B665C]">WARDROBE RESULT</div>
+                    <div className="wf-label text-[#6B665C]">내 옷장 코디 결과</div>
                     <h2 className="mt-2 text-lg font-semibold">내가 고른 옷으로 다시 맞춘 코디</h2>
                     <div className="mt-4 grid gap-2 text-sm">
                       {[
