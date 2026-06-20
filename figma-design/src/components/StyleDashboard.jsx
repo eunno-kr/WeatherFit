@@ -44,7 +44,8 @@ function getWeekDates() {
 
 function parseDate(raw) {
   if (!raw) return null;
-  const m = raw.match(/(\d{4})[.\-/](\d{1,2})[.\-/](\d{1,2})/);
+  // "2026. 6. 21." (ko-KR) 및 "2026-06-21", "2026/6/21" 등 모두 처리
+  const m = raw.match(/(\d{4})\s*[.\-/]\s*(\d{1,2})\s*[.\-/]\s*(\d{1,2})/);
   if (m) return `${m[1]}-${m[2].padStart(2, "0")}-${m[3].padStart(2, "0")}`;
   return null;
 }
