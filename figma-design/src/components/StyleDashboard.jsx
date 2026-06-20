@@ -100,7 +100,7 @@ export default function StyleDashboard({ history, condition, temp, theme }) {
           </div>
           <div className="flex items-center gap-2">
             <span className="border px-3 py-1 text-sm font-bold" style={{ borderColor: `${accent}55`, color: accent }}>{wornDays}/7</span>
-            <span className="text-xs text-[#A8A296]">{openCal ? "▲" : "▼"}</span>
+            <span style={{ fontSize: "13px", border: "0.5px solid #D7D0C4", borderRadius: "4px", padding: "2px 8px", color: "#6B665C" }}>{openCal ? "−" : "+"}</span>
           </div>
         </button>
         {openCal && (
@@ -170,7 +170,7 @@ export default function StyleDashboard({ history, condition, temp, theme }) {
         <section className="border border-[#E5DED1] bg-[#FAF8F3] p-5">
           <button type="button" onClick={() => setOpenRecent((v) => !v)} className="flex w-full items-center justify-between mb-4">
             <div className="wf-label text-[#3A362E]" style={LABEL_STYLE}>최근 착용 코디</div>
-            <span className="text-xs text-[#A8A296]">{openRecent ? "▲" : "▼"}</span>
+            <span style={{ fontSize: "13px", border: "0.5px solid #D7D0C4", borderRadius: "4px", padding: "2px 8px", color: "#6B665C" }}>{openRecent ? "−" : "+"}</span>
           </button>
           {openRecent && (
             <div className="grid gap-3">
