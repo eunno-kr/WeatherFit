@@ -28,9 +28,7 @@ export default function ForecastPanel({ forecast, selectedDay, onSelectDay, them
           style={{ borderColor: theme.accent, background: `${theme.accent}15`, color: theme.accent }}
         >
           <span>☂️</span>
-          <span>
-            내일 강수 확률 {tomorrow.precipProb}% — 방수 아이템을 미리 준비하세요
-          </span>
+          <span>내일 강수 확률 {tomorrow.precipProb}% — 방수 아이템을 미리 준비하세요</span>
         </div>
       )}
 
@@ -38,53 +36,57 @@ export default function ForecastPanel({ forecast, selectedDay, onSelectDay, them
         <div className="wf-label text-[#6B665C]" style={{ fontSize: "13px" }}>주간 예보</div>
         <span className="text-xs text-[#A8A296]">{open ? "▲" : "▼"}</span>
       </button>
-      {open && <div className="forecast-scroll">
-      <div className="forecast-grid">
-        {forecast.map((day, i) => {
-          const date = new Date(day.date + "T12:00:00");
-          const label = i === 0 ? "오늘" : i === 1 ? "내일" : WEEKDAYS[date.getDay()];
-          const selected = selectedDay === i;
-          const [condition] = decodeWeather(day.code);
 
-          return (
-            <button
-              key={day.date}
-              type="button"
-              onClick={() => onSelectDay(i)}
-              title={condition}
-              className="flex flex-col items-center gap-1.5 border py-3.5 px-1 text-sm transition"
-              style={{
-                borderColor: selected ? "#1A1A1A" : "#E5DED1",
-                background: selected ? "#1A1A1A" : "#FAF8F3",
-                color: selected ? "#FFFDF7" : "#3A362E",
-              }}
-            >
-              <span className="text-sm font-semibold">{label}</span>
-              {i >= 2 && (
-                <span className="text-[11px]" style={{ opacity: 0.5 }}>
-                  {date.getMonth() + 1}/{date.getDate()}
-                </span>
-              )}
-              <span className="text-xl leading-none">{weatherIcon(day.code)}</span>
-              <span
-                className="text-sm font-semibold"
-                style={{ color: selected ? "#FFFDF7" : theme.accent }}
-              >
-                {Math.round(day.tmax)}°
-              </span>
-              <span className="text-xs" style={{ opacity: 0.55 }}>{Math.round(day.tmin)}°</span>
-              {day.precipProb >= 20 && (
-                <span
-                  className="text-[11px]"
-                  style={{ color: selected ? "#9FC7E8" : "#547EA8" }}
+      {open && (
+        <div className="forecast-scroll">
+          <div className="forecast-grid">
+            {forecast.map((day, i) => {
+              const date = new Date(day.date + "T12:00:00");
+              const label = i === 0 ? "오늘" : i === 1 ? "내일" : WEEKDAYS[date.getDay()];
+              const selected = selectedDay === i;
+              const [condition] = decodeWeather(day.code);
+
+              return (
+                <button
+                  key={day.date}
+                  type="button"
+                  onClick={() => onSelectDay(i)}
+                  title={condition}
+                  className="flex flex-col items-center gap-1.5 border py-3.5 px-1 text-sm transition"
+                  style={{
+                    borderColor: selected ? "#1A1A1A" : "#E5DED1",
+                    background: selected ? "#1A1A1A" : "#FAF8F3",
+                    color: selected ? "#FFFDF7" : "#3A362E",
+                  }}
                 >
-                  {day.precipProb}%
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </div>}
+                  <span className="text-sm font-semibold">{label}</span>
+                  {i >= 2 && (
+                    <span className="text-[11px]" style={{ opacity: 0.5 }}>
+                      {date.getMonth() + 1}/{date.getDate()}
+                    </span>
+                  )}
+                  <span className="text-xl leading-none">{weatherIcon(day.code)}</span>
+                  <span
+                    className="text-sm font-semibold"
+                    style={{ color: selected ? "#FFFDF7" : theme.accent }}
+                  >
+                    {Math.round(day.tmax)}°
+                  </span>
+                  <span className="text-xs" style={{ opacity: 0.55 }}>{Math.round(day.tmin)}°</span>
+                  {day.precipProb >= 20 && (
+                    <span
+                      className="text-[11px]"
+                      style={{ color: selected ? "#9FC7E8" : "#547EA8" }}
+                    >
+                      {day.precipProb}%
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {selectedDay > 0 && forecast[selectedDay] && (
         <p className="mt-2 text-xs text-[#6B665C]">
