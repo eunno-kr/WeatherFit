@@ -135,6 +135,44 @@ button:hover {
   min-width: 400px;
 }
 
+/* ── 코디 카드 배경색 애니메이션 ── */
+@keyframes look-bg-0 {
+  0%   { background-color: #FFFDF7; }
+  20%  { background-color: #F0F5EE; }
+  40%  { background-color: #EEF1F7; }
+  60%  { background-color: #F7F0EE; }
+  80%  { background-color: #F5F3E6; }
+  100% { background-color: #FFFDF7; }
+}
+@keyframes look-bg-1 {
+  0%   { background-color: #F5F3E6; }
+  20%  { background-color: #FFFDF7; }
+  40%  { background-color: #F0F5EE; }
+  60%  { background-color: #EEF1F7; }
+  80%  { background-color: #F2EEF5; }
+  100% { background-color: #F5F3E6; }
+}
+@keyframes look-bg-2 {
+  0%   { background-color: #EEF1F7; }
+  20%  { background-color: #F2EEF5; }
+  40%  { background-color: #F7F0EE; }
+  60%  { background-color: #F0F5EE; }
+  80%  { background-color: #FFFDF7; }
+  100% { background-color: #EEF1F7; }
+}
+
+.look-card-animated-0 {
+  animation: look-bg-0 12s ease-in-out infinite;
+}
+.look-card-animated-1 {
+  animation: look-bg-1 12s ease-in-out infinite;
+  animation-delay: -4s;
+}
+.look-card-animated-2 {
+  animation: look-bg-2 12s ease-in-out infinite;
+  animation-delay: -8s;
+}
+
 /* ── 다크모드 ── */
 [data-dark="true"] body {
   background-color: #1a1a1a;
