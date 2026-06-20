@@ -130,6 +130,7 @@ export default function LookCard({
   const [sectionBg] = useState(
     () => BG_COLORS[Math.floor(Math.random() * BG_COLORS.length)]
   );
+  const [open, setOpen] = useState(true);
   const [wornId, setWornId] = useState(() => {
     const today = new Date().toLocaleDateString("ko-KR");
     const todayEntry = history?.find((h) => h.date === today);
@@ -153,93 +154,100 @@ export default function LookCard({
       className="mt-6 border p-5 sm:p-6 transition-colors duration-1000"
       style={{ background: sectionBg, borderColor: `${theme.accent}44` }}
     >
-      <div className="flex items-center justify-between gap-4">
-        <div>
+      <button type="button" onClick={() => setOpen((v) => !v)} className="flex w-full items-center justify-between gap-4">
+        <div className="text-left">
           <div className="wf-label" style={{ color: theme.accent, fontSize: "13px" }}>
             {sectionLabel}
           </div>
           <h2 className="mt-1 text-2xl font-semibold tracking-normal">{title}</h2>
         </div>
-        <div className="border border-[#D7D0C4] bg-[#FFFDF7] px-2.5 py-1 text-xs text-[#6B665C]">
-          일반 추천
-        </div>
-      </div>
-
-      <div className="mt-5 grid gap-3">
-        {look.outfits.map((outfit, index) => (
-          <OutfitCard
-            key={outfit.id}
-            outfit={outfit}
-            index={index}
-            theme={theme}
-            onSave={onSave}
-            isSaved={savedIds.has(outfit.id)}
-            weather={weather}
-            palette={look.palette}
-            condition={condition}
-            onWorn={(o) => { setWornId(o.id); onWorn && onWorn(o); }}
-            wornId={wornId}
-          />
-        ))}
-      </div>
-
-      <div className="mt-4 flex flex-wrap gap-2">
-        <button
-          type="button"
-          onClick={() => shareOutfit(wornId ? look.outfits.find(o => o.id === wornId) || look.outfits[0] : look.outfits[0], weatherSummary)}
-          className="border border-[#D7D0C4] px-4 py-2 text-xs text-[#6B665C]"
-        >
-          공유하기 ↗
-        </button>
-        {onAskAI && (
-          <button
-            type="button"
-            onClick={onAskAI}
-            disabled={aiLoading}
-            className="flex items-center gap-1.5 border px-4 py-2 text-xs font-semibold transition disabled:opacity-50"
-            style={{
-              borderColor: theme.accent,
-              color: aiAdvice ? "#FFFDF7" : theme.accent,
-              background: aiAdvice ? theme.accent : "transparent",
-            }}
-          >
-            {aiLoading ? (
-              <>
-                <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                AI 분석 중...
-              </>
-            ) : (
-              <>✦ AI에게 물어보기</>
-            )}
-          </button>
-        )}
-      </div>
-
-      {aiAdvice && (
-        <div
-          className="mt-4 border-l-2 pl-4 text-sm leading-7"
-          style={{ borderColor: theme.accent }}
-        >
-          <div className="wf-label mb-2" style={{ color: theme.accent, fontSize: "13px" }}>
-            AI 스타일리스트
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="border border-[#D7D0C4] bg-[#FFFDF7] px-2.5 py-1 text-xs text-[#6B665C]">
+            일반 추천
           </div>
-          <p className="whitespace-pre-line text-[#3A362E]">{aiAdvice}</p>
+          <span className="text-xs text-[#A8A296]">{open ? "▲" : "▼"}</span>
         </div>
+      </button>
+
+      {open && (
+        <>
+          <div className="mt-5 grid gap-3">
+            {look.outfits.map((outfit, index) => (
+              <OutfitCard
+                key={outfit.id}
+                outfit={outfit}
+                index={index}
+                theme={theme}
+                onSave={onSave}
+                isSaved={savedIds.has(outfit.id)}
+                weather={weather}
+                palette={look.palette}
+                condition={condition}
+                onWorn={(o) => { setWornId(o.id); onWorn && onWorn(o); }}
+                wornId={wornId}
+              />
+            ))}
+          </div>
+
+          <div className="mt-4 flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => shareOutfit(wornId ? look.outfits.find(o => o.id === wornId) || look.outfits[0] : look.outfits[0], weatherSummary)}
+              className="border border-[#D7D0C4] px-4 py-2 text-xs text-[#6B665C]"
+            >
+              공유하기 ↗
+            </button>
+            {onAskAI && (
+              <button
+                type="button"
+                onClick={onAskAI}
+                disabled={aiLoading}
+                className="flex items-center gap-1.5 border px-4 py-2 text-xs font-semibold transition disabled:opacity-50"
+                style={{
+                  borderColor: theme.accent,
+                  color: aiAdvice ? "#FFFDF7" : theme.accent,
+                  background: aiAdvice ? theme.accent : "transparent",
+                }}
+              >
+                {aiLoading ? (
+                  <>
+                    <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                    AI 분석 중...
+                  </>
+                ) : (
+                  <>✦ AI에게 물어보기</>
+                )}
+              </button>
+            )}
+          </div>
+
+          {aiAdvice && (
+            <div
+              className="mt-4 border-l-2 pl-4 text-sm leading-7"
+              style={{ borderColor: theme.accent }}
+            >
+              <div className="wf-label mb-2" style={{ color: theme.accent, fontSize: "13px" }}>
+                AI 스타일리스트
+              </div>
+              <p className="whitespace-pre-line text-[#3A362E]">{aiAdvice}</p>
+            </div>
+          )}
+
+          <p className="mt-5 text-sm leading-6 text-[#3A362E]">{look.comment}</p>
+
+          <div className="mt-4 flex flex-wrap gap-1.5">
+            {look.reasons.map((reason) => (
+              <span
+                key={reason}
+                className="border px-2.5 py-1 font-display text-[11px] font-medium"
+                style={{ borderColor: `${theme.accent}66`, color: theme.accent }}
+              >
+                왜? {reason}
+              </span>
+            ))}
+          </div>
+        </>
       )}
-
-      <p className="mt-5 text-sm leading-6 text-[#3A362E]">{look.comment}</p>
-
-      <div className="mt-4 flex flex-wrap gap-1.5">
-        {look.reasons.map((reason) => (
-          <span
-            key={reason}
-            className="border px-2.5 py-1 font-display text-[11px] font-medium"
-            style={{ borderColor: `${theme.accent}66`, color: theme.accent }}
-          >
-            왜? {reason}
-          </span>
-        ))}
-      </div>
     </section>
   );
 }

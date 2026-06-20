@@ -8,35 +8,45 @@ const OCCASIONS = [
 
 export const OCCASION_DEFS = OCCASIONS;
 
+import { useState } from "react";
+
 export default function OccasionPicker({ occasion, onOccasionChange, theme }) {
+  const [open, setOpen] = useState(true);
   const current = OCCASIONS.find((o) => o.id === occasion) || OCCASIONS[0];
 
   return (
     <div className="mt-4 border-b border-[#D7D0C4] pb-4">
-      <div className="wf-label mb-2 text-[#6B665C]" style={{ fontSize: "13px" }}>상황</div>
-      <div className="flex flex-wrap gap-2">
-        {OCCASIONS.map((item) => {
-          const selected = occasion === item.id;
-          return (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => onOccasionChange(item.id)}
-              className="flex items-center gap-1.5 border px-3 py-1.5 text-sm transition"
-              style={{
-                borderColor: selected ? theme.accent : "#CFC9BD",
-                background: selected ? theme.accent : "transparent",
-                color: selected ? "#fff" : "#6B665C",
-              }}
-            >
-              <span>{item.emoji}</span>
-              <span>{item.label}</span>
-            </button>
-          );
-        })}
-      </div>
-      {current.tip && (
-        <p className="mt-2 text-xs text-[#8F897D]">{current.tip}</p>
+      <button type="button" onClick={() => setOpen((v) => !v)} className="flex w-full items-center justify-between mb-2">
+        <div className="wf-label text-[#6B665C]" style={{ fontSize: "13px" }}>상황 · {current.emoji} {current.label}</div>
+        <span className="text-xs text-[#A8A296]">{open ? "▲" : "▼"}</span>
+      </button>
+      {open && (
+        <>
+          <div className="flex flex-wrap gap-2">
+            {OCCASIONS.map((item) => {
+              const selected = occasion === item.id;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => onOccasionChange(item.id)}
+                  className="flex items-center gap-1.5 border px-3 py-1.5 text-sm transition"
+                  style={{
+                    borderColor: selected ? theme.accent : "#CFC9BD",
+                    background: selected ? theme.accent : "transparent",
+                    color: selected ? "#fff" : "#6B665C",
+                  }}
+                >
+                  <span>{item.emoji}</span>
+                  <span>{item.label}</span>
+                </button>
+              );
+            })}
+          </div>
+          {current.tip && (
+            <p className="mt-2 text-xs text-[#8F897D]">{current.tip}</p>
+          )}
+        </>
       )}
     </div>
   );

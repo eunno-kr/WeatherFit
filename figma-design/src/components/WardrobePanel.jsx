@@ -110,6 +110,7 @@ export default function WardrobePanel({
   const [filter, setFilter] = useState("all");
   const [appliedAt, setAppliedAt] = useState(null);
   const [showMoreColors, setShowMoreColors] = useState(false);
+  const [open, setOpen] = useState(true);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -226,17 +227,18 @@ export default function WardrobePanel({
           <span>{seasonAlert}</span>
         </div>
       )}
-      <div className="flex items-start justify-between gap-4">
-        <div>
+      <button type="button" onClick={() => setOpen((v) => !v)} className="flex w-full items-start justify-between gap-4">
+        <div className="text-left">
           <div className="wf-label text-[#6B665C]" style={{ fontSize: "13px" }}>내 옷장</div>
           <h2 className="mt-2 text-lg font-semibold">내 옷장</h2>
           <p className="mt-1 text-sm leading-6 text-[#6B665C]">
-            가지고 있는 옷을 넣으면 날씨, 스타일, 색감 기준으로 입을 수 있는 조합을 골라줍니다.
+            가지고 있는 옷을 넣으면 날씨, 스타일, 색감 기준으로 조합을 골라줍니다.
           </p>
         </div>
-      </div>
+        <span className="mt-1 shrink-0 text-xs text-[#A8A296]">{open ? "▲" : "▼"}</span>
+      </button>
 
-      <div className="mt-5 border-t border-[#E5DED1] pt-4">
+      {open && (<><div className="mt-5 border-t border-[#E5DED1] pt-4">
         <div className="mb-3 wf-label text-[#6B665C]" style={{ fontSize: "13px" }}>옷 추가</div>
       <div className="grid min-w-0 gap-3">
         <input
@@ -529,6 +531,7 @@ export default function WardrobePanel({
           ))}
         </div>
       )}
+      </>)}
     </section>
   );
 }
