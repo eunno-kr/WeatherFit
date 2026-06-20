@@ -37,6 +37,36 @@ async function callGroq(messages) {
     .replace(/[一-鿿㐀-䶿]/g, "");
 }
 
+function getSeason() {
+  const m = new Date().getMonth() + 1;
+  if (m >= 3 && m <= 5) return "봄";
+  if (m >= 6 && m <= 8) return "여름";
+  if (m >= 9 && m <= 11) return "가을";
+  return "겨울";
+}
+
+export async function fetchSeasonChecklist({ profile, condition, temp }) {
+  const season = getSeason();
+  const text = await callGroq([
+    {
+      role: "system",
+      content:
+        "당신은 패션 전문가입니다. 반드시 순수한 한국어(한글)로만 답변하세요. 한자, 중국어, 일본어 문자는 절대 사용하지 마세요. JSON 형식으로만 답변하세요.",
+    },
+    {
+      role: "user",
+      content: `현재 ${season} 시즌입니다. 날씨: ${condition || "보통"}, 기온: ${temp}°C, 스타일: ${profile?.style || "캐주얼"}, 나이대: ${profile?.age || "20대"}.
+
+이번 ${season} 시즌에 꼭 준비해야 할 패션 아이템 5가지를 JSON 배열로 알려주세요.
+형식: [{"label": "아이템명", "desc": "한 줄 팁"}, ...]
+JSON 배열만 출력하세요. 다른 텍스트 없이.`,
+    },
+  ]);
+  const match = text.match(/\[[\s\S]*?\]/);
+  if (!match) throw new Error("파싱 실패");
+  return JSON.parse(match[0]);
+}
+
 export async function askGeminiForOutfit({ weather, profile, look, wardrobe, occasion, condition }) {
   const outfitList = look.outfits
     .map(

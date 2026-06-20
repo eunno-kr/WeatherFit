@@ -4,6 +4,9 @@ import ColorText from "./components/ColorText.jsx";
 import ColorPalette from "./components/ColorPalette.jsx";
 import MonthlyStats from "./components/MonthlyStats.jsx";
 import StyleDashboard from "./components/StyleDashboard.jsx";
+import TodayColorPalette from "./components/TodayColorPalette.jsx";
+import SeasonChecklist from "./components/SeasonChecklist.jsx";
+import TempHistory from "./components/TempHistory.jsx";
 import ForecastPanel from "./components/ForecastPanel.jsx";
 import HistoryPanel from "./components/HistoryPanel.jsx";
 import InsightPanel from "./components/InsightPanel.jsx";
@@ -462,6 +465,22 @@ export default function App() {
                   history={history}
                   condition={condition}
                   temp={Math.round(activeWeather?.temp || 0)}
+                  theme={theme}
+                />
+                <TodayColorPalette
+                  condition={condition}
+                  temp={Math.round(activeWeather?.temp || 0)}
+                  profile={profile}
+                  theme={theme}
+                />
+                <SeasonChecklist
+                  profile={profile}
+                  condition={condition}
+                  temp={Math.round(activeWeather?.temp || 0)}
+                  theme={theme}
+                />
+                <TempHistory
+                  history={history}
                   theme={theme}
                 />
               </div>
