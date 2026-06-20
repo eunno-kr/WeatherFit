@@ -21,7 +21,9 @@ const SLOTS = [
   ["포인트", "accessory"],
 ];
 
-function OutfitCard({ outfit, index, theme, onSave, isSaved, weather, palette, condition }) {
+function OutfitCard({ outfit, index, theme, onSave, isSaved, weather, palette, condition, onWorn, wornId }) {
+  const isWorn = wornId === outfit.id;
+
   return (
     <article className="group border border-black/10 bg-[#FFFDF7] p-5 transition hover:border-black/40 hover:bg-white">
       <div className="flex items-center justify-between gap-3">
@@ -68,6 +70,23 @@ function OutfitCard({ outfit, index, theme, onSave, isSaved, weather, palette, c
           </div>
         ))}
       </div>
+
+      {/* 입었어요 버튼 */}
+      <div className="mt-4 pt-4 border-t border-[#EFE8DA]">
+        <button
+          type="button"
+          onClick={() => onWorn && onWorn(outfit)}
+          className="w-full border py-2.5 text-sm font-semibold transition"
+          style={{
+            borderColor: isWorn ? theme.accent : "#1A1A1A",
+            background: isWorn ? theme.accent : "#1A1A1A",
+            color: "#FFFDF7",
+            opacity: isWorn ? 0.75 : 1,
+          }}
+        >
+          {isWorn ? "오늘 이 코디 입었어요 ✓" : "오늘 이 코디 입었어요"}
+        </button>
+      </div>
     </article>
   );
 }
@@ -110,6 +129,7 @@ export default function LookCard({
   const [sectionBg] = useState(
     () => BG_COLORS[Math.floor(Math.random() * BG_COLORS.length)]
   );
+  const [wornId, setWornId] = useState(null);
   const sectionLabel =
     forecastDay === 0 ? "오늘의 코디" : forecastDay === 1 ? "내일의 코디" : "예보 코디";
   const title =
@@ -148,6 +168,8 @@ export default function LookCard({
             weather={weather}
             palette={look.palette}
             condition={condition}
+            onWorn={(o) => { setWornId(o.id); onWorn && onWorn(o); }}
+            wornId={wornId}
           />
         ))}
       </div>
@@ -155,14 +177,7 @@ export default function LookCard({
       <div className="mt-4 flex flex-wrap gap-2">
         <button
           type="button"
-          onClick={() => onWorn && onWorn(look.outfits[0])}
-          className="border border-[#1A1A1A] bg-[#1A1A1A] px-4 py-2 text-xs font-semibold text-white transition hover:opacity-80"
-        >
-          오늘 입었어요 ✓
-        </button>
-        <button
-          type="button"
-          onClick={() => shareOutfit(look.outfits[0], weatherSummary)}
+          onClick={() => shareOutfit(wornId ? look.outfits.find(o => o.id === wornId) || look.outfits[0] : look.outfits[0], weatherSummary)}
           className="border border-[#D7D0C4] px-4 py-2 text-xs text-[#6B665C]"
         >
           공유하기 ↗
