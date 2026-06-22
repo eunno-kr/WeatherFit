@@ -473,6 +473,7 @@ export default function App() {
                   temp={Math.round(activeWeather?.temp || 0)}
                   profile={profile}
                   theme={theme}
+                  darkMode={darkMode}
                 />
                 <SeasonChecklist
                   profile={profile}

@@ -153,7 +153,7 @@ function loadSavedPC() {
   try { return JSON.parse(localStorage.getItem(PC_KEY)); } catch { return null; }
 }
 
-export default function TodayColorPalette({ condition, temp, profile, theme }) {
+export default function TodayColorPalette({ condition, temp, profile, theme, darkMode }) {
   const accent = theme?.accent || "#E8543B";
   const season = getSeason();
   const seasonKo = SEASON_KO[season];
@@ -221,8 +221,8 @@ export default function TodayColorPalette({ condition, temp, profile, theme }) {
             className="py-3 text-sm font-bold border transition"
             style={{
               background: tab === key ? "#1A1A1A" : "transparent",
-              color: tab === key ? "#FFFDF7" : "#6B665C",
-              borderColor: tab === key ? "#1A1A1A" : "#D7D0C4",
+              color: tab === key ? "#FFFDF7" : (darkMode ? "#9e9890" : "#6B665C"),
+              borderColor: tab === key ? "#1A1A1A" : (darkMode ? "#4a4540" : "#D7D0C4"),
             }}
           >
             {label}
