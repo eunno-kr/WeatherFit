@@ -23,11 +23,11 @@ export default function NotificationSettings({ notifTime, onSave, condition, tem
   return (
     <div className="mt-4">
       <div className="flex items-center gap-3 mb-4">
-        <span className="text-xs font-bold text-[#1A1A1A] shrink-0">알림 설정</span>
+        <span className="text-sm font-bold text-[#1A1A1A] shrink-0">알림 설정</span>
         <div className="flex-1 h-px bg-[#E5DED1]" />
       </div>
-      <div className="wf-label mb-2 text-[#6B665C]">DAILY REMINDER</div>
-      <p className="mb-3 text-xs leading-5 text-[#8F897D]">
+      <div className="wf-label mb-2 text-[#3A362E]" style={{ fontSize: "15px" }}>DAILY REMINDER</div>
+      <p className="mb-3 text-sm leading-5 text-[#4A4540]">
         매일 설정한 시간에 날씨 코디 알림을 받아요.
         {notifTime && <span className="ml-1 font-semibold text-[#E8543B]">{notifTime} 설정됨</span>}
       </p>
@@ -43,7 +43,7 @@ export default function NotificationSettings({ notifTime, onSave, condition, tem
             <button
               type="button"
               onClick={() => onSave(time)}
-              className="bg-[#1A1A1A] px-4 py-2 text-xs font-semibold text-white"
+              className="bg-[#1A1A1A] px-4 py-2 text-sm font-semibold text-white"
             >
               저장
             </button>
@@ -51,7 +51,7 @@ export default function NotificationSettings({ notifTime, onSave, condition, tem
               <button
                 type="button"
                 onClick={cancel}
-                className="border border-[#D7D0C4] px-4 py-2 text-xs text-[#6B665C]"
+                className="border border-[#D7D0C4] px-4 py-2 text-sm text-[#3A362E]"
               >
                 해제
               </button>
@@ -61,14 +61,14 @@ export default function NotificationSettings({ notifTime, onSave, condition, tem
           <button
             type="button"
             onClick={requestAndSave}
-            className="bg-[#E8543B] px-4 py-2 text-xs font-semibold text-white"
+            className="bg-[#E8543B] px-4 py-2 text-sm font-semibold text-white"
           >
             알림 허용 & 저장
           </button>
         )}
       </div>
       {status === "denied" && (
-        <p className="mt-2 text-xs text-[#C9443E]">
+        <p className="mt-2 text-sm text-[#C9443E]">
           브라우저 설정에서 알림을 허용해야 사용할 수 있어요.
         </p>
       )}

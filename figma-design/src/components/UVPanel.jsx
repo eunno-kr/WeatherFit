@@ -42,7 +42,7 @@ export default function UVPanel({ uvIndex = 0, uvHourly = [], theme, darkMode })
       <button type="button" onClick={toggleOpen} className="flex w-full items-start justify-between mb-3">
         <div className="text-left">
           <div className="flex items-center gap-2">
-            <div className="wf-label text-[#3A362E]" style={{ fontSize: "13px" }}>자외선 지수</div>
+            <div className="wf-label text-[#3A362E]" style={{ fontSize: "15px" }}>자외선 지수</div>
             {isHigh && (
               <span
                 className="text-[10px] font-bold px-2 py-0.5"
@@ -52,11 +52,11 @@ export default function UVPanel({ uvIndex = 0, uvHourly = [], theme, darkMode })
               </span>
             )}
           </div>
-          <p className="mt-1 text-xs text-[#8F897D] leading-5">
+          <p className="mt-1 text-sm text-[#4A4540] leading-5">
             오늘 시간대별 자외선 지수와 주의사항을 확인하세요.
           </p>
         </div>
-        <span className="ml-3 shrink-0" style={{ fontSize: "13px", border: "0.5px solid #D7D0C4", borderRadius: "4px", padding: "2px 8px", color: "#6B665C" }}>
+        <span className="ml-3 shrink-0" style={{ fontSize: "15px", border: "0.5px solid #D7D0C4", borderRadius: "4px", padding: "2px 8px", color: "#3A362E" }}>
           {open ? "−" : "+"}
         </span>
       </button>
@@ -89,7 +89,7 @@ export default function UVPanel({ uvIndex = 0, uvHourly = [], theme, darkMode })
                   { range: "8–10", label: "매우높음", color: "#F44336" },
                   { range: "11+", label: "위험",    color: "#9C27B0" },
                 ].map((lv) => (
-                  <span key={lv.label} className="flex items-center gap-1 text-[11px] text-[#6B665C]">
+                  <span key={lv.label} className="flex items-center gap-1 text-xs text-[#3A362E]">
                     <span className="inline-block w-2 h-2 rounded-full" style={{ background: lv.color }} />
                     {lv.range} {lv.label}
                   </span>
@@ -101,7 +101,7 @@ export default function UVPanel({ uvIndex = 0, uvHourly = [], theme, darkMode })
           {/* 시간별 그래프 */}
           {displayHours.length > 0 && (
             <div className="mb-5">
-              <div className="wf-label mb-3 text-[#3A362E]" style={{ fontSize: "13px" }}>시간대별 자외선</div>
+              <div className="wf-label mb-3 text-[#3A362E]" style={{ fontSize: "15px" }}>시간대별 자외선</div>
               <div className="flex items-end gap-1" style={{ height: "80px" }}>
                 {displayHours.map((e) => {
                   const lv = uvLevel(e.uv);
@@ -145,7 +145,7 @@ export default function UVPanel({ uvIndex = 0, uvHourly = [], theme, darkMode })
               </p>
               <ul className="space-y-1.5">
                 {warnings.map((w, i) => (
-                  <li key={i} className="flex items-start gap-2 text-xs leading-5" style={{ color: level.text }}>
+                  <li key={i} className="flex items-start gap-2 text-sm leading-5" style={{ color: level.text }}>
                     <span>{w.icon}</span>
                     <span>{w.text}</span>
                   </li>
@@ -156,7 +156,7 @@ export default function UVPanel({ uvIndex = 0, uvHourly = [], theme, darkMode })
 
           {/* UV 낮을 때 안내 */}
           {!isHigh && (
-            <p className="text-xs text-[#8F897D] leading-5">
+            <p className="text-sm text-[#4A4540] leading-5">
               현재 자외선 지수가 낮아 야외 활동에 무리가 없어요.
               {uvIndex >= 3 && " 장시간 외출 시에는 자외선 차단제를 챙기세요."}
             </p>
