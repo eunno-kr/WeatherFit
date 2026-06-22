@@ -1,3 +1,4 @@
+// 화면 컴포넌트 경로 파일 아직 미완성//
 import { useEffect, useMemo, useRef, useState } from "react";
 import ChatBot from "./components/ChatBot.jsx";
 import ColorText from "./components/ColorText.jsx";
@@ -19,6 +20,7 @@ import ProfileSetup from "./components/ProfileSetup.jsx";
 import SavedOutfitsPanel from "./components/SavedOutfitsPanel.jsx";
 import WardrobePanel from "./components/WardrobePanel.jsx";
 import WeatherHero from "./components/WeatherHero.jsx";
+import UVPanel from "./components/UVPanel.jsx";
 import { CITIES, CITY_GROUPS } from "./data/cities.js";
 import { curate } from "./lib/curate.js";
 import { askGeminiForOutfit } from "./lib/gemini.js";
@@ -400,6 +402,13 @@ export default function App() {
               selectedDay={forecastDay}
               onSelectDay={setForecastDay}
               theme={theme}
+            />
+
+            <UVPanel
+              uvIndex={activeWeather.uvIndex ?? 0}
+              uvHourly={activeWeather.uvHourly ?? []}
+              theme={theme}
+              darkMode={darkMode}
             />
 
             <OccasionPicker occasion={occasion} onOccasionChange={setOccasion} theme={theme} />

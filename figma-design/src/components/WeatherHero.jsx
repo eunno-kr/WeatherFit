@@ -1,3 +1,11 @@
+function uvLevel(uv) {
+  if (uv <= 2) return { label: "낮음",     color: "#4CAF50" };
+  if (uv <= 5) return { label: "보통",     color: "#FFC107" };
+  if (uv <= 7) return { label: "높음",     color: "#FF9800" };
+  if (uv <= 10) return { label: "매우높음", color: "#F44336" };
+  return { label: "위험",     color: "#9C27B0" };
+}
+
 const STYLE_KO = {
   minimal: "미니멀", street: "스트릿", casual: "캐주얼", office: "오피스", outdoor: "아웃도어",
 };
@@ -103,8 +111,20 @@ export default function WeatherHero({
                     최저 {Math.round(data.tmin)}° / 최고 {Math.round(data.tmax)}°
                     {gap >= 8 && <span style={{ color: theme.accent }}> · 일교차 큼</span>}
                   </div>
+                  {data.uvIndex != null && (() => {
+                    const lv = uvLevel(data.uvIndex);
+                    return (
+                      <div className="flex items-center gap-1.5 mt-0.5">
+                        <span>자외선</span>
+                        <span className="text-xs font-bold px-1.5 py-0.5 leading-none" style={{ background: lv.color, color: "#fff", borderRadius: "2px" }}>
+                          {lv.label} {Math.round(data.uvIndex)}
+                        </span>
+                        {data.uvIndex >= 6 && <span className="text-xs font-semibold" style={{ color: lv.color }}>⚠️ 차단제 필수</span>}
+                      </div>
+                    );
+                  })()}
                   {gap >= 10 && (
-                    <div className="mt-2 text-xs font-semibold" style={{ color: theme.accent }}>
+                    <div className="mt-1 text-xs font-semibold" style={{ color: theme.accent }}>
                       ⚠️ 일교차 {Math.round(gap)}° — 벗고 입기 쉬운 레이어 필수
                     </div>
                   )}

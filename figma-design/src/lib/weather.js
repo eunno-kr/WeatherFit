@@ -6,6 +6,12 @@ export const SAMPLE_WEATHER = {
   code: 2,
   tmax: 22,
   tmin: 11,
+  uvIndex: 6,
+  uvHourly: [6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23].map((h) => ({
+    hour: h,
+    time: `${String(h).padStart(2, "0")}:00`,
+    uv: [0,0,0,1,2,3,5,7,8,7,6,4,2,1,0,0,0,0][h - 6] ?? 0,
+  })),
   forecast: Array.from({ length: 7 }, (_, i) => {
     const d = new Date(Date.now() + i * 86400000);
     return {
@@ -52,6 +58,7 @@ export async function fetchWeather(city) {
     latitude: city.lat,
     longitude: city.lon,
     current: "temperature_2m,relative_humidity_2m,apparent_temperature,weather_code",
+    hourly: "uv_index",
     daily:
       "weather_code,precipitation_probability_max,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min",
     timezone: "auto",
@@ -63,6 +70,23 @@ export async function fetchWeather(city) {
 
   const json = await response.json();
   const d = json.daily;
+  const h = json.hourly;
+
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const currentHour = new Date().getHours();
+
+  const uvHourly = h.time
+    .map((t, i) => ({ t, uv: h.uv_index[i] ?? 0 }))
+    .filter(({ t }) => t.startsWith(todayStr))
+    .map(({ t, uv }) => ({
+      hour: parseInt(t.slice(11, 13)),
+      time: t.slice(11, 16),
+      uv: Math.round(uv * 10) / 10,
+    }));
+
+  const currentUVEntry = uvHourly.find((e) => e.hour === currentHour);
+  const uvIndex = currentUVEntry?.uv ?? uvHourly[Math.min(12, uvHourly.length - 1)]?.uv ?? 0;
+
   return {
     city: city.name,
     temp: json.current.temperature_2m,
@@ -71,6 +95,8 @@ export async function fetchWeather(city) {
     code: json.current.weather_code,
     tmax: d.temperature_2m_max[0],
     tmin: d.temperature_2m_min[0],
+    uvIndex,
+    uvHourly,
     forecast: d.time.map((date, i) => ({
       date,
       tmax: d.temperature_2m_max[i],
