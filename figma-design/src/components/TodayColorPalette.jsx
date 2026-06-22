@@ -59,7 +59,7 @@ function getStep2(isMale) {
           hint: "예: 연분홍 니트·민트 가방 vs 코럴 블라우스·골드 귀걸이",
           options: [{ label: "밝고 가벼운 파스텔 계열", type: "라이트" }, { label: "선명하고 활기찬 코럴·골드 계열", type: "트루" }] },
         { q: "선호하는 색의 분위기는?",
-          hint: "예: 카멜 코트·머스타드 니트 vs 빨간 패딩·형광 노랑 스니커즈",
+          hint: "예: 황토색 코트·겨자색 니트처럼 흙빛 계열의 따뜻한 색 vs 빨간 패딩·형광 노란 운동화처럼 눈에 확 들어오는 강렬한 색",
           options: [{ label: "골드·오렌지처럼 따뜻하고 풍성한 느낌", type: "웜" }, { label: "원색에 가까운 선명하고 경쾌한 느낌", type: "브라이트" }] },
         { q: "주로 입는 옷 스타일은?",
           hint: "예: 베이비핑크 티·아이보리 원피스 vs 올리브 자켓·테라코타 팬츠",
@@ -86,7 +86,7 @@ function getStep2(isMale) {
           hint: "예: 수지·박보검처럼 맑고 산뜻한 느낌 vs 윤아·이준기처럼 차분하고 우아한 느낌",
           options: [{ label: "밝고 가볍고 산뜻한 느낌", type: "라이트" }, { label: "차분하고 우아한 느낌", type: "트루" }] },
         { q: "선호하는 색상 느낌은?",
-          hint: "예: 아이스블루 가디건·라벤더 원피스 vs 모브 코트·그레이베이지 팬츠",
+          hint: "예: 하늘색 가디건·파스텔 보라색 원피스처럼 차갑고 맑게 선명한 색 vs 뿌연 분홍·회갈색 팬츠처럼 전체적으로 살짝 탁하고 부드러운 색",
           options: [{ label: "아이스블루·라벤더처럼 선명한 쿨 컬러", type: "쿨" }, { label: "모든 색이 약간 흐리고 그레이시한 느낌", type: "소프트" }] },
         isMale
           ? { q: "피부와 가장 잘 어울리는 셔츠·티 베이스 컬러는?",
@@ -96,7 +96,7 @@ function getStep2(isMale) {
               hint: "예: 메이크업이라면 핑크베이지 파운데이션 / 옷이라면 아이보리·핑크빛 흰 셔츠 vs 쿨베이지 쿠션 / 푸른기 도는 아이시한 흰 셔츠",
               options: [{ label: "핑크베이지, 투명하고 맑은 피부 톤", type: "라이트" }, { label: "블루언더톤이 있는 밝은 피부 톤", type: "쿨" }] },
         { q: "잘 어울리는 머리색은?",
-          hint: "예: 애쉬브라운·내추럴 쿨브라운 vs 그레이·모브브라운 컬러",
+          hint: "예: 차갑고 맑아 보이는 갈색(밝은 초콜릿빛) vs 약간 보라빛·회색빛이 살짝 섞인 어두운 갈색·회색",
           options: [{ label: "애쉬브라운, 자연스러운 쿨브라운", type: "트루" }, { label: "그레이 계열, 모브브라운", type: "소프트" }] },
         { q: "코디할 때 선호하는 방식은?",
           hint: "예: 화이트 블라우스+스카이블루 팬츠처럼 밝은 색 조합 vs 모카베이지+그레이처럼 전체 채도를 낮춘 코디",
@@ -110,7 +110,7 @@ function getStep2(isMale) {
       types: ["소프트", "트루", "웜", "딥"],
       questions: [
         { q: "피부에 맞는 분위기는?",
-          hint: "예: 오트밀 니트·카키 팬츠처럼 차분한 어스톤 vs 카멜 코트·머스타드 스카프처럼 풍성한 어스톤",
+          hint: "예: 베이지색 니트·황토빛 팬츠처럼 밝고 부드럽게 가라앉은 흙빛 vs 갈색 코트·겨자색 목도리처럼 깊고 묵직한 흙빛",
           options: [{ label: "부드럽고 차분하게 가라앉은 어스톤", type: "소프트" }, { label: "깊고 풍성한 따뜻한 어스톤", type: "트루" }] },
         isMale
           ? { q: "포인트 소품이나 아이템에서 잘 받는 컬러는?",
@@ -120,7 +120,7 @@ function getStep2(isMale) {
               hint: "예: 메이크업이라면 코퍼·테라코타 립·새도 / 소품이라면 테라코타 니트·코퍼 가방 vs 초코브라운·버건디 립스틱 / 버건디 코트·딥브라운 가방",
               options: [{ label: "코퍼, 테라코타 계열이 화사하게 어울림", type: "웜" }, { label: "초코, 딥브라운, 버건디가 자연스럽게 어울림", type: "딥" }] },
         { q: "잘 어울리는 머리색은?",
-          hint: "예: 모카브라운·애쉬카키 컬러 vs 카멜·꿀빛 골든브라운 컬러",
+          hint: "예: 초록빛이 살짝 섞인 어두운 갈색(올리브빛 갈색) vs 꿀처럼 따뜻하고 빛나는 황금빛 갈색",
           options: [{ label: "모카브라운, 애쉬카키 계열", type: "소프트" }, { label: "카멜, 골든브라운 계열", type: "웜" }] },
         { q: "전체적인 인상은?",
           hint: "예: 고현정·정우성처럼 따뜻하고 자연스러운 느낌 vs 이병헌·김혜수처럼 강하고 묵직한 느낌",
@@ -129,7 +129,7 @@ function getStep2(isMale) {
           hint: "예: 카키 셔츠·오트밀 니트·모카베이지 자켓 vs 딥그린 코트·다크네이비 티·딥버건디 후드",
           options: [{ label: "카키, 모카베이지, 오트밀 계열", type: "소프트" }, { label: "딥그린, 다크네이비, 딥버건디 계열", type: "딥" }] },
         { q: "골드 액세서리나 메탈 소품을 착용했을 때?",
-          hint: "예: 금반지·황동 시계·골드 벨트 버클을 찼을 때 피부가 더 살아 보이는지 vs 생기가 더해지는지",
+          hint: "예: 금반지를 끼면 피부가 포근하고 편안하게 어울리는 느낌 vs 금반지를 끼면 피부가 더 환하고 도드라져 보이는 느낌",
           options: [{ label: "따뜻하고 자연스럽게 어울림", type: "트루" }, { label: "생기있고 더욱 화사해 보임", type: "웜" }] },
       ],
     },
@@ -152,15 +152,15 @@ function getStep2(isMale) {
           hint: "예: 원색 빨강·원색 파랑·형광 계열 vs 딥퍼플·딥네이비·딥버건디 같은 짙은 색",
           options: [{ label: "비비드, 선명한 컬러가 생기있어 보임", type: "브라이트" }, { label: "딥퍼플, 딥네이비처럼 깊고 진한 색이 잘 맞음", type: "딥" }] },
         { q: "잘 어울리는 머리색은?",
-          hint: "예: 블루블랙·제트블랙 vs 애쉬그레이·플래티넘·실버 컬러",
+          hint: "예: 새까만 검정 머리(파란빛 살짝 도는 진한 검정) vs 은빛·연회색이 살짝 섞인 밝은 회색 머리",
           options: [{ label: "블루블랙, 제트블랙이 가장 잘 어울림", type: "트루" }, { label: "애쉬, 플래티넘, 실버 계열이 잘 받음", type: "쿨" }] },
       ],
     },
   };
 }
 
-function calcSubtype(season, answers) {
-  const types = STEP2[season].types;
+function calcSubtype(season, answers, step2Data) {
+  const types = step2Data[season].types;
   const scores = Object.fromEntries(types.map((t) => [t, 0]));
   answers.forEach((t) => { if (t in scores) scores[t]++; });
   const sorted = [...types].sort((a, b) => scores[b] - scores[a]);
@@ -310,7 +310,7 @@ export default function TodayColorPalette({ condition, temp, profile, theme, dar
     if (next.length < totalQ) {
       setStep(step + 1);
     } else {
-      const { subtype, fitPercent, ranking, scores } = calcSubtype(season, next);
+      const { subtype, fitPercent, ranking, scores } = calcSubtype(season, next, step2Data);
       const res = { season, subtype, fullName: `${season} ${subtype}`, fitPercent, ranking, scores };
       setResult(res);
       setPhase("result");
