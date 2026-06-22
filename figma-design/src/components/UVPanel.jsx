@@ -102,29 +102,51 @@ export default function UVPanel({ uvIndex = 0, uvHourly = [], theme, darkMode })
           {displayHours.length > 0 && (
             <div className="mb-5">
               <div className="wf-label mb-3 text-[#3A362E]" style={{ fontSize: "15px" }}>시간대별 자외선</div>
-              <div className="flex items-end gap-1" style={{ height: "80px" }}>
+              <div className="flex items-end gap-1" style={{ height: "100px" }}>
                 {displayHours.map((e) => {
                   const lv = uvLevel(e.uv);
                   const heightPct = maxUV > 0 ? (e.uv / maxUV) * 100 : 0;
                   const isCurrent = e.hour === currentHour;
+                  const labelColor = isCurrent
+                    ? lv.color
+                    : darkMode ? "#B0A898" : "#5A5650";
+                  const timeColor = isCurrent
+                    ? lv.color
+                    : darkMode ? "#9e9890" : "#6B665C";
                   return (
-                    <div key={e.hour} className="flex flex-col items-center flex-1 gap-1">
-                      <span className="text-[9px] font-bold" style={{ color: isCurrent ? level.color : "transparent" }}>
-                        {e.uv > 0 ? e.uv : ""}
+                    <div key={e.hour} className="flex flex-col items-center flex-1 gap-0.5">
+                      {/* 숫자 — 항상 표시, 현재 시간은 컬러 강조 */}
+                      <span
+                        className="font-bold"
+                        style={{
+                          fontSize: "9px",
+                          color: e.uv > 0 ? labelColor : "transparent",
+                          fontWeight: isCurrent ? 900 : 600,
+                        }}
+                      >
+                        {e.uv > 0 ? e.uv.toFixed(1) : ""}
                       </span>
-                      <div className="w-full flex items-end" style={{ height: "52px" }}>
+                      {/* 막대 */}
+                      <div className="w-full flex items-end" style={{ height: "60px" }}>
                         <div
                           className="w-full transition-all"
                           style={{
                             height: `${Math.max(heightPct, 4)}%`,
                             background: lv.color,
-                            opacity: isCurrent ? 1 : 0.6,
+                            opacity: isCurrent ? 1 : 0.65,
                             outline: isCurrent ? `2px solid ${lv.color}` : "none",
                             outlineOffset: "1px",
                           }}
                         />
                       </div>
-                      <span className="text-[9px]" style={{ color: darkMode ? "#9e9890" : "#A09A90" }}>
+                      {/* 시간 — 항상 표시, 현재 시간은 컬러 강조 */}
+                      <span
+                        style={{
+                          fontSize: "9px",
+                          color: timeColor,
+                          fontWeight: isCurrent ? 700 : 400,
+                        }}
+                      >
                         {e.hour}시
                       </span>
                     </div>

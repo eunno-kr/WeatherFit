@@ -349,7 +349,9 @@ export default function TodayColorPalette({ condition, temp, profile, theme, dar
     localStorage.removeItem(PC_KEY);
   };
 
-  const pcData = result ? PC_DATA[result.fullName] : null;
+  const [selectedRankIdx, setSelectedRankIdx] = useState(0);
+  const selectedFullName = result ? `${result.season} ${result.ranking[selectedRankIdx]}` : null;
+  const pcData = selectedFullName ? PC_DATA[selectedFullName] : null;
   const qText = darkMode ? "#DDD7CC" : "#1A1A1A";
   const borderColor = darkMode ? "#4a4540" : "#D7D0C4";
   const hoverBg = darkMode ? "#2c2a26" : "#EEE9E0";
@@ -481,25 +483,42 @@ export default function TodayColorPalette({ condition, temp, profile, theme, dar
             </p>
           </div>
 
-          {/* Top 3 */}
+          {/* Top 3 — 클릭하면 해당 타입 팔레트로 전환 */}
           <div className="mb-5 grid grid-cols-3 gap-2">
-            {result.ranking.slice(0, 3).map((t, i) => (
-              <div
-                key={t}
-                className="border px-2 py-3 text-center"
-                style={{
-                  borderColor: i === 0 ? accent : (darkMode ? "#4a4540" : "#E5DED1"),
-                  background: i === 0 ? `${accent}12` : "transparent",
-                }}
-              >
-                <div className="text-sm font-bold mb-1" style={{ color: i === 0 ? accent : "#4A4540" }}>
-                  {i === 0 ? "1위" : i === 1 ? "2위" : "3위"}
-                </div>
-                <div className="text-base font-semibold" style={{ color: qText }}>{result.season} {t}</div>
-                <div className="text-sm text-[#4A4540] mt-0.5">{result.scores[t]} / 3점</div>
-              </div>
-            ))}
+            {result.ranking.slice(0, 3).map((t, i) => {
+              const isSelected = i === selectedRankIdx;
+              return (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => setSelectedRankIdx(i)}
+                  className="border px-2 py-3 text-center transition"
+                  style={{
+                    borderColor: isSelected ? accent : (darkMode ? "#4a4540" : "#E5DED1"),
+                    background: isSelected ? `${accent}12` : "transparent",
+                    outline: isSelected ? `2px solid ${accent}` : "none",
+                    outlineOffset: "-1px",
+                    cursor: "pointer",
+                  }}
+                  onMouseEnter={(e) => { if (!isSelected) e.currentTarget.style.background = hoverBg; }}
+                  onMouseLeave={(e) => { if (!isSelected) e.currentTarget.style.background = "transparent"; }}
+                >
+                  <div className="text-sm font-bold mb-1" style={{ color: isSelected ? accent : "#4A4540" }}>
+                    {i === 0 ? "1위" : i === 1 ? "2위" : "3위"}
+                  </div>
+                  <div className="text-base font-semibold" style={{ color: qText }}>{result.season} {t}</div>
+                  <div className="text-sm text-[#4A4540] mt-0.5">{result.scores[t]} / 3점</div>
+                </button>
+              );
+            })}
           </div>
+
+          {/* 선택된 타입 이름 */}
+          {selectedRankIdx > 0 && (
+            <div className="mb-3 text-sm font-semibold" style={{ color: accent }}>
+              {selectedRankIdx + 1}위 타입 · {result.season} {result.ranking[selectedRankIdx]} 팔레트
+            </div>
+          )}
 
           {/* 팔레트 */}
           <div className="mb-4">
