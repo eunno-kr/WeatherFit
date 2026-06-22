@@ -339,7 +339,7 @@ export default function TodayColorPalette({ condition, temp, profile, theme, dar
       <button type="button" onClick={toggleOpen} className="flex w-full items-start justify-between mb-3">
         <div className="text-left">
           <div className="wf-label text-[#3A362E]" style={{ fontSize: "13px" }}>퍼스널컬러 16타입 진단</div>
-          <p className="mt-1 text-xs text-[#8F897D] leading-5">
+          <p className="mt-1 text-sm text-[#4A4540] leading-5">
             2단계 진단으로 나에게 맞는 퍼스널컬러 타입을 찾아보세요.
             {result && <span style={{ color: accent }}> · 현재: {result.fullName}</span>}
           </p>
@@ -355,10 +355,10 @@ export default function TodayColorPalette({ condition, temp, profile, theme, dar
         <div>
           <div className="mb-5">
             <div className="flex items-center justify-between mb-2">
-              <span className="wf-label text-[#3A362E]" style={{ fontSize: "13px" }}>
+              <span className="wf-label text-[#3A362E]" style={{ fontSize: "15px" }}>
                 1단계 · 기본 피부톤 파악
               </span>
-              <span className="text-xs font-semibold text-[#8F897D]">
+              <span className="text-sm font-semibold text-[#4A4540]">
                 {step + 1} / {STEP1_QUESTIONS.length}
               </span>
             </div>
@@ -367,9 +367,9 @@ export default function TodayColorPalette({ condition, temp, profile, theme, dar
             </div>
           </div>
 
-          <p className="text-base font-bold leading-6" style={{ color: qText }}>{STEP1_QUESTIONS[step].q}</p>
+          <p className="text-lg font-bold leading-7" style={{ color: qText }}>{STEP1_QUESTIONS[step].q}</p>
           {STEP1_QUESTIONS[step].hint && (
-            <p className="mt-1 text-xs text-[#8F897D]">{STEP1_QUESTIONS[step].hint}</p>
+            <p className="mt-1.5 text-sm text-[#4A4540] leading-6">{STEP1_QUESTIONS[step].hint}</p>
           )}
           <div className="mt-4 grid grid-cols-2 gap-3">
             {STEP1_QUESTIONS[step].options.map((opt) => (
@@ -377,7 +377,7 @@ export default function TodayColorPalette({ condition, temp, profile, theme, dar
                 key={opt.value}
                 type="button"
                 onClick={() => handleStep1(opt.value)}
-                className="border py-5 text-sm font-semibold transition"
+                className="border py-5 text-base font-semibold transition"
                 style={{ borderColor, color: darkMode ? "#DDD7CC" : "#3A362E" }}
                 onMouseEnter={(e) => { e.currentTarget.style.background = hoverBg; e.currentTarget.style.borderColor = qText; }}
                 onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = borderColor; }}
@@ -394,10 +394,10 @@ export default function TodayColorPalette({ condition, temp, profile, theme, dar
         <div>
           <div className="mb-5">
             <div className="flex items-center justify-between mb-2">
-              <span className="wf-label text-[#3A362E]" style={{ fontSize: "13px" }}>
+              <span className="wf-label text-[#3A362E]" style={{ fontSize: "15px" }}>
                 2단계 · {season} 서브타입 진단
               </span>
-              <span className="text-xs font-semibold text-[#8F897D]">
+              <span className="text-sm font-semibold text-[#4A4540]">
                 {step + 1} / {step2Data[season].questions.length}
               </span>
             </div>
@@ -406,15 +406,15 @@ export default function TodayColorPalette({ condition, temp, profile, theme, dar
             </div>
           </div>
 
-          <div className="mb-3 text-xs font-semibold" style={{ color: accent }}>
+          <div className="mb-3 text-sm font-semibold" style={{ color: accent }}>
             ✦ 1단계 결과: {season} 시즌 — 이제 세부 타입을 찾아볼게요
           </div>
 
-          <p className="text-base font-bold leading-6" style={{ color: qText }}>
+          <p className="text-lg font-bold leading-7" style={{ color: qText }}>
             {step2Data[season].questions[step].q}
           </p>
           {step2Data[season].questions[step].hint && (
-            <p className="mt-1 text-xs text-[#8F897D] leading-5">
+            <p className="mt-1.5 text-sm text-[#4A4540] leading-6">
               {step2Data[season].questions[step].hint}
             </p>
           )}
@@ -424,7 +424,7 @@ export default function TodayColorPalette({ condition, temp, profile, theme, dar
                 key={opt.type}
                 type="button"
                 onClick={() => handleStep2(opt.type)}
-                className="border py-5 text-sm font-semibold transition"
+                className="border py-5 text-base font-semibold transition"
                 style={{ borderColor, color: darkMode ? "#DDD7CC" : "#3A362E" }}
                 onMouseEnter={(e) => { e.currentTarget.style.background = hoverBg; e.currentTarget.style.borderColor = qText; }}
                 onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = borderColor; }}
@@ -441,11 +441,11 @@ export default function TodayColorPalette({ condition, temp, profile, theme, dar
         <div>
           {/* 타입 헤더 */}
           <div className="border-l-4 pl-4 py-2 mb-5" style={{ borderColor: accent }}>
-            <div className="wf-label mb-1" style={{ fontSize: "13px", color: accent }}>내 퍼스널컬러</div>
+            <div className="wf-label mb-1" style={{ fontSize: "15px", color: accent }}>내 퍼스널컬러</div>
             <p className="text-2xl font-bold" style={{ color: qText }}>{result.fullName}</p>
             <div className="mt-1 flex items-center gap-3">
-              <span className="text-sm font-semibold" style={{ color: accent }}>적합도 {result.fitPercent}%</span>
-              <span className="text-xs text-[#8F897D]">· {result.season} 시즌</span>
+              <span className="text-base font-semibold" style={{ color: accent }}>적합도 {result.fitPercent}%</span>
+              <span className="text-sm text-[#4A4540]">· {result.season} 시즌</span>
             </div>
           </div>
 
@@ -460,25 +460,25 @@ export default function TodayColorPalette({ condition, temp, profile, theme, dar
                   background: i === 0 ? `${accent}12` : "transparent",
                 }}
               >
-                <div className="text-xs font-bold mb-1" style={{ color: i === 0 ? accent : "#8F897D" }}>
+                <div className="text-sm font-bold mb-1" style={{ color: i === 0 ? accent : "#4A4540" }}>
                   {i === 0 ? "1위" : i === 1 ? "2위" : "3위"}
                 </div>
-                <div className="text-sm font-semibold" style={{ color: qText }}>{result.season} {t}</div>
-                <div className="text-xs text-[#8F897D] mt-0.5">{result.scores[t]} / 3점</div>
+                <div className="text-base font-semibold" style={{ color: qText }}>{result.season} {t}</div>
+                <div className="text-sm text-[#4A4540] mt-0.5">{result.scores[t]} / 3점</div>
               </div>
             ))}
           </div>
 
           {/* 팔레트 */}
           <div className="mb-4">
-            <div className="wf-label mb-3 text-[#3A362E]" style={{ fontSize: "13px" }}>추천 팔레트</div>
+            <div className="wf-label mb-3 text-[#3A362E]" style={{ fontSize: "15px" }}>추천 팔레트</div>
             <div className="grid grid-cols-5 gap-2">
               {pcData.palette.map((hex, i) => (
                 <div key={i}>
                   <div className="h-16 w-full border border-black/10" style={{ background: hex }} />
                   <div className="bg-[#EEEBE4] px-1 py-1.5 text-center">
                     <span className="block text-xs font-bold text-[#1A1A1A] leading-tight">{pcData.names[i]}</span>
-                    <span className="block text-[10px] text-[#6B665C] mt-0.5">{hex}</span>
+                    <span className="block text-xs text-[#4A4540] mt-0.5">{hex}</span>
                   </div>
                 </div>
               ))}
@@ -486,18 +486,18 @@ export default function TodayColorPalette({ condition, temp, profile, theme, dar
           </div>
 
           {/* 팁 */}
-          <div className="mb-2 border-l-2 pl-3 text-sm font-medium leading-6 text-[#3A362E]" style={{ borderColor: accent }}>
+          <div className="mb-2 border-l-2 pl-3 text-base font-medium leading-7 text-[#3A362E]" style={{ borderColor: accent }}>
             {pcData.tip}
           </div>
-          <p className="mb-5 text-xs leading-5 text-[#8F897D]">
-            <span className="font-semibold text-[#6B665C]">피하면 좋은 컬러: </span>{pcData.avoid}
+          <p className="mb-5 text-sm leading-6 text-[#4A4540]">
+            <span className="font-semibold text-[#3A362E]">피하면 좋은 컬러: </span>{pcData.avoid}
           </p>
 
           <button
             type="button"
             onClick={reset}
-            className="border px-4 py-2 text-xs font-semibold transition"
-            style={{ borderColor, color: "#6B665C" }}
+            className="border px-4 py-2 text-sm font-semibold transition"
+            style={{ borderColor, color: "#3A362E" }}
             onMouseEnter={(e) => { e.currentTarget.style.borderColor = qText; }}
             onMouseLeave={(e) => { e.currentTarget.style.borderColor = borderColor; }}
           >
