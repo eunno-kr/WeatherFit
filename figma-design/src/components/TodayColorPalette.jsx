@@ -68,8 +68,8 @@ function getStep2(isMale) {
           ? { q: "포인트 아이템(가방·신발·소품)에서 잘 받는 색은?",
               hint: "예: 피치색 가방·살구 스카프 vs 레드 백팩·오렌지 스니커즈",
               options: [{ label: "코럴, 피치 계열이 자연스럽게 어울림", type: "트루" }, { label: "레드, 오렌지처럼 선명한 컬러가 또렷해 보임", type: "브라이트" }] }
-          : { q: "립·아이라인 등 포인트 메이크업 컬러는?",
-              hint: "예: 살구색·피치 립스틱 vs 레드·오렌지 립스틱",
+          : { q: "포인트 컬러는? (메이크업 또는 소품 기준)",
+              hint: "예: 메이크업이라면 살구색·피치 립 / 소품이라면 코럴 가방·피치 스카프 vs 레드·오렌지 립스틱 / 레드 가방·오렌지 스니커즈",
               options: [{ label: "코럴, 피치 계열이 자연스러움", type: "트루" }, { label: "레드, 오렌지처럼 선명한 컬러가 또렷해 보임", type: "브라이트" }] },
         { q: "전체적인 이미지는?",
           hint: "예: 김유정·박형식처럼 사랑스럽고 부드러운 느낌 vs 아이린·이민호처럼 밝고 생동감 있는 느낌",
@@ -92,8 +92,8 @@ function getStep2(isMale) {
           ? { q: "피부와 가장 잘 어울리는 셔츠·티 베이스 컬러는?",
               hint: "예: 핑크베이지·밝은 아이보리 흰 티 vs 푸른기 도는 아이시한 흰 셔츠",
               options: [{ label: "핑크베이지, 밝고 맑은 느낌의 흰색", type: "라이트" }, { label: "푸른기가 살짝 도는 아이시한 흰색", type: "쿨" }] }
-          : { q: "베이스 메이크업이 잘 맞는 톤은?",
-              hint: "예: 핑크베이지·뉴트럴 파운데이션이 자연스러움 vs 쿨베이지·블루언더톤 쿠션이 잘 맞음",
+          : { q: "피부에 잘 어울리는 베이스 컬러는?",
+              hint: "예: 메이크업이라면 핑크베이지 파운데이션 / 옷이라면 아이보리·핑크빛 흰 셔츠 vs 쿨베이지 쿠션 / 푸른기 도는 아이시한 흰 셔츠",
               options: [{ label: "핑크베이지, 투명하고 맑은 피부 톤", type: "라이트" }, { label: "블루언더톤이 있는 밝은 피부 톤", type: "쿨" }] },
         { q: "잘 어울리는 머리색은?",
           hint: "예: 애쉬브라운·내추럴 쿨브라운 vs 그레이·모브브라운 컬러",
@@ -116,8 +116,8 @@ function getStep2(isMale) {
           ? { q: "포인트 소품이나 아이템에서 잘 받는 컬러는?",
               hint: "예: 코퍼색 벨트·테라코타 스니커즈 vs 초코브라운 가방·버건디 자켓",
               options: [{ label: "코퍼, 테라코타 계열 — 화사하게 어울림", type: "웜" }, { label: "초코, 딥브라운, 버건디 계열 — 자연스럽게 어울림", type: "딥" }] }
-          : { q: "메이크업 포인트 컬러는?",
-              hint: "예: 코퍼·테라코타 아이섀도·립 vs 초코브라운·버건디 립스틱",
+          : { q: "포인트 컬러는? (메이크업 또는 소품 기준)",
+              hint: "예: 메이크업이라면 코퍼·테라코타 립·새도 / 소품이라면 테라코타 니트·코퍼 가방 vs 초코브라운·버건디 립스틱 / 버건디 코트·딥브라운 가방",
               options: [{ label: "코퍼, 테라코타 계열이 화사하게 어울림", type: "웜" }, { label: "초코, 딥브라운, 버건디가 자연스럽게 어울림", type: "딥" }] },
         { q: "잘 어울리는 머리색은?",
           hint: "예: 모카브라운·애쉬카키 컬러 vs 카멜·꿀빛 골든브라운 컬러",
@@ -277,7 +277,7 @@ function loadSaved() {
 
 export default function TodayColorPalette({ condition, temp, profile, theme, darkMode }) {
   const accent = theme?.accent || "#E8543B";
-  const isMale = profile?.gender === "male";
+  const isMale = profile?.gender !== "female";
   const step2Data = getStep2(isMale);
 
   const [open, toggleOpen] = useOpen("colorPalette", true);
