@@ -6,6 +6,11 @@ function uvLevel(uv) {
   return { label: "위험",     color: "#9C27B0" };
 }
 
+function dustBadge(value, label) {
+  const color = label === "좋음" ? "#4CAF50" : label === "보통" ? "#FFC107" : label === "나쁨" ? "#FF9800" : "#F44336";
+  return { label, color, value };
+}
+
 const STYLE_KO = {
   minimal: "미니멀", street: "스트릿", casual: "캐주얼", office: "오피스", outdoor: "아웃도어",
 };
@@ -120,6 +125,32 @@ export default function WeatherHero({
                           {lv.label} {Math.round(data.uvIndex)}
                         </span>
                         {data.uvIndex >= 6 && <span className="text-xs font-semibold" style={{ color: lv.color }}>⚠️ 차단제 필수</span>}
+                      </div>
+                    );
+                  })()}
+                  {(data.pm10 != null || data.pm25 != null) && (() => {
+                    const pm10L = data.pm10 <= 30 ? "좋음" : data.pm10 <= 80 ? "보통" : data.pm10 <= 150 ? "나쁨" : "매우나쁨";
+                    const pm25L = data.pm25 <= 15 ? "좋음" : data.pm25 <= 35 ? "보통" : data.pm25 <= 75 ? "나쁨" : "매우나쁨";
+                    const b10 = dustBadge(data.pm10, pm10L);
+                    const b25 = dustBadge(data.pm25, pm25L);
+                    return (
+                      <div className="flex flex-wrap items-center gap-2 mt-0.5">
+                        {data.pm10 != null && (
+                          <div className="flex items-center gap-1">
+                            <span>미세먼지</span>
+                            <span className="text-xs font-bold px-1.5 py-0.5 leading-none" style={{ background: b10.color, color: "#fff", borderRadius: "2px" }}>
+                              {b10.label} {b10.value}
+                            </span>
+                          </div>
+                        )}
+                        {data.pm25 != null && (
+                          <div className="flex items-center gap-1">
+                            <span>초미세</span>
+                            <span className="text-xs font-bold px-1.5 py-0.5 leading-none" style={{ background: b25.color, color: "#fff", borderRadius: "2px" }}>
+                              {b25.label} {b25.value}
+                            </span>
+                          </div>
+                        )}
                       </div>
                     );
                   })()}
