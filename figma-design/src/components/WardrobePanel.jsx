@@ -70,6 +70,8 @@ const MORE_COLOR_SWATCHES = [
   ["골드", "#C7A64A"],
 ];
 
+const COLOR_NAME_TO_HEX = Object.fromEntries([...COLOR_SWATCHES, ...MORE_COLOR_SWATCHES]);
+
 const FILTER_OPTIONS = [["all", "전체"], ...CATEGORY_OPTIONS];
 
 const WARMTH_LABELS = Object.fromEntries(WARMTH_OPTIONS);
@@ -274,7 +276,11 @@ export default function WardrobePanel({
                 <span className="shrink-0"><ColorChips text={draft.color} colorHex={draft.colorHex} /></span>
                 <input
                   value={draft.color}
-                  onChange={(e) => setDraft({ ...draft, color: e.target.value })}
+                  onChange={(e) => {
+                    const name = e.target.value;
+                    const hex = COLOR_NAME_TO_HEX[name];
+                    setDraft({ ...draft, color: name, ...(hex ? { colorHex: hex } : {}) });
+                  }}
                   className="min-w-0 w-full border border-[#D7D0C4] bg-transparent px-3 py-2 text-sm font-normal text-ink outline-none"
                 />
               </div>
