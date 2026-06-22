@@ -126,7 +126,7 @@ function getStep2(isMale) {
           hint: "예: 고현정·정우성처럼 따뜻하고 자연스러운 느낌 vs 이병헌·김혜수처럼 강하고 묵직한 느낌",
           options: [{ label: "따뜻하고 자연스러운 어스 무드", type: "트루" }, { label: "강하고 묵직하며 깊은 무드", type: "딥" }] },
         { q: "잘 어울리는 상의 컬러는?",
-          hint: "예: 카키 셔츠·오트밀 니트·모카베이지 자켓 vs 딥그린 코트·다크네이비 티·딥버건디 후드",
+          hint: "예: 황록빛 셔츠·크림색 니트·연갈색 자켓처럼 부드럽고 밝은 흙빛 계열 vs 진한 초록색 코트·거의 검정 같은 파란색 티·어두운 와인색 후드처럼 짙고 깊은 계열",
           options: [{ label: "카키, 모카베이지, 오트밀 계열", type: "소프트" }, { label: "딥그린, 다크네이비, 딥버건디 계열", type: "딥" }] },
         { q: "골드 액세서리나 메탈 소품을 착용했을 때?",
           hint: "예: 금반지를 끼면 피부가 포근하고 편안하게 어울리는 느낌 vs 금반지를 끼면 피부가 더 환하고 도드라져 보이는 느낌",
@@ -318,6 +318,27 @@ export default function TodayColorPalette({ condition, temp, profile, theme, dar
     }
   };
 
+  const handleBack = () => {
+    if (phase === "step1" && step > 0) {
+      const newAns = { ...step1Ans };
+      delete newAns[step - 1];
+      setStep1Ans(newAns);
+      setStep(step - 1);
+    } else if (phase === "step2") {
+      if (step > 0) {
+        setStep2Ans(step2Ans.slice(0, -1));
+        setStep(step - 1);
+      } else {
+        const newAns = { ...step1Ans };
+        delete newAns[STEP1_QUESTIONS.length - 1];
+        setStep1Ans(newAns);
+        setStep2Ans([]);
+        setPhase("step1");
+        setStep(STEP1_QUESTIONS.length - 1);
+      }
+    }
+  };
+
   const reset = () => {
     setPhase("step1");
     setStep(0);
@@ -386,6 +407,11 @@ export default function TodayColorPalette({ condition, temp, profile, theme, dar
               </button>
             ))}
           </div>
+          {step > 0 && (
+            <button type="button" onClick={handleBack} className="mt-3 text-sm text-[#6B665C] underline underline-offset-2">
+              ← 이전 질문으로
+            </button>
+          )}
         </div>
       )}
 
@@ -433,6 +459,9 @@ export default function TodayColorPalette({ condition, temp, profile, theme, dar
               </button>
             ))}
           </div>
+          <button type="button" onClick={handleBack} className="mt-3 text-sm text-[#6B665C] underline underline-offset-2">
+            ← 이전 질문으로
+          </button>
         </div>
       )}
 
