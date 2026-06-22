@@ -455,6 +455,7 @@ export default function App() {
                   weather={activeWeather}
                   condition={condition}
                   history={history}
+                  darkMode={darkMode}
                 />
                 <InsightPanel look={look} />
                 <SavedOutfitsPanel savedOutfits={savedOutfits} onRemove={removeSavedOutfit} />
@@ -465,6 +466,7 @@ export default function App() {
                   condition={condition}
                   temp={Math.round(activeWeather?.temp || 0)}
                   theme={theme}
+                  darkMode={darkMode}
                 />
                 <TodayColorPalette
                   condition={condition}
@@ -477,6 +479,7 @@ export default function App() {
                   condition={condition}
                   temp={Math.round(activeWeather?.temp || 0)}
                   theme={theme}
+                  darkMode={darkMode}
                 />
                 <TempHistory
                   history={history}

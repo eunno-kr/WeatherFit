@@ -66,7 +66,7 @@ function calcStreak(history) {
 const STYLE_KO = { minimal: "미니멀", casual: "캐주얼", street: "스트릿", formal: "포멀", sporty: "스포티" };
 const LABEL_STYLE = { fontSize: "13px" };
 
-export default function StyleDashboard({ history, condition, temp, theme }) {
+export default function StyleDashboard({ history, condition, temp, theme, darkMode }) {
   const accent = theme?.accent || "#E8543B";
   const weekDates = useMemo(() => getWeekDates(), []);
   const todayStr = localDateStr(new Date());
@@ -118,8 +118,8 @@ export default function StyleDashboard({ history, condition, temp, theme }) {
                   <div
                     className="flex h-10 w-full items-center justify-center text-sm font-bold transition"
                     style={{
-                      background: worn ? accent : isToday ? `${accent}18` : "#F0EBE0",
-                      color: worn ? "#FFFDF7" : isToday ? accent : "#6B665C",
+                      background: worn ? accent : isToday ? `${accent}18` : (darkMode ? "#2c2a26" : "#F0EBE0"),
+                      color: worn ? "#FFFDF7" : isToday ? accent : (darkMode ? "#9e9890" : "#6B665C"),
                       borderRadius: "4px",
                     }}
                   >
@@ -136,7 +136,7 @@ export default function StyleDashboard({ history, condition, temp, theme }) {
       <div className="grid grid-cols-[auto_1fr] gap-3">
         <section
           className="border p-4 flex flex-col justify-between"
-          style={{ borderColor: streak > 0 ? `${accent}55` : "#E5DED1", background: streak > 0 ? `${accent}08` : "#FAF8F3", minWidth: "120px" }}
+          style={{ borderColor: streak > 0 ? `${accent}55` : "#E5DED1", background: streak > 0 ? `${accent}08` : (darkMode ? "#232119" : "#FAF8F3"), minWidth: "120px" }}
         >
           <div className="wf-label text-[#3A362E]" style={LABEL_STYLE}>연속 착용일</div>
           <div className="mt-3">

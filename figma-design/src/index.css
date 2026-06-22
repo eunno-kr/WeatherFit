@@ -181,10 +181,14 @@ button:hover {
 /* 인풋 */
 [data-dark="true"] select,
 [data-dark="true"] input[type="text"],
-[data-dark="true"] input[type="color"] {
+[data-dark="true"] input[type="color"],
+[data-dark="true"] input[type="time"] {
   background: #2a2824 !important;
   color: #ddd7cc !important;
   border-color: #38342c !important;
+}
+[data-dark="true"] input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
 }
 [data-dark="true"] ::selection {
   background: #c44830;

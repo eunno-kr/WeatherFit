@@ -78,7 +78,7 @@ function saveChecked(checked) {
   try { localStorage.setItem(CHECKED_KEY, JSON.stringify(checked)); } catch {}
 }
 
-export default function SeasonChecklist({ profile, condition, temp, theme }) {
+export default function SeasonChecklist({ profile, condition, temp, theme, darkMode }) {
   const [items, setItems] = useState([]);
   const [checked, setChecked] = useState(() => loadChecked());
   const [loading, setLoading] = useState(false);
@@ -163,7 +163,7 @@ export default function SeasonChecklist({ profile, condition, temp, theme }) {
             <div
               className="text-base font-semibold leading-6 transition"
               style={{
-                color: checked[i] ? "#A8A296" : "#1A1A1A",
+                color: checked[i] ? "#A8A296" : (darkMode ? "#DDD7CC" : "#1A1A1A"),
                 textDecoration: checked[i] ? "line-through" : "none",
               }}
             >

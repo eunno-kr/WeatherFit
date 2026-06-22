@@ -22,7 +22,7 @@ const SLOTS = [
   ["포인트", "accessory"],
 ];
 
-function OutfitCard({ outfit, index, theme, onSave, isSaved, weather, palette, condition, onWorn, wornId }) {
+function OutfitCard({ outfit, index, theme, onSave, isSaved, weather, palette, condition, onWorn, wornId, darkMode }) {
   const isWorn = wornId === outfit.id;
 
   return (
@@ -79,8 +79,8 @@ function OutfitCard({ outfit, index, theme, onSave, isSaved, weather, palette, c
           onClick={() => onWorn && onWorn(outfit)}
           className="w-full border py-2.5 text-sm font-semibold transition"
           style={{
-            borderColor: isWorn ? theme.accent : "#1A1A1A",
-            background: isWorn ? theme.accent : "#1A1A1A",
+            borderColor: isWorn ? theme.accent : (darkMode ? "#DDD7CC" : "#1A1A1A"),
+            background: isWorn ? theme.accent : (darkMode ? "#3A362E" : "#1A1A1A"),
             color: "#FFFDF7",
             opacity: isWorn ? 0.75 : 1,
           }}
@@ -127,6 +127,7 @@ export default function LookCard({
   weather,
   condition,
   history,
+  darkMode,
 }) {
   const [sectionBg] = useState(
     () => BG_COLORS[Math.floor(Math.random() * BG_COLORS.length)]
@@ -153,7 +154,7 @@ export default function LookCard({
   return (
     <section
       className="mt-6 border p-5 sm:p-6 transition-colors duration-1000"
-      style={{ background: sectionBg, borderColor: `${theme.accent}44` }}
+      style={{ background: darkMode ? "#232119" : sectionBg, borderColor: `${theme.accent}44` }}
     >
       <button type="button" onClick={toggleOpen} className="flex w-full items-center justify-between gap-4">
         <div className="text-left">
@@ -186,6 +187,7 @@ export default function LookCard({
                 condition={condition}
                 onWorn={(o) => { setWornId(o.id); onWorn && onWorn(o); }}
                 wornId={wornId}
+                darkMode={darkMode}
               />
             ))}
           </div>
