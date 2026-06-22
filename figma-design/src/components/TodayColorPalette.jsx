@@ -1,37 +1,30 @@
 import { useState } from "react";
 import { useOpen } from "../lib/useOpen.js";
 
-const getSeason = () => {
-  const m = new Date().getMonth() + 1;
-  if (m >= 3 && m <= 5) return "spring";
-  if (m >= 6 && m <= 8) return "summer";
-  if (m >= 9 && m <= 11) return "fall";
-  return "winter";
-};
+const PC_KEY = "wf-personal-color-v2";
 
-const SEASON_KO = { spring: "봄", summer: "여름", fall: "가을", winter: "겨울" };
-const PC_KEY = "wf-personal-color";
+// ── STEP1: 웜/쿨 + 밝기 판별 (5문항) ─────────────────────────────────────
 
-const QUESTIONS = [
+const STEP1_QUESTIONS = [
   {
-    q: "손목 안쪽 혈관이 어떤 색인가요?",
-    hint: "밝은 빛 아래서 확인해보세요",
+    q: "손목 안쪽 혈관 색이 어떻게 보이나요?",
+    hint: "밝은 자연광 아래서 확인해보세요",
     options: [{ label: "초록빛", value: "W" }, { label: "파란·보라빛", value: "C" }],
   },
   {
-    q: "피부에서 느껴지는 빛깔은?",
-    hint: "화장을 지운 자연 피부 기준",
+    q: "자연 피부에서 느껴지는 빛깔은?",
+    hint: "화장을 지운 상태 기준",
     options: [{ label: "노란빛·황금빛", value: "W" }, { label: "분홍빛·파란빛", value: "C" }],
   },
   {
-    q: "어울리는 금속 액세서리는?",
-    hint: "착용했을 때 더 화사해 보이는 것",
-    options: [{ label: "금(Gold)", value: "W" }, { label: "은(Silver)", value: "C" }],
+    q: "더 잘 어울리는 금속 액세서리는?",
+    hint: "착용했을 때 더 화사해 보이는 쪽",
+    options: [{ label: "골드(Gold)", value: "W" }, { label: "실버(Silver)", value: "C" }],
   },
   {
     q: "햇빛에 노출되면 피부가 어떻게 되나요?",
     hint: "",
-    options: [{ label: "황금빛으로 그을린다", value: "W" }, { label: "붉어지거나 잘 안 탄다", value: "C" }],
+    options: [{ label: "황금빛으로 자연스럽게 그을림", value: "W" }, { label: "붉어지거나 잘 타지 않음", value: "C" }],
   },
   {
     q: "전체적인 피부 인상은?",
@@ -43,230 +36,285 @@ const QUESTIONS = [
   },
 ];
 
-const RESULT_MAP = {
-  "W-bright": { name: "봄 웜톤", desc: "맑고 밝은 따뜻한 컬러 타입", tone: "warm" },
-  "W-deep":   { name: "가을 웜톤", desc: "깊고 풍성한 따뜻한 컬러 타입", tone: "warm" },
-  "C-bright": { name: "여름 쿨톤", desc: "부드럽고 흐린 차가운 컬러 타입", tone: "cool" },
-  "C-deep":   { name: "겨울 쿨톤", desc: "선명하고 강렬한 차가운 컬러 타입", tone: "cool" },
-};
+function calcSeason(ans) {
+  const wCount = [0, 1, 2, 3].filter((i) => ans[i] === "W").length;
+  const isWarm = wCount >= 2;
+  const isBright = ans[4] === "bright";
+  if (isWarm && isBright) return "봄";
+  if (isWarm && !isBright) return "가을";
+  if (!isWarm && isBright) return "겨울";
+  return "여름";
+}
 
-const PALETTES = {
-  spring: {
-    warm: {
-      desc: "봄날의 밝고 따뜻한 파스텔",
-      tip: "웜톤은 봄에 코럴·피치·골드로 화사하게 연출하세요",
-      colors: [
-        { hex: "#F4A460", name: "웜코럴" },
-        { hex: "#FFC080", name: "피치" },
-        { hex: "#FFE8A0", name: "버터옐로우" },
-        { hex: "#A8D880", name: "프레시그린" },
-        { hex: "#F8D8A0", name: "아이보리골드" },
-      ],
-    },
-    cool: {
-      desc: "봄날의 맑고 부드러운 쿨 파스텔",
-      tip: "쿨톤은 봄에 라일락·파스텔블루로 청순하게 연출하세요",
-      colors: [
-        { hex: "#B8D8F0", name: "파스텔블루" },
-        { hex: "#D0B8E8", name: "라일락" },
-        { hex: "#B0E8D0", name: "소프트민트" },
-        { hex: "#F8F0FF", name: "소프트화이트" },
-        { hex: "#F0B8C8", name: "로즈핑크" },
-      ],
-    },
+// ── STEP2: 시즌별 서브타입 6문항 (round-robin 1:1 대결) ──────────────────
+// 4타입 A/B/C/D → 6쌍: AB CD AC BD AD BC (각 타입 3회 등장)
+
+const STEP2 = {
+  봄: {
+    types: ["라이트", "트루", "웜", "브라이트"],
+    questions: [
+      { q: "봄에 자연스럽게 맞는 무드는?",         options: [{ label: "밝고 가벼운 파스텔 계열",              type: "라이트" }, { label: "선명하고 활기찬 코럴·골드 계열",           type: "트루"   }] },
+      { q: "선호하는 색의 분위기는?",               options: [{ label: "골드·오렌지처럼 따뜻하고 풍성한 느낌",  type: "웜"    }, { label: "원색에 가까운 선명하고 경쾌한 느낌",       type: "브라이트"}] },
+      { q: "주로 입는 옷 스타일은?",                options: [{ label: "파스텔, 화이트, 연한 색 위주",          type: "라이트" }, { label: "카키, 머스타드, 테라코타 계열",             type: "웜"    }] },
+      { q: "립·아이라인 컬러는?",                   options: [{ label: "코럴, 피치 계열이 자연스러움",          type: "트루"   }, { label: "레드, 오렌지처럼 선명한 컬러가 또렷해 보임", type: "브라이트"}] },
+      { q: "전체적인 이미지는?",                    options: [{ label: "부드럽고 사랑스러운 느낌",              type: "라이트" }, { label: "밝고 생동감 있는 느낌",                   type: "브라이트"}] },
+      { q: "잘 어울리는 베이스 컬러는?",            options: [{ label: "아이보리, 연한 피치",                  type: "트루"   }, { label: "버터, 연한 황금빛",                        type: "웜"    }] },
+    ],
   },
-  summer: {
-    warm: {
-      desc: "여름의 가볍고 따뜻한 베이지 계열",
-      tip: "웜톤은 여름에도 코럴·피치 유지, 아이보리 베이스로 시원하게",
-      colors: [
-        { hex: "#F4A470", name: "써머코럴" },
-        { hex: "#FFC888", name: "연피치" },
-        { hex: "#FFF0D0", name: "크림아이보리" },
-        { hex: "#C8D890", name: "연카키" },
-        { hex: "#F0E0B0", name: "베이지" },
-      ],
-    },
-    cool: {
-      desc: "여름의 청량하고 시원한 쿨 베이스",
-      tip: "쿨톤은 여름에 아이스블루·민트로 청량감을 극대화하세요",
-      colors: [
-        { hex: "#D6EDFF", name: "아이스블루" },
-        { hex: "#A8E6CF", name: "민트그린" },
-        { hex: "#F8F8F8", name: "오프화이트" },
-        { hex: "#D8C8F0", name: "소프트라벤더" },
-        { hex: "#C0E8F0", name: "아쿠아" },
-      ],
-    },
+  여름: {
+    types: ["라이트", "트루", "쿨", "소프트"],
+    questions: [
+      { q: "전체적인 인상을 고른다면?",             options: [{ label: "밝고 가볍고 산뜻한 느낌",              type: "라이트" }, { label: "차분하고 우아한 느낌",                     type: "트루"   }] },
+      { q: "선호하는 색상 느낌은?",                 options: [{ label: "아이스블루·라벤더처럼 선명한 쿨 컬러",  type: "쿨"    }, { label: "모든 색이 약간 흐리고 그레이시한 느낌",    type: "소프트" }] },
+      { q: "베이스 메이크업이 잘 맞는 톤은?",       options: [{ label: "핑크베이지, 투명하고 맑은 피부",        type: "라이트" }, { label: "블루언더톤이 있는 밝은 피부",               type: "쿨"    }] },
+      { q: "잘 어울리는 머리색은?",                 options: [{ label: "애쉬브라운, 자연스러운 쿨브라운",       type: "트루"   }, { label: "그레이 계열, 모브브라운",                  type: "소프트" }] },
+      { q: "코디할 때 선호하는 방식은?",            options: [{ label: "밝은 색끼리 조합하는 것이 자연스러움",  type: "라이트" }, { label: "전반적으로 채도를 낮춘 코디가 어울림",     type: "소프트" }] },
+      { q: "포인트 컬러 느낌은?",                   options: [{ label: "로즈, 핑크, 라벤더가 잘 맞음",         type: "트루"   }, { label: "아이스핑크, 아이스블루, 아이스민트가 더 잘 받음", type: "쿨" }] },
+    ],
   },
-  fall: {
-    warm: {
-      desc: "가을의 깊고 따뜻한 어스 팔레트",
-      tip: "웜톤은 가을에 테라코타·카멜로 가장 자연스러운 어스 코디를",
-      colors: [
-        { hex: "#C88848", name: "카멜" },
-        { hex: "#C06040", name: "테라코타" },
-        { hex: "#C09820", name: "머스타드" },
-        { hex: "#806040", name: "초코브라운" },
-        { hex: "#607840", name: "올리브" },
-      ],
-    },
-    cool: {
-      desc: "가을의 스모키하고 차분한 쿨 어스",
-      tip: "쿨톤은 가을에 스모키 계열로 차분하고 세련되게 연출하세요",
-      colors: [
-        { hex: "#7090A8", name: "스틸블루" },
-        { hex: "#A090B0", name: "스모키라벤더" },
-        { hex: "#508878", name: "딥민트" },
-        { hex: "#506070", name: "슬레이트" },
-        { hex: "#A06870", name: "로즈우드" },
-      ],
-    },
+  가을: {
+    types: ["소프트", "트루", "웜", "딥"],
+    questions: [
+      { q: "피부에 맞는 분위기는?",                 options: [{ label: "부드럽고 차분하게 가라앉은 어스톤",    type: "소프트" }, { label: "깊고 풍성한 따뜻한 어스톤",               type: "트루"   }] },
+      { q: "메이크업 컬러는?",                      options: [{ label: "코퍼, 테라코타 계열이 화사하게 어울림", type: "웜"    }, { label: "초코, 딥브라운, 버건디가 자연스럽게 어울림", type: "딥"   }] },
+      { q: "잘 어울리는 머리색은?",                 options: [{ label: "모카브라운, 애쉬카키 계열",            type: "소프트" }, { label: "카멜, 골든브라운 계열",                   type: "웜"    }] },
+      { q: "전체적인 인상은?",                      options: [{ label: "따뜻하고 자연스러운 어스 무드",        type: "트루"   }, { label: "강하고 묵직하며 깊은 무드",                type: "딥"    }] },
+      { q: "잘 어울리는 상의 컬러는?",              options: [{ label: "카키, 모카베이지, 오트밀 계열",        type: "소프트" }, { label: "딥그린, 다크네이비, 딥버건디 계열",        type: "딥"    }] },
+      { q: "골드 액세서리를 착용했을 때?",          options: [{ label: "따뜻하고 자연스럽게 어울림",           type: "트루"   }, { label: "생기있고 더욱 화사해 보임",                type: "웜"    }] },
+    ],
   },
-  winter: {
-    warm: {
-      desc: "겨울의 깊고 따뜻한 딥 웜 팔레트",
-      tip: "웜톤은 겨울에 딥버건디·다크올리브로 깊고 고급스럽게",
-      colors: [
-        { hex: "#900030", name: "딥버건디" },
-        { hex: "#A06030", name: "딥카멜" },
-        { hex: "#506028", name: "다크올리브" },
-        { hex: "#A04830", name: "딥테라코타" },
-        { hex: "#988020", name: "골드브라운" },
-      ],
-    },
-    cool: {
-      desc: "겨울의 선명하고 강렬한 딥 쿨 팔레트",
-      tip: "쿨톤은 겨울에 로얄네이비·와인레드로 강렬한 대비를 살리세요",
-      colors: [
-        { hex: "#203880", name: "로얄네이비" },
-        { hex: "#602068", name: "딥퍼플" },
-        { hex: "#A02030", name: "와인레드" },
-        { hex: "#E8E8F0", name: "아이시화이트" },
-        { hex: "#205060", name: "딥틸" },
-      ],
-    },
+  겨울: {
+    types: ["브라이트", "트루", "쿨", "딥"],
+    questions: [
+      { q: "어울리는 색의 강도는?",                 options: [{ label: "원색·비비드 계열이 훨씬 잘 맞음",      type: "브라이트"}, { label: "블랙·화이트 대비가 가장 잘 받음",          type: "트루"   }] },
+      { q: "피부 느낌은?",                          options: [{ label: "밝고 차갑고 투명한 느낌",              type: "쿨"     }, { label: "어둡고 강렬한 피부 톤",                   type: "딥"    }] },
+      { q: "선호하는 포인트 컬러는?",               options: [{ label: "비비드 레드, 비비드 블루처럼 선명한 원색", type: "브라이트"}, { label: "아이스블루, 라벤더, 아이스핑크 같은 쿨 파스텔", type: "쿨" }] },
+      { q: "블랙 착용 시 느낌은?",                  options: [{ label: "세련되고 강렬한 느낌이 강해짐",        type: "트루"   }, { label: "고급스럽고 깊이 있는 느낌이 강해짐",       type: "딥"    }] },
+      { q: "선호하는 색감은?",                      options: [{ label: "비비드, 선명한 컬러가 생기있어 보임",  type: "브라이트"}, { label: "딥퍼플, 딥네이비처럼 깊은 색이 잘 맞음",   type: "딥"    }] },
+      { q: "머리색은?",                             options: [{ label: "블루블랙, 제트블랙이 가장 잘 어울림",  type: "트루"   }, { label: "애쉬, 플래티넘, 실버 계열이 잘 받음",     type: "쿨"    }] },
+    ],
   },
 };
 
-function loadSavedPC() {
+function calcSubtype(season, answers) {
+  const types = STEP2[season].types;
+  const scores = Object.fromEntries(types.map((t) => [t, 0]));
+  answers.forEach((t) => { if (t in scores) scores[t]++; });
+  const sorted = [...types].sort((a, b) => scores[b] - scores[a]);
+  const winnerScore = scores[sorted[0]];
+  const secondScore = scores[sorted[1]];
+  const fitPercent = Math.min(99, 60 + winnerScore * 10 + (winnerScore - secondScore) * 5);
+  return { subtype: sorted[0], fitPercent, ranking: sorted, scores };
+}
+
+// ── 16타입 팔레트 & 코디 팁 ──────────────────────────────────────────────
+
+const PC_DATA = {
+  "봄 라이트": {
+    palette: ["#FFCCA0", "#FFF0C0", "#C8F0E0", "#EED8F8", "#FFF8F0"],
+    names:   ["소프트코럴", "버터크림", "민트크림", "소프트라일락", "크림아이보리"],
+    tip: "밝고 가벼운 파스텔로 코디하세요. 피치·베이비핑크·민트가 피부를 맑게 살려줍니다.",
+    avoid: "진한 어스톤, 딥브라운, 블랙 단독 착용은 무거워 보일 수 있어요.",
+  },
+  "봄 트루": {
+    palette: ["#FF8870", "#FFB080", "#A0D870", "#A0D8F0", "#FFD8A0"],
+    names:   ["코럴", "피치오렌지", "프레시그린", "아쿠아블루", "버터골드"],
+    tip: "코럴, 피치, 골드 계열이 가장 잘 어울려요. 선명하고 따뜻한 스프링 컬러를 살리세요.",
+    avoid: "무채색 단독, 차가운 네이비나 딥퍼플은 피하세요.",
+  },
+  "봄 웜": {
+    palette: ["#FFD040", "#FF9040", "#FF8060", "#C88040", "#FFF0D0"],
+    names:   ["골드옐로우", "오렌지", "웜코럴", "카멜", "크림"],
+    tip: "골드, 오렌지, 테라코타 계열이 피부를 생기있게 해줘요. 따뜻하고 풍성한 팔레트를 활용하세요.",
+    avoid: "차가운 화이트, 딥퍼플, 쿨그레이는 피하세요.",
+  },
+  "봄 브라이트": {
+    palette: ["#FF3060", "#FF8000", "#FFD000", "#40C080", "#0080F0"],
+    names:   ["비비드레드", "오렌지", "비비드옐로우", "비비드그린", "비비드블루"],
+    tip: "원색과 비비드 계열이 가장 잘 맞아요. 밝고 선명한 포인트 컬러로 생동감을 살리세요.",
+    avoid: "채도가 낮은 모노톤, 흐리고 부드러운 파스텔은 존재감이 사라져요.",
+  },
+  "여름 라이트": {
+    palette: ["#E0D0F8", "#C0D8F0", "#FFD8E8", "#C0F0E8", "#F0F0F8"],
+    names:   ["소프트라벤더", "파스텔블루", "소프트핑크", "소프트민트", "아이시화이트"],
+    tip: "밝고 가벼운 쿨 파스텔이 잘 맞아요. 핑크베이지, 라벤더, 소프트블루로 산뜻하게 연출하세요.",
+    avoid: "진한 어스톤, 원색, 황금빛은 피부를 탁하게 만들 수 있어요.",
+  },
+  "여름 트루": {
+    palette: ["#D09090", "#A0C0E0", "#C0A8E0", "#C08088", "#F0B0C0"],
+    names:   ["더스티로즈", "소프트블루", "모브라벤더", "로즈우드", "소프트핑크"],
+    tip: "로즈, 모브, 라벤더 계열이 가장 잘 받아요. 차분하고 우아한 쿨 팔레트로 연출하세요.",
+    avoid: "원색, 황금빛, 진한 오렌지 계열은 피하세요.",
+  },
+  "여름 쿨": {
+    palette: ["#90C8F0", "#B0A0E8", "#F0C0D8", "#90E0D8", "#C0C8D8"],
+    names:   ["아이스블루", "쿨라벤더", "아이스핑크", "아이스민트", "스틸블루그레이"],
+    tip: "아이스블루, 라벤더, 아이스핑크 등 맑고 차가운 컬러가 피부를 투명하게 살려줘요.",
+    avoid: "웜 어스톤, 오렌지, 골드는 피하세요.",
+  },
+  "여름 소프트": {
+    palette: ["#B0A8C0", "#D0A8A8", "#A0C0B8", "#A0B098", "#C0C0C8"],
+    names:   ["모브그레이", "더스티핑크", "소프트틸", "세이지그레이", "라벤더그레이"],
+    tip: "저채도의 그레이시 컬러들이 부드럽게 어울려요. 모브, 모카, 그레이베이지로 차분하게 연출하세요.",
+    avoid: "비비드 원색, 강한 대비, 선명한 색 조합은 피하세요.",
+  },
+  "가을 소프트": {
+    palette: ["#909870", "#C09070", "#E0B090", "#889870", "#C0B0A0"],
+    names:   ["올리브그린", "클레이", "아이보리베이지", "카키그린", "모카베이지"],
+    tip: "오트밀, 카키, 모카베이지 등 부드러운 어스 컬러가 잘 어울려요. 저채도의 따뜻한 팔레트를 활용하세요.",
+    avoid: "비비드 원색, 네온, 차가운 파스텔은 피하세요.",
+  },
+  "가을 트루": {
+    palette: ["#C08840", "#C89020", "#C07030", "#708038", "#804830"],
+    names:   ["카멜", "머스타드", "테라코타", "올리브", "쵸코브라운"],
+    tip: "카멜, 머스타드, 테라코타 등 가을 어스 컬러가 가장 자연스러워요. 골드·코퍼 액세서리도 잘 어울려요.",
+    avoid: "차가운 파스텔, 블루 계열, 쿨 그레이는 피하세요.",
+  },
+  "가을 웜": {
+    palette: ["#C06040", "#C05820", "#B07030", "#A84028", "#A06030"],
+    names:   ["테라코타", "번트오렌지", "코퍼", "버건디", "브릭레드"],
+    tip: "코퍼, 테라코타, 번트오렌지가 피부를 생기있게 해줘요. 따뜻하고 풍성한 가을 팔레트를 활용하세요.",
+    avoid: "차갑고 선명한 쿨 계열, 파스텔, 블루 계열은 피하세요.",
+  },
+  "가을 딥": {
+    palette: ["#802030", "#503020", "#506030", "#907820", "#402818"],
+    names:   ["딥버건디", "초콜릿브라운", "딥올리브", "다크골드", "에스프레소"],
+    tip: "딥버건디, 딥그린, 다크브라운 등 진하고 풍성한 컬러가 잘 어울려요. 묵직하고 고급스러운 스타일을 연출하세요.",
+    avoid: "파스텔, 밝은 색, 차가운 계열은 피하세요.",
+  },
+  "겨울 브라이트": {
+    palette: ["#E01030", "#0030C0", "#8000C0", "#00A060", "#F8F8FF"],
+    names:   ["비비드레드", "코발트블루", "비비드퍼플", "비비드그린", "아이시화이트"],
+    tip: "비비드 레드, 코발트블루, 비비드 퍼플 등 원색이 가장 잘 맞아요. 대담하고 선명한 포인트 컬러를 활용하세요.",
+    avoid: "채도 낮은 어스톤, 흐리고 부드러운 파스텔은 피하세요.",
+  },
+  "겨울 트루": {
+    palette: ["#181820", "#F8F8FF", "#C01020", "#101840", "#800818"],
+    names:   ["제트블랙", "퓨어화이트", "와인레드", "딥네이비", "딥버건디"],
+    tip: "블랙, 화이트, 와인레드 등 강한 대비의 컬러가 가장 잘 받아요. 세련되고 강렬한 스타일을 연출하세요.",
+    avoid: "웜 어스톤, 황금빛, 베이지 계열은 피하세요.",
+  },
+  "겨울 쿨": {
+    palette: ["#80C0F0", "#C0B0F0", "#C0C8D0", "#80E0D8", "#F8E0F0"],
+    names:   ["아이스블루", "아이스라벤더", "아이스그레이", "아이스민트", "아이스핑크"],
+    tip: "아이스블루, 아이스라벤더, 아이스핑크 등 맑고 차가운 파스텔 계열이 잘 어울려요.",
+    avoid: "웜 어스톤, 오렌지, 황금빛 계열은 피하세요.",
+  },
+  "겨울 딥": {
+    palette: ["#0A1030", "#401068", "#400818", "#181828", "#104840"],
+    names:   ["딥네이비", "딥퍼플", "딥버건디", "딥블랙네이비", "딥틸블랙"],
+    tip: "딥퍼플, 딥네이비, 블랙 등 어둡고 깊은 컬러가 고급스럽게 어울려요. 묵직하고 강렬한 스타일을 연출하세요.",
+    avoid: "밝고 따뜻한 계열, 파스텔, 황금빛은 피하세요.",
+  },
+};
+
+function loadSaved() {
   try { return JSON.parse(localStorage.getItem(PC_KEY)); } catch { return null; }
 }
 
 export default function TodayColorPalette({ condition, temp, profile, theme, darkMode }) {
   const accent = theme?.accent || "#E8543B";
-  const season = getSeason();
-  const seasonKo = SEASON_KO[season];
-
   const [open, toggleOpen] = useOpen("colorPalette", true);
-  const [tab, setTab] = useState("quiz");
+
+  const initialSaved = (() => { try { return JSON.parse(localStorage.getItem(PC_KEY)); } catch { return null; } })();
+  const [phase, setPhase] = useState(initialSaved ? "result" : "step1");
   const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState({});
-  const [result, setResult] = useState(() => loadSavedPC());
-  const [done, setDone] = useState(() => !!loadSavedPC());
+  const [step1Ans, setStep1Ans] = useState({});
+  const [step2Ans, setStep2Ans] = useState([]);
+  const [season, setSeason] = useState(initialSaved?.season ?? null);
+  const [result, setResult] = useState(initialSaved);
 
-  const palette = tab === "warm" ? PALETTES[season].warm : tab === "cool" ? PALETTES[season].cool : null;
-
-  const handleAnswer = (value) => {
-    const next = { ...answers, [step]: value };
-    setAnswers(next);
-    if (step < QUESTIONS.length - 1) {
+  const handleStep1 = (value) => {
+    const next = { ...step1Ans, [step]: value };
+    setStep1Ans(next);
+    if (step < STEP1_QUESTIONS.length - 1) {
       setStep(step + 1);
     } else {
-      const toneVotes = Object.entries(next).slice(0, 4).map(([, v]) => v);
-      const wCount = toneVotes.filter((v) => v === "W").length;
-      const tone = wCount >= 2 ? "W" : "C";
-      const depth = next[4] || "bright";
-      const pc = RESULT_MAP[`${tone}-${depth}`];
-      setResult(pc);
-      setDone(true);
-      localStorage.setItem(PC_KEY, JSON.stringify(pc));
+      const s = calcSeason(next);
+      setSeason(s);
+      setStep(0);
+      setPhase("step2");
     }
   };
 
-  const resetQuiz = () => {
-    setAnswers({});
+  const handleStep2 = (type) => {
+    const next = [...step2Ans, type];
+    setStep2Ans(next);
+    const totalQ = STEP2[season].questions.length;
+    if (next.length < totalQ) {
+      setStep(step + 1);
+    } else {
+      const { subtype, fitPercent, ranking, scores } = calcSubtype(season, next);
+      const res = { season, subtype, fullName: `${season} ${subtype}`, fitPercent, ranking, scores };
+      setResult(res);
+      setPhase("result");
+      localStorage.setItem(PC_KEY, JSON.stringify(res));
+    }
+  };
+
+  const reset = () => {
+    setPhase("step1");
     setStep(0);
+    setStep1Ans({});
+    setStep2Ans([]);
+    setSeason(null);
     setResult(null);
-    setDone(false);
     localStorage.removeItem(PC_KEY);
   };
 
-  const TABS = [
-    { key: "quiz", label: "퍼스널컬러 찾기" },
-    { key: "warm", label: `${seasonKo} 웜톤` },
-    { key: "cool", label: `${seasonKo} 쿨톤` },
-  ];
+  const pcData = result ? PC_DATA[result.fullName] : null;
+  const qText = darkMode ? "#DDD7CC" : "#1A1A1A";
+  const borderColor = darkMode ? "#4a4540" : "#D7D0C4";
+  const hoverBg = darkMode ? "#2c2a26" : "#EEE9E0";
 
   return (
     <section className="mt-6 border border-[#E5DED1] bg-[#FAF8F3] p-5">
-
       {/* 헤더 */}
       <button type="button" onClick={toggleOpen} className="flex w-full items-start justify-between mb-3">
         <div className="text-left">
-          <div className="wf-label text-[#3A362E]" style={{ fontSize: "13px" }}>퍼스널컬러 & 색상 팔레트</div>
-          <p className="mt-1 text-xs text-[#8F897D] leading-5">내 피부톤에 맞는 색상을 진단하고 계절별 팔레트를 확인하세요. 코디 추천 색상과는 별개로, 평소 잘 받는 색을 파악하는 용도예요.</p>
+          <div className="wf-label text-[#3A362E]" style={{ fontSize: "13px" }}>퍼스널컬러 16타입 진단</div>
+          <p className="mt-1 text-xs text-[#8F897D] leading-5">
+            2단계 진단으로 나에게 맞는 퍼스널컬러 타입을 찾아보세요.
+            {result && <span style={{ color: accent }}> · 현재: {result.fullName}</span>}
+          </p>
         </div>
-        <span className="ml-3 shrink-0" style={{ fontSize: "13px", border: "0.5px solid #D7D0C4", borderRadius: "4px", padding: "2px 8px", color: "#6B665C" }}>{open ? "−" : "+"}</span>
+        <span className="ml-3 shrink-0" style={{ fontSize: "13px", border: "0.5px solid #D7D0C4", borderRadius: "4px", padding: "2px 8px", color: "#6B665C" }}>
+          {open ? "−" : "+"}
+        </span>
       </button>
-      {open && <div className="border-t border-[#E5DED1] pt-4 mb-1" />}
+      {open && <div className="border-t border-[#E5DED1] pt-4 mb-4" />}
 
-      {/* 탭 */}
-      {open && <div className="grid grid-cols-3 gap-1.5 mb-5">
-        {TABS.map(({ key, label }) => (
-          <button
-            key={key}
-            type="button"
-            onClick={() => setTab(key)}
-            className="py-3 text-sm font-bold border transition"
-            style={{
-              background: tab === key ? "#1A1A1A" : "transparent",
-              color: tab === key ? "#FFFDF7" : (darkMode ? "#9e9890" : "#6B665C"),
-              borderColor: tab === key ? "#1A1A1A" : (darkMode ? "#4a4540" : "#D7D0C4"),
-            }}
-          >
-            {label}
-            {key === "quiz" && result && tab !== "quiz" && (
-              <span className="ml-1 text-[10px]" style={{ color: accent }}>✓</span>
-            )}
-          </button>
-        ))}
-      </div>}
-
-      {/* ── 퍼스널컬러 찾기 탭 ── */}
-      {open && tab === "quiz" && !done && (
+      {/* ── 1단계 ── */}
+      {open && phase === "step1" && (
         <div>
-          {/* 진행 바 */}
           <div className="mb-5">
             <div className="flex items-center justify-between mb-2">
-              <div className="wf-label text-[#3A362E]" style={{ fontSize: "13px" }}>
-                퍼스널컬러 진단
-              </div>
+              <span className="wf-label text-[#3A362E]" style={{ fontSize: "13px" }}>
+                1단계 · 기본 피부톤 파악
+              </span>
               <span className="text-xs font-semibold text-[#8F897D]">
-                {step + 1} / {QUESTIONS.length}
+                {step + 1} / {STEP1_QUESTIONS.length}
               </span>
             </div>
             <div className="h-1.5 bg-[#F0EBE0]">
-              <div
-                className="h-full transition-all"
-                style={{ width: `${(step / QUESTIONS.length) * 100}%`, background: accent }}
-              />
+              <div className="h-full transition-all" style={{ width: `${(step / STEP1_QUESTIONS.length) * 100}%`, background: accent }} />
             </div>
           </div>
 
-          <p className="text-base font-bold text-[#1A1A1A] leading-6">{QUESTIONS[step].q}</p>
-          {QUESTIONS[step].hint && (
-            <p className="mt-1 text-xs text-[#8F897D]">{QUESTIONS[step].hint}</p>
+          <p className="text-base font-bold leading-6" style={{ color: qText }}>{STEP1_QUESTIONS[step].q}</p>
+          {STEP1_QUESTIONS[step].hint && (
+            <p className="mt-1 text-xs text-[#8F897D]">{STEP1_QUESTIONS[step].hint}</p>
           )}
-
           <div className="mt-4 grid grid-cols-2 gap-3">
-            {QUESTIONS[step].options.map((opt) => (
+            {STEP1_QUESTIONS[step].options.map((opt) => (
               <button
                 key={opt.value}
                 type="button"
-                onClick={() => handleAnswer(opt.value)}
-                className="border py-5 text-sm font-semibold text-[#3A362E] transition hover:border-[#1A1A1A] hover:bg-[#EEE9E0]"
-                style={{ borderColor: "#D7D0C4" }}
+                onClick={() => handleStep1(opt.value)}
+                className="border py-5 text-sm font-semibold transition"
+                style={{ borderColor, color: darkMode ? "#DDD7CC" : "#3A362E" }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = hoverBg; e.currentTarget.style.borderColor = qText; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = borderColor; }}
               >
                 {opt.label}
               </button>
@@ -275,76 +323,115 @@ export default function TodayColorPalette({ condition, temp, profile, theme, dar
         </div>
       )}
 
-      {/* ── 진단 결과 ── */}
-      {open && tab === "quiz" && done && result && (
+      {/* ── 2단계 ── */}
+      {open && phase === "step2" && season && (
         <div>
-          <div className="wf-label mb-3 text-[#3A362E]" style={{ fontSize: "13px" }}>내 퍼스널컬러</div>
-          <div className="border-l-4 pl-4 py-2 mb-4" style={{ borderColor: accent }}>
-            <p className="text-2xl font-bold text-[#1A1A1A]">{result.name}</p>
-            <p className="mt-1 text-sm text-[#6B665C]">{result.desc}</p>
+          <div className="mb-5">
+            <div className="flex items-center justify-between mb-2">
+              <span className="wf-label text-[#3A362E]" style={{ fontSize: "13px" }}>
+                2단계 · {season} 서브타입 진단
+              </span>
+              <span className="text-xs font-semibold text-[#8F897D]">
+                {step + 1} / {STEP2[season].questions.length}
+              </span>
+            </div>
+            <div className="h-1.5 bg-[#F0EBE0]">
+              <div className="h-full transition-all" style={{ width: `${(step / STEP2[season].questions.length) * 100}%`, background: accent }} />
+            </div>
           </div>
 
-          <div className="bg-[#F0EBE0] px-4 py-3 text-sm text-[#3A362E] leading-6">
-            <strong>{seasonKo} 시즌</strong>에 맞는 팔레트는 위 탭에서 확인하세요!<br />
-            <span style={{ color: accent }} className="font-semibold">
-              {result.tone === "warm" ? `→ '${seasonKo} 웜톤' 탭 추천` : `→ '${seasonKo} 쿨톤' 탭 추천`}
-            </span>
+          <div className="mb-3 text-xs font-semibold" style={{ color: accent }}>
+            ✦ 1단계 결과: {season} 시즌 — 이제 세부 타입을 찾아볼게요
           </div>
 
-          <button
-            type="button"
-            onClick={resetQuiz}
-            className="mt-4 border border-[#D7D0C4] px-4 py-2 text-xs font-semibold text-[#6B665C] hover:border-[#1A1A1A] transition"
-          >
-            다시 테스트하기
-          </button>
+          <p className="text-base font-bold leading-6" style={{ color: qText }}>
+            {STEP2[season].questions[step].q}
+          </p>
+          <div className="mt-4 grid grid-cols-2 gap-3">
+            {STEP2[season].questions[step].options.map((opt) => (
+              <button
+                key={opt.type}
+                type="button"
+                onClick={() => handleStep2(opt.type)}
+                className="border py-5 text-sm font-semibold transition"
+                style={{ borderColor, color: darkMode ? "#DDD7CC" : "#3A362E" }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = hoverBg; e.currentTarget.style.borderColor = qText; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = borderColor; }}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
         </div>
       )}
 
-      {/* ── 웜톤 / 쿨톤 팔레트 탭 ── */}
-      {open && palette && (
+      {/* ── 결과 ── */}
+      {open && phase === "result" && result && pcData && (
         <div>
-          <p className="mb-4 text-sm font-medium text-[#6B665C]">{palette.desc}</p>
-
-          {result && (
-            <div
-              className="mb-4 flex items-center gap-2 border px-3 py-2 text-xs font-semibold"
-              style={{ borderColor: `${accent}44`, color: accent }}
-            >
-              ✦ 내 퍼스널컬러({result.name})
-              {result.tone === (tab === "warm" ? "warm" : "cool")
-                ? " — 나에게 잘 맞는 톤이에요!"
-                : " — 나의 톤과 다를 수 있어요"}
+          {/* 타입 헤더 */}
+          <div className="border-l-4 pl-4 py-2 mb-5" style={{ borderColor: accent }}>
+            <div className="wf-label mb-1" style={{ fontSize: "13px", color: accent }}>내 퍼스널컬러</div>
+            <p className="text-2xl font-bold" style={{ color: qText }}>{result.fullName}</p>
+            <div className="mt-1 flex items-center gap-3">
+              <span className="text-sm font-semibold" style={{ color: accent }}>적합도 {result.fitPercent}%</span>
+              <span className="text-xs text-[#8F897D]">· {result.season} 시즌</span>
             </div>
-          )}
+          </div>
 
-          {/* 스와치 */}
-          <div className="grid grid-cols-5 gap-2 mb-5">
-            {palette.colors.map((color, i) => (
-              <div key={i}>
-                <div className="h-16 w-full border border-black/10" style={{ background: color.hex }} />
-                <div className="bg-[#EEEBE4] px-1 py-1.5 text-center">
-                  <span className="block text-xs font-bold text-[#1A1A1A] leading-tight">{color.name}</span>
-                  <span className="block text-[10px] text-[#6B665C] mt-0.5">{color.hex}</span>
+          {/* Top 3 */}
+          <div className="mb-5 grid grid-cols-3 gap-2">
+            {result.ranking.slice(0, 3).map((t, i) => (
+              <div
+                key={t}
+                className="border px-2 py-3 text-center"
+                style={{
+                  borderColor: i === 0 ? accent : (darkMode ? "#4a4540" : "#E5DED1"),
+                  background: i === 0 ? `${accent}12` : "transparent",
+                }}
+              >
+                <div className="text-xs font-bold mb-1" style={{ color: i === 0 ? accent : "#8F897D" }}>
+                  {i === 0 ? "1위" : i === 1 ? "2위" : "3위"}
                 </div>
+                <div className="text-sm font-semibold" style={{ color: qText }}>{result.season} {t}</div>
+                <div className="text-xs text-[#8F897D] mt-0.5">{result.scores[t]} / 3점</div>
               </div>
             ))}
           </div>
 
-          <p className="border-l-2 pl-3 text-sm font-medium text-[#3A362E]" style={{ borderColor: accent }}>
-            {palette.tip}
+          {/* 팔레트 */}
+          <div className="mb-4">
+            <div className="wf-label mb-3 text-[#3A362E]" style={{ fontSize: "13px" }}>추천 팔레트</div>
+            <div className="grid grid-cols-5 gap-2">
+              {pcData.palette.map((hex, i) => (
+                <div key={i}>
+                  <div className="h-16 w-full border border-black/10" style={{ background: hex }} />
+                  <div className="bg-[#EEEBE4] px-1 py-1.5 text-center">
+                    <span className="block text-xs font-bold text-[#1A1A1A] leading-tight">{pcData.names[i]}</span>
+                    <span className="block text-[10px] text-[#6B665C] mt-0.5">{hex}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 팁 */}
+          <div className="mb-2 border-l-2 pl-3 text-sm font-medium leading-6 text-[#3A362E]" style={{ borderColor: accent }}>
+            {pcData.tip}
+          </div>
+          <p className="mb-5 text-xs leading-5 text-[#8F897D]">
+            <span className="font-semibold text-[#6B665C]">피하면 좋은 컬러: </span>{pcData.avoid}
           </p>
 
-          {!result && (
-            <button
-              type="button"
-              onClick={() => setTab("quiz")}
-              className="mt-4 border px-4 py-2 text-xs font-semibold transition"
-              style={{ borderColor: `${accent}55`, color: accent }}
-            >
-              ✦ 내 퍼스널컬러 찾기 →
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={reset}
+            className="border px-4 py-2 text-xs font-semibold transition"
+            style={{ borderColor, color: "#6B665C" }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = qText; }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = borderColor; }}
+          >
+            다시 테스트하기
+          </button>
         </div>
       )}
     </section>
