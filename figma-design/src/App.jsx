@@ -19,7 +19,7 @@ import ProfileSetup from "./components/ProfileSetup.jsx";
 import SavedOutfitsPanel from "./components/SavedOutfitsPanel.jsx";
 import WardrobePanel from "./components/WardrobePanel.jsx";
 import WeatherHero from "./components/WeatherHero.jsx";
-import { CITIES } from "./data/cities.js";
+import { CITIES, CITY_GROUPS } from "./data/cities.js";
 import { curate } from "./lib/curate.js";
 import { askGeminiForOutfit } from "./lib/gemini.js";
 import { themeFor } from "./lib/theme.js";
@@ -30,7 +30,7 @@ const INITIAL_PROFILE = {
   age: "20대",
   gender: "unisex",
   cityName: "서울",
-  style: "minimal",
+  style: ["minimal"],
   sensitivity: "normal",
   colorTone: "neutral",
   mainColor: "auto",
@@ -156,7 +156,8 @@ export default function App() {
   const startWithProfile = () => {
     const selectedCity = CITIES.find((item) => item.name === profile.cityName) || CITIES[0];
     setCity(selectedCity);
-    setMood(profile.style);
+    const styleVal = Array.isArray(profile.style) ? profile.style[0] : profile.style;
+    setMood(styleVal || "minimal");
     setProfileDone(true);
   };
 
@@ -165,7 +166,7 @@ export default function App() {
     setProfile(INITIAL_PROFILE);
     setProfileDone(false);
     setCity(CITIES[0]);
-    setMood(INITIAL_PROFILE.style);
+    setMood(INITIAL_PROFILE.style[0]);
     setOccasion("free");
     setWardrobe(DEFAULT_WARDROBE);
     setLocks(INITIAL_LOCKS);
@@ -179,7 +180,8 @@ export default function App() {
   useEffect(() => {
     const selectedCity = CITIES.find((item) => item.name === profile.cityName);
     if (selectedCity) setCity(selectedCity);
-    setMood(profile.style);
+    const styleVal = Array.isArray(profile.style) ? profile.style[0] : profile.style;
+    setMood(styleVal || "minimal");
   }, []);
 
   useEffect(() => { localStorage.setItem(STORAGE_KEYS.profile, JSON.stringify(profile)); }, [profile]);
@@ -342,6 +344,7 @@ export default function App() {
         profile={profile}
         setProfile={setProfile}
         cities={CITIES}
+        cityGroups={CITY_GROUPS}
         onStart={startWithProfile}
       />
     );
@@ -384,6 +387,7 @@ export default function App() {
               city={city}
               onCityChange={setCity}
               cities={CITIES}
+              cityGroups={CITY_GROUPS}
               profile={profile}
               onEditProfile={() => setProfileDone(false)}
               onResetSavedData={resetSavedData}

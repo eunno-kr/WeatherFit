@@ -63,7 +63,43 @@ function ChoiceGroup({ label, options, value, onChange, accent }) {
   );
 }
 
-export default function ProfileSetup({ profile, setProfile, cities, onStart }) {
+function MultiChoiceGroup({ label, options, value = [], onChange, accent }) {
+  const toggle = (id) => {
+    const next = value.includes(id) ? value.filter((v) => v !== id) : [...value, id];
+    if (next.length > 0) onChange(next);
+  };
+  return (
+    <div>
+      <div className="mb-2 text-xs font-semibold text-[#6B665C]">
+        {label} <span className="font-normal text-[#A8A296]">(중복 선택 가능)</span>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {options.map((option) => {
+          const id = Array.isArray(option) ? option[0] : option;
+          const text = Array.isArray(option) ? option[1] : option;
+          const selected = value.includes(id);
+          return (
+            <button
+              key={id}
+              type="button"
+              onClick={() => toggle(id)}
+              className="border px-3 py-2 text-sm transition"
+              style={{
+                borderColor: selected ? accent : "#D7D0C4",
+                background: selected ? accent : "transparent",
+                color: selected ? "#fff" : "#3A362E",
+              }}
+            >
+              {text}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+export default function ProfileSetup({ profile, setProfile, cities, cityGroups, onStart }) {
   const accent = "#7C8B5A";
 
   return (
@@ -95,10 +131,14 @@ export default function ProfileSetup({ profile, setProfile, cities, onStart }) {
               onChange={(event) => setProfile({ ...profile, cityName: event.target.value })}
               className="w-full border border-[#D7D0C4] bg-transparent px-3 py-2 text-sm outline-none"
             >
-              {cities.map((city) => (
-                <option key={city.name} value={city.name}>
-                  {city.name}
-                </option>
+              {(cityGroups || [{ label: "", cities }]).map((group) => (
+                <optgroup key={group.label} label={group.label}>
+                  {group.cities.map((city) => (
+                    <option key={city.name} value={city.name}>
+                      {city.name}
+                    </option>
+                  ))}
+                </optgroup>
               ))}
             </select>
           </div>
@@ -116,10 +156,10 @@ export default function ProfileSetup({ profile, setProfile, cities, onStart }) {
             onChange={(gender) => setProfile({ ...profile, gender })}
             accent={accent}
           />
-          <ChoiceGroup
+          <MultiChoiceGroup
             label="선호 스타일"
             options={STYLE_OPTIONS}
-            value={profile.style}
+            value={Array.isArray(profile.style) ? profile.style : [profile.style]}
             onChange={(style) => setProfile({ ...profile, style })}
             accent={accent}
           />

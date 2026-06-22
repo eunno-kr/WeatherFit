@@ -23,6 +23,7 @@ export default function WeatherHero({
   city,
   onCityChange,
   cities,
+  cityGroups,
   profile,
   onEditProfile,
   onResetSavedData,
@@ -49,10 +50,14 @@ export default function WeatherHero({
             onChange={(event) => onCityChange(cities.find((item) => item.name === event.target.value))}
             className="border border-ink bg-[#FFFDF7] px-3 py-2 text-sm outline-none"
           >
-            {cities.map((item) => (
-              <option key={item.name} value={item.name}>
-                {item.name}
-              </option>
+            {(cityGroups || [{ label: "", cities }]).map((group) => (
+              <optgroup key={group.label} label={group.label}>
+                {group.cities.map((item) => (
+                  <option key={item.name} value={item.name}>
+                    {item.name}
+                  </option>
+                ))}
+              </optgroup>
             ))}
           </select>
           <button type="button" onClick={onEditProfile} className="border border-[#1A1A1A] bg-[#FFFDF7] px-3 py-2 text-sm">
@@ -138,7 +143,7 @@ export default function WeatherHero({
 
           <div className="mt-4 grid grid-cols-2 gap-0">
             {[
-              { label: "스타일", value: STYLE_KO[profile.style] || profile.style },
+              { label: "스타일", value: Array.isArray(profile.style) ? profile.style.map((s) => STYLE_KO[s] || s).join(" · ") : (STYLE_KO[profile.style] || profile.style) },
               { label: "색감", value: COLOR_KO[profile.colorTone] || profile.colorTone },
               { label: "온도 민감도", value: SENSITIVITY_KO[profile.sensitivity] || profile.sensitivity },
               { label: "성별", value: genderLabel },
