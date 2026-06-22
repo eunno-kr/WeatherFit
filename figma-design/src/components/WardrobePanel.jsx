@@ -79,7 +79,7 @@ const STYLE_LABELS = Object.fromEntries(STYLE_OPTIONS);
 
 function SelectField({ label, value, onChange, options }) {
   return (
-    <label className="grid gap-1 text-xs font-semibold text-[#6B665C]">
+    <label className="grid gap-1 text-sm font-semibold text-[#3A362E]">
       {label}
       <select
         value={value}
@@ -243,7 +243,7 @@ export default function WardrobePanel({
     <button type="button" onClick={onToggle} className="flex w-full items-start justify-between py-1 text-left">
       <div>
         <div className="text-sm font-semibold text-[#1A1A1A]">{title}</div>
-        {sub && <p className="text-xs text-[#6B665C] leading-5">{sub}</p>}
+        {sub && <p className="text-sm text-[#3A362E] leading-5">{sub}</p>}
       </div>
       <span className="ml-3 shrink-0" style={{ fontSize: "13px", border: "0.5px solid #D7D0C4", borderRadius: "4px", padding: "2px 8px", color: "#6B665C" }}>{o ? "−" : "+"}</span>
     </button>
@@ -270,7 +270,7 @@ export default function WardrobePanel({
               className="min-w-0 w-full border border-[#D7D0C4] bg-transparent px-3 py-2 text-sm outline-none"
             />
             <SelectField label="분류" value={draft.category} onChange={(category) => setDraft({ ...draft, category })} options={CATEGORY_OPTIONS} />
-            <label className="grid gap-1 text-xs font-semibold text-[#6B665C]">
+            <label className="grid gap-1 text-sm font-semibold text-[#3A362E]">
               색상
               <div className="flex min-w-0 items-center gap-2">
                 <span className="shrink-0"><ColorChips text={draft.color} colorHex={draft.colorHex} /></span>
@@ -284,6 +284,9 @@ export default function WardrobePanel({
                   className="min-w-0 w-full border border-[#D7D0C4] bg-transparent px-3 py-2 text-sm font-normal text-ink outline-none"
                 />
               </div>
+              <p className="text-xs text-[#6B665C] leading-5">
+                💡 블랙·네이비·코럴 등 <span className="font-semibold">등록된 색상명</span>은 직접 입력하면 색상이 자동 적용돼요. 등록되지 않은 색은 아래 스와치나 직접 선택을 이용하세요.
+              </p>
               <div className="mt-2 grid grid-cols-9 gap-1.5">
                 {(showMoreColors ? [...COLOR_SWATCHES, ...MORE_COLOR_SWATCHES] : COLOR_SWATCHES).map(([name, hex]) => {
                   const selected = draft.colorHex === hex;
@@ -297,13 +300,13 @@ export default function WardrobePanel({
                 })}
               </div>
               <div className="mt-2 flex flex-wrap items-center gap-2">
-                <button type="button" onClick={() => setShowMoreColors(!showMoreColors)} className="border border-[#D7D0C4] px-3 py-1.5 text-xs font-normal text-[#6B665C]">
+                <button type="button" onClick={() => setShowMoreColors(!showMoreColors)} className="border border-[#D7D0C4] px-3 py-1.5 text-sm font-normal text-[#3A362E]">
                   {showMoreColors ? "기본 색만 보기" : "더 많은 색 보기"}
                 </button>
                 <input type="color" value={draft.colorHex || "#111111"} onChange={(e) => setDraft({ ...draft, color: "직접 선택", colorHex: e.target.value })}
                   className="h-8 w-10 border border-[#D7D0C4] bg-transparent p-0" title="직접 색 선택" />
-                <span className="text-xs font-normal text-[#8F897D]">직접 선택</span>
-                <label className="flex cursor-pointer items-center gap-1 border border-[#D7D0C4] px-3 py-1.5 text-xs font-normal text-[#6B665C] transition hover:border-[#1A1A1A]">
+                <span className="text-sm text-[#4A4540]">직접 선택</span>
+                <label className="flex cursor-pointer items-center gap-1 border border-[#D7D0C4] px-3 py-1.5 text-sm font-normal text-[#3A362E] transition hover:border-[#1A1A1A]">
                   📷 사진 색상 추출
                   <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
                 </label>
@@ -329,7 +332,7 @@ export default function WardrobePanel({
           <div className="border-t border-[#E5DED1] pt-3">
             <div className="grid min-w-0 gap-3">
               {CATEGORY_OPTIONS.map(([category, label]) => (
-                <label key={category} className="grid gap-1 text-xs font-semibold text-[#6B665C]">
+                <label key={category} className="grid gap-1 text-sm font-semibold text-[#3A362E]">
                   {label} 고정
                   <select
                     value={locks[category] ?? SKIP}
@@ -347,10 +350,10 @@ export default function WardrobePanel({
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
               <button type="button" onClick={applyLocks} className="bg-ink px-4 py-2 text-sm font-semibold text-white">고정한 옷으로 다시 조합하기</button>
-              <button type="button" onClick={autoAll} className="border border-[#D7D0C4] px-4 py-2 text-sm text-[#6B665C]">자동 추천</button>
-              <button type="button" onClick={clearLocks} className="border border-[#D7D0C4] px-4 py-2 text-sm text-[#6B665C]">고정 해제</button>
+              <button type="button" onClick={autoAll} className="border border-[#D7D0C4] px-4 py-2 text-sm text-[#3A362E]">자동 추천</button>
+              <button type="button" onClick={clearLocks} className="border border-[#D7D0C4] px-4 py-2 text-sm text-[#3A362E]">고정 해제</button>
             </div>
-            <p className="mt-3 text-xs leading-5 text-[#6B665C]">
+            <p className="mt-3 text-sm leading-5 text-[#3A362E]">
               {lockedCount > 0
                 ? `현재 ${lockedCount}개 고정.${appliedAt ? ` ${appliedAt}에 조합했어요.` : " 버튼을 눌러 결과를 확인하세요."}`
                 : "고정한 옷이 없으면 자동으로 조합합니다."}
@@ -373,8 +376,8 @@ export default function WardrobePanel({
               {FILTER_OPTIONS.map(([id, label]) => {
                 const selected = filter === id;
                 return (
-                  <button key={id} type="button" onClick={() => setFilter(id)} className="border px-2.5 py-1 text-xs"
-                    style={{ borderColor: selected ? "#1A1A1A" : "#D7D0C4", background: selected ? "#1A1A1A" : "transparent", color: selected ? "#fff" : "#6B665C" }}>
+                  <button key={id} type="button" onClick={() => setFilter(id)} className="border px-2.5 py-1 text-sm"
+                    style={{ borderColor: selected ? "#1A1A1A" : "#D7D0C4", background: selected ? "#1A1A1A" : "transparent", color: selected ? "#fff" : "#3A362E" }}>
                     {label}
                   </button>
                 );
@@ -386,26 +389,26 @@ export default function WardrobePanel({
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <div className="text-sm font-semibold"><ColorText value={item.name} colorHex={item.colorHex} /></div>
-                      <div className="mt-1 text-xs leading-5 text-[#6B665C]">
+                      <div className="mt-1 text-sm leading-5 text-[#3A362E]">
                         {CATEGORY_LABELS_KO[item.category]} · <ColorText value={item.color} colorHex={item.colorHex} /> · {WARMTH_LABELS[item.warmth]} · {STYLE_LABELS[item.style]}
                       </div>
-                      <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-[#8F897D]">
+                      <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-[#4A4540]">
                         <span>{item.rainOk ? "비 오는 날 가능" : "비 오는 날 비추천"}</span>
                         {(item.wearCount || 0) > 0
                           ? <span className="border border-[#E5DED1] px-1.5 py-0.5">{item.wearCount}회 착용</span>
                           : <span className="text-[#C9B89A]">미착용</span>}
                       </div>
-                      {item.lastWorn && <div className="mt-0.5 text-xs text-[#A8A296]">마지막 {item.lastWorn}</div>}
+                      {item.lastWorn && <div className="mt-0.5 text-sm text-[#6B665C]">마지막 {item.lastWorn}</div>}
                     </div>
                     <div className="flex shrink-0 flex-col gap-1">
-                      <button type="button" onClick={() => recordWear(item.id)} className="border border-[#D7D0C4] px-2 py-1 text-xs text-[#6B665C]">착용 ✓</button>
-                      <button type="button" onClick={() => removeItem(item.id)} className="border border-[#D7D0C4] px-2 py-1 text-xs text-[#6B665C]">삭제</button>
+                      <button type="button" onClick={() => recordWear(item.id)} className="border border-[#D7D0C4] px-2 py-1 text-sm text-[#3A362E]">착용 ✓</button>
+                      <button type="button" onClick={() => removeItem(item.id)} className="border border-[#D7D0C4] px-2 py-1 text-sm text-[#3A362E]">삭제</button>
                     </div>
                   </div>
                 </div>
               ))}
               {filteredWardrobe.length === 0 && (
-                <div className="border border-dashed border-[#D7D0C4] p-4 text-center text-sm text-[#8F897D]">이 분류에 등록된 옷이 없습니다.</div>
+                <div className="border border-dashed border-[#D7D0C4] p-4 text-center text-sm text-[#4A4540]">이 분류에 등록된 옷이 없습니다.</div>
               )}
             </div>
           </div>
@@ -425,7 +428,7 @@ export default function WardrobePanel({
             <div className="border border-[#1A1A1A] bg-[#FAF8F3] p-4">
               <div className="flex items-center justify-between gap-3">
                 <h3 className="text-base font-semibold">{recommendation.outfit?.title || "내 옷장 코디"}</h3>
-                <span className="border border-[#D7D0C4] px-2 py-1 text-[11px] text-[#6B665C]">{lockedCount > 0 ? "고정 반영" : "자동"}</span>
+                <span className="border border-[#D7D0C4] px-2 py-1 text-xs text-[#3A362E]">{lockedCount > 0 ? "고정 반영" : "자동"}</span>
               </div>
               <div className="mt-3 grid gap-2">
                 {outfitRows.map(([label, category, item, fallback]) => {
@@ -435,12 +438,12 @@ export default function WardrobePanel({
                   const suffix = item ? (appliedLocks[item.category] === item.id ? " · 고정" : "") : "";
                   return (
                     <div key={label} className="grid grid-cols-[56px_1fr] gap-3 text-sm">
-                      <span className="font-semibold text-[#6B665C]">{label}</span>
+                      <span className="font-semibold text-[#3A362E]">{label}</span>
                       {isSkipped
-                        ? <span className="text-[#C9B89A]">생략</span>
+                        ? <span className="text-[#6B665C]">생략</span>
                         : value
                           ? <ColorText value={value} suffix={suffix} colorHex={colorHex} />
-                          : <span className="text-[#A8A296]">추천 가능한 옷 부족</span>}
+                          : <span className="text-[#6B665C]">추천 가능한 옷 부족</span>}
                     </div>
                   );
                 })}
@@ -449,16 +452,16 @@ export default function WardrobePanel({
             <div className="mt-3 grid gap-2">
               {Object.entries(recommendation.picked).map(([category, item]) => (
                 <div key={category} className="flex items-center justify-between border-t border-[#E5DED1] pt-2 text-sm">
-                  <span className="font-semibold text-[#6B665C]">{CATEGORY_LABELS_KO[category]}</span>
+                  <span className="font-semibold text-[#3A362E]">{CATEGORY_LABELS_KO[category]}</span>
                   <ColorText value={`${item.name} · ${item.color}`} colorHex={item.colorHex} suffix={appliedLocks[category] === item.id ? " · 고정" : ""} />
                 </div>
               ))}
               {Object.keys(recommendation.picked).length === 0 && (
-                <p className="text-sm leading-6 text-[#8F897D]">상의, 하의, 신발을 하나씩 추가해보세요.</p>
+                <p className="text-sm leading-6 text-[#4A4540]">상의, 하의, 신발을 하나씩 추가해보세요.</p>
               )}
             </div>
             {recommendation.reasons.length > 0 && (
-              <div className="mt-4 grid gap-1 text-xs leading-5 text-[#6B665C]">
+              <div className="mt-4 grid gap-1 text-sm leading-5 text-[#3A362E]">
                 {recommendation.reasons.map((reason) => <p key={reason}>왜? {reason}</p>)}
               </div>
             )}
