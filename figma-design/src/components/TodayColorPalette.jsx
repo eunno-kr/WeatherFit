@@ -476,6 +476,9 @@ export default function TodayColorPalette({ condition, temp, profile, theme, dar
               <span className="text-base font-semibold" style={{ color: accent }}>적합도 {result.fitPercent}%</span>
               <span className="text-sm text-[#4A4540]">· {result.season} 시즌</span>
             </div>
+            <p className="mt-2 text-xs text-[#6B665C] leading-5">
+              💡 여기서 '{result.season}'은 달력의 계절이 아닌 피부톤 유형의 이름이에요.
+            </p>
           </div>
 
           {/* Top 3 */}
